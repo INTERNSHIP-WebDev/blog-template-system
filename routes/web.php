@@ -1,10 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
+use App\Models\Title;
+use App\Models\Subtitle;
+use App\Models\Description;
+use App\Models\Image;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +25,11 @@ use App\Http\Controllers\ProductController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $titles = Title::all();
+    $subtitles = Subtitle::all();
+    $descriptions = Description::all();
+    $images = Image::all();
+    return view('welcome', compact('titles', 'subtitles', 'descriptions', 'images'));
 });
 
 Auth::routes();

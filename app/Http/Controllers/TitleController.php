@@ -13,7 +13,7 @@ class TitleController extends Controller
      */
     public function index()
     {
-        //
+  
     }
 
     /**
