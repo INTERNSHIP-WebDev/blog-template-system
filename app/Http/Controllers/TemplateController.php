@@ -49,7 +49,8 @@ class TemplateController extends Controller
             $request->validate([
                 'header' => 'nullable|string|max:255',
                 'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:25000',
-                'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:25000'
+                'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:25000',
+                'titles.*.text' => 'required|string|max:255',
             ]);
     
             if ($request->hasFile('banner')) {
@@ -68,22 +69,20 @@ class TemplateController extends Controller
 
             $template = Template::create([
                 'header' => $request->input('header'),
-                'banner' => $request->input('header'),
-                'logo' => $request->input('header'),
+                'banner' => $request->input('banner'),
+                'logo' => $request->input('logo'),
             ]);
 
-            // Process and store each beneficiary
+           // Process and store each title
             if ($request->has('titles')) {
                 foreach ($request->input('titles') as $titleData) {
-                    // You may also add validation for each beneficiary data
+                    // You may also add validation for each title data
                     Title::create([
                         'temp_id' => $template->id,
                         'text' => $titleData['text'],
                     ]);
                 }
             }
-    
-            // Alert::success('Success!', 'Added member successfully.');
     
             return redirect()->route('templates.index')->with('success', 'Template added successfully!');
         } catch (\Exception $e) {
@@ -119,39 +118,78 @@ class TemplateController extends Controller
             $request->validate([
                 'header' => 'nullable|string|max:255',
                 'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:25000',
-                'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:25000'
-         
-           ]);
+                'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:25000',
+                'titles.*.text' => 'required|string|max:255',
+                'titles.*.id' => 'nullable|exists:titles,id', 
+            ]);
 
-           $template = Template::findOrFail($id);
+            $template = Template::findOrFail($id);
 
-           $template->update([
-            'header' => $request->input('header'),
-            'banner' => $request->input('banner'),
-            'logo' => $request->input('logo'),
+            $oldBanner = $template->banner;
+            $oldLogo = $template->logo;
+
+            $template->update([
+                'header' => $request->input('header'),
+                'banner' => $request->input('banner', $oldBanner),
+                'logo' => $request->input('logo', $oldLogo),
             ]);
 
             if ($request->hasFile('banner')) {
-                $image = $request->file('banner');
-                $imageName = 'banner' . time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images/banners/'), $imageName);
-                $request->merge(['banner' => $imageName]);
+                // Delete old banner image
+                if ($oldBanner) {
+                    $oldBannerPath = public_path('images/banners/') . $oldBanner;
+                    if (file_exists($oldBannerPath)) {
+                        unlink($oldBannerPath);
+                    }
+                }
+
+                // Upload new banner image
+                $banner = $request->file('banner');
+                $bannerName = 'banner' . time() . '.' . $banner->getClientOriginalExtension();
+                $banner->move(public_path('images/banners/'), $bannerName);
+                $template->update(['banner' => $bannerName]);
             }
 
             if ($request->hasFile('logo')) {
-                $image = $request->file('logo');
-                $imageName = 'logo' . time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images/logos/'), $imageName);
-                $request->merge(['logo' => $imageName]);
+                // Delete old logo image
+                if ($oldLogo) {
+                    $oldLogoPath = public_path('images/logos/') . $oldLogo;
+                    if (file_exists($oldLogoPath)) {
+                        unlink($oldLogoPath);
+                    }
+                }
+
+                // Upload new logo image
+                $logo = $request->file('logo');
+                $logoName = 'logo' . time() . '.' . $logo->getClientOriginalExtension();
+                $logo->move(public_path('images/logos/'), $logoName);
+                $template->update(['logo' => $logoName]);
             }
 
+            // Process and update each title
+            if ($request->has('titles')) {
+                foreach ($request->input('titles') as $titleData) {
+                    // Check if the title has an 'id' - update existing title
+                    if (isset($titleData['id'])) {
+                        Title::findOrFail($titleData['id'])->update([
+                            'text' => $titleData['text'],
+                        ]);
+                    } else {
+                        // Create a new title
+                        Title::create([
+                            'temp_id' => $template->id,
+                            'text' => $titleData['text'],
+                        ]);
+                    }
+                }
+            }
 
-            // You can redirect to the member's profile or any other page after updating
             return redirect()->route('templates.index')->with('success', 'Template updated successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
+
     /**
      * Remove the specified resource from storage.
      */

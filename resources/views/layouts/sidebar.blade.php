@@ -69,7 +69,7 @@
                 <ul class="sub-menu" aria-expanded="false">
                     <li><a href="{{ route('templates.index') }}" key="t-blog-list">Blog List</a></li>
                     <li><a href="blog-grid.html" key="t-blog-grid">Blog Grid</a></li>
-                    <li><a href="blog-details.html" key="t-blog-details">Blog Details</a></li>
+                    <li><a href="{{ route('templates.show') }}" key="t-blog-details">Blog Details</a></li>
                 </ul>
             </li>
 

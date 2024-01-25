@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('temp_id');
+            $table->string('file');
             $table->timestamps();
+
+            // Define foreign key constraints
+            $table->foreign('temp_id')->references('id')->on('templates')->onDelete('cascade');
         });
     }
 

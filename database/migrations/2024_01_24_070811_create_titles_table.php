@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('titles', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('temp_id');
-            $table->string('file');
+            $table->string('text');
             $table->timestamps();
 
             // Define foreign key constraints

@@ -55,13 +55,16 @@ Route::resources([
 Route::middleware(['auth'])->group(function () {
 
     Route::get('templates', [App\Http\Controllers\TemplateController::class, 'index'])->name('templates.index');
+    Route::get('templates/show', [App\Http\Controllers\TemplateController::class, 'show'])->name('templates.show');
     Route::get('templates/create', [App\Http\Controllers\TemplateController::class, 'create'])->name('templates.create');
     Route::post('templates', [App\Http\Controllers\TemplateController::class, 'store'])->name('templates.store');
     Route::get('/templates/{template}/edit', [TemplateController::class, 'edit'])->name('templates.edit');
     Route::delete('/templates/{template}', [TemplateController::class, 'destroy'])->name('templates.destroy');
     Route::resource('templates', TemplateController::class);
+    
 
     Route::get('titles', [\App\Http\Controllers\TitleController::class, 'index'])->name('titles.index');
+    Route::get('templates/show', [App\Http\Controllers\TemplateController::class, 'show'])->name('templates.show');
     Route::get('titles/create', [App\Http\Controllers\TitleController::class, 'create'])->name('titles.create');
     Route::post('titles', [App\Http\Controllers\TitleController::class, 'store'])->name('titles.store');
     Route::get('/titles/{title}/edit', [TitleController::class, 'edit'])->name('titles.edit');
