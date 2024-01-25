@@ -64,12 +64,11 @@
             <li>
                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                     <i class="bx bx-detail"></i>
-                    <span key="t-blog">Blog</span>
+                    <span key="t-blog">Blogs</span>
                 </a>
                 <ul class="sub-menu" aria-expanded="false">
                     <li><a href="{{ route('templates.index') }}" key="t-blog-list">Blog List</a></li>
                     <li><a href="blog-grid.html" key="t-blog-grid">Blog Grid</a></li>
-                    <li><a href="{{ route('templates.show') }}" key="t-blog-details">Blog Details</a></li>
                 </ul>
             </li>
 
@@ -80,12 +79,19 @@
                 </a>
             </li>
 
+            <li>
+                <a href="apps-filemanager.html" class="waves-effect">
+                    <i class="bx bx-customize"></i>
+                    <span key="t-category">Categories</span>
+                </a>
+            </li>
+
             <li class="menu-title" key="t-apps">Notifications</li>
 
             <li>
                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                     <i class="bx bx-envelope"></i>
-                    <span key="t-email">Email</span>
+                    <span key="t-email">Emails</span>
                 </a>
                 <ul class="sub-menu" aria-expanded="false">
                     <li><a href="email-inbox.html" key="t-inbox">Inbox</a></li>
@@ -105,7 +111,7 @@
 
             <li>
                 <a href="comments.html" class="waves-effect">
-                    <i class="bx bx-edit-alt"></i>
+                    <i class="bx bx-comment-dots"></i>
                     <span key="t-comment">Comments</span>
                 </a>
             </li>

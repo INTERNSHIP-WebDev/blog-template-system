@@ -3,23 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog | List</title>
-
-     <!-- App favicon -->
-     <link rel="shortcut icon" href="assets/images/favicon.ico">
-
-    <link href="<?php echo url('theme')?>/dist/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css">
-
-    <link href="<?php echo url('theme')?>/dist/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
-
-    <!-- Bootstrap Css -->
-    <link href="<?php echo url('theme')?>/dist/assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
-    <!-- Icons Css -->
-    <link href="<?php echo url('theme')?>/dist/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
-    <!-- App Css-->
-    <link href="<?php echo url('theme')?>/dist/assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
-    <!-- App js -->
-    <script src="<?php echo url('theme')?>/dist/assets/js/plugin.js"></script>
+    <title>Blogs | List</title>
 </head>
 <body>
 
@@ -60,7 +44,7 @@
                                         <div class="d-flex align-items-center">
                                             <h5 class="mb-0 card-title flex-grow-1">Blogs Lists</h5>
                                             <div class="flex-shrink-0">
-                                                <a href="{{ route('templates.create') }}" class="btn btn-primary">Add New Blog</a>
+                                                <a href="{{ route('templates.create') }}" class="btn btn-success btn-sm my-2"><i class="bi bi-plus-circle"></i> Add New Blog</a>
                                             </div>
                                         </div>
                                     </div>
@@ -71,6 +55,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">No</th>
+                                                        <th scope="col">Author</th>
                                                         <th scope="col">Header</th>
                                                         <th scope="col">Banner</th>
                                                         <th scope="col">Logo</th>
@@ -78,43 +63,44 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @forelse ($templates as $template)
+                                                    @forelse ($templates ?? [] as $template)
                                                         <tr>
                                                             <td>{{ $loop->iteration }}</td>
+                                                            <!-- Retrieve the user associated with the template -->
+                                                            <td>{{ $template->user->name }}</td>
                                                             <td>{{ $template->header }}</td>
                                                             <td>
                                                                 @if ($template->banner)
-                                                                <img src="{{ asset('images/banners/' . $template->banner) }}" alt="Banner Image" class="img-thumbnail" width="50" height="50">
+                                                                    <img src="{{ asset('images/banners/' . $template->banner) }}" alt="Banner Image" class="img-thumbnail" width="50" height="50">
                                                                 @else
                                                                     No photo
                                                                 @endif
                                                             </td>
                                                             <td>
                                                                 @if ($template->logo)
-                                                                <img src="{{ asset('images/logos/' . $template->logo) }}" alt="Logo Image" class="img-thumbnail" width="50" height="50">
+                                                                    <img src="{{ asset('images/logos/' . $template->logo) }}" alt="Logo Image" class="img-thumbnail" width="50" height="50">
                                                                 @else
                                                                     No photo
                                                                 @endif
                                                             </td>
                                                             <td>
-                                                                <a href="{{ route('templates.show', $template->id) }}" class="btn btn-info">Show</a>
-                                                                <a href="{{ route('templates.edit', $template->id) }}" class="btn btn-warning">Edit</a>
+                                                                <a href="{{ route('templates.show', $template->id) }}" class="btn btn-warning btn-sm"><i class="bi bi-eye"></i></a>
+                                                                <a href="{{ route('templates.edit', $template->id) }}" class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i></a>
                                                                 <form action="{{ route('templates.destroy', $template->id) }}" method="POST" style="display:inline;">
                                                                     @csrf
                                                                     @method('DELETE')
-                                                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Do you want to delete this template?');"><i class="bi bi-trash"></i></button>
                                                                 </form>
                                                             </td>
                                                         </tr>
-                                                        @empty
-                                                            <tr>
-                                                                <td colspan="6">No blog posts found.</td>
-                                                            </tr>
-                                                        @endforelse
+                                                    @empty
+                                                        <tr>
+                                                            <td colspan="6">No blog posts found.</td>
+                                                        </tr>
+                                                    @endforelse
                                                 </tbody>
                                             </table>
                                         </div>
-                                       
                                     </div>
                                 </div><!--end card-->
                             </div><!--end col-->
@@ -134,20 +120,6 @@
         <!-- Right bar overlay-->
         <div class="rightbar-overlay"></div>
 
-        
-        <!-- JAVASCRIPT -->
-        <script src="<?php echo url('theme')?>/dist/assets/libs/jquery/jquery.min.js"></script>
-        <script src="<?php echo url('theme')?>/dist/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="<?php echo url('theme')?>/dist/assets/libs/metismenu/metisMenu.min.js"></script>
-        <script src="<?php echo url('theme')?>/dist/assets/libs/simplebar/simplebar.min.js"></script>
-        <script src="<?php echo url('theme')?>/dist/assets/libs/node-waves/waves.min.js"></script>
-
-        <script src="<?php echo url('theme')?>/dist/assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
-
-        <script src="<?php echo url('theme')?>/dist/assets/libs/select2/js/select2.min.js"></script>
-
-        <script src="<?php echo url('theme')?>/dist/assets/js/pages/job-list.init.js"></script>
-
-        <script src="<?php echo url('theme')?>/dist/assets/js/app.js"></script>
+        @endsection
     </body>
 </html>

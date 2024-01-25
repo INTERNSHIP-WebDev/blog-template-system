@@ -10,8 +10,8 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="{{ asset('backend/assets/img/favicon.png') }}" rel="icon">
-  <link href="{{ asset('backend/assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+  <link href="<?php echo url('backend') ?>/backend/assets/img/favicon.png" rel="icon">
+  <link href="<?php echo url('backend') ?>/backend/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,15 +19,15 @@
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=Inter:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="{{ asset('backend/assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-  <link href="{{ asset('backend/assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
-  <link href="{{ asset('backend/assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
-  <link href="{{ asset('backend/assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
-  <link href="{{ asset('backend/assets/vendor/aos/aos.css') }}" rel="stylesheet">
+  <link href="<?php echo url('backend') ?>/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="<?php echo url('backend') ?>/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="<?php echo url('backend') ?>/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="<?php echo url('backend') ?>/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="<?php echo url('backend') ?>/assets/vendor/aos/aos.css" rel="stylesheet">
 
   <!-- Template Main CSS Files -->
-  <link href="{{ asset('backend/assets/css/variables.css') }}" rel="stylesheet">
-  <link href="{{ asset('backend/assets/css/main.css') }}" rel="stylesheet">
+  <link href="<?php echo url('backend') ?>/assets/css/variables.css" rel="stylesheet">
+  <link href="<?php echo url('backend') ?>/assets/css/main.css" rel="stylesheet">
 </head>
 
 <body>
@@ -103,7 +103,7 @@
             <div class="swiper sliderFeaturedPosts">
               <div class="swiper-wrapper">
                 <div class="swiper-slide">
-                  <a href="single-post.html" class="img-bg d-flex align-items-end" style="background-image: url('{{ asset('backend/assets/img/post-slide-1.jpg') }}');">
+                  <a href="single-post.html" class="img-bg d-flex align-items-end" style="background-image: url(<?php echo url('backend') ?>/assets2/img/post-slide-1.jpg);">
                     <div class="img-bg-inner">
                       <h2>The Best Homemade Masks for Face (keep the Pimples Away)</h2>
                       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem neque est mollitia! Beatae minima assumenda repellat harum vero, officiis ipsam magnam obcaecati cumque maxime inventore repudiandae quidem necessitatibus rem atque.</p>
@@ -155,114 +155,116 @@
     <!-- ======= Post Grid Section ======= -->
     <section id="posts" class="posts">
       <div class="container" data-aos="fade-up">
-        <div class="row g-5">
+        <!-- LATEST -->
+        <div class="row g-6">
           <div class="col-lg-4">
             <div class="post-entry-1 lg">
-              <a href="single-post.html"><img src="{{ asset('backend/assets/img/post-landscape-1.jpg') }}" alt="" class="img-fluid"></a>
-              <div class="post-meta"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-              <h2><a href="single-post.html">11 Work From Home Part-Time Jobs You Can Do Now</a></h2>
-              <p class="mb-4 d-block">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero temporibus repudiandae, inventore pariatur numquam cumque possimus exercitationem? Nihil tempore odit ab minus eveniet praesentium, similique blanditiis molestiae ut saepe perspiciatis officia nemo, eos quae cumque. Accusamus fugiat architecto rerum animi atque eveniet, quo, praesentium dignissimos</p>
-
+              <a href="{{ route('view_blog', ['id' => $latestTemplate->id]) }}"><img src="{{ asset('images/banners/' . $latestTemplate->banner) }}" alt="" class="img-fluid"></a>
+              <div class="post-meta">
+                @if($latestTemplate->title)
+                <span class="date">{{ $latestTemplate->title->text }}</span>
+                @else
+                <span class="date">No Title</span>
+                @endif
+                <span class="mx-1">&bullet;</span>
+                <span>{{ $latestTemplate->created_at->format('M d, Y') }}</span>
+              </div>
+              <h2><a href="{{ route('view_blog', ['id' => $latestTemplate->id]) }}">{{ $latestTemplate->header }} {{ $latestTemplate->id }}</a></h2>
+              @php
+                  $description = \App\Models\Description::where('temp_id', $latestTemplate->id)->first();
+              @endphp
+              @if($description)
+                <p class="mb-4 d-block">{{ $description->text }}</p>
+              @else
+                <p class="mb-4 d-block">No Description</p>
+              @endif
               <div class="d-flex align-items-center author">
-                <div class="photo"><img src="{{ asset('backend/assets/img/person-1.jpg') }}" alt="" class="img-fluid"></div>
-                <div class="name">
-                  <h3 class="m-0 p-0">Cameron Williamson</h3>
+              <div class="photo"><img src="{{ asset('backend/assets/img/person-1.jpg') }}" alt="" class="img-fluid"></div>
+              <div class="name">
+              @php
+                  $author = \App\Models\User::where('id', $latestTemplate->user_id)->first();
+              @endphp
+              @if($author)
+                    <h3 class="m-0 p-0">{{ $author->name }}</h3>
+              @else
+                    <h3 class="m-0 p-0">Unknown Author</h3>
+              @endif
                 </div>
               </div>
             </div>
-
           </div>
+          <!-- END LATEST -->
 
+          <!-- Main Content -->
           <div class="col-lg-8">
             <div class="row g-5">
-              <div class="col-lg-4 border-start custom-border">
-                <div class="post-entry-1">
-                  <a href="single-post.html"><img src="{{ asset('backend/assets/img/post-landscape-2.jpg') }}" alt="" class="img-fluid"></a>
-                  <div class="post-meta"><span class="date">Sport</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                  <h2><a href="single-post.html">Let’s Get Back to Work, New York</a></h2>
+              @foreach($templates as $index => $template)
+              @if($index % 3 == 0)
+    
+              <div class="row g-5">
+                @endif
+
+                <div class="col-lg-4">
+                  <div class="post-entry-1">
+                    <a href="single-post.html"><img src="{{ asset('images/banners/' . $template->banner) }}" alt="" class="img-fluid"></a>
+                    <div class="post-meta">
+                      @php
+                      $title = $titles->where('temp_id', $template->id)->first();
+                      @endphp
+                      @if($title)
+                      <span class="date">{{ $title->text }}</span>
+                      @else
+                      <span class="date">No Title</span>
+                      @endif
+                      <span class="mx-1">&bullet;</span>
+                      <span>{{ $template->created_at->format('M d, Y') }}</span>
+                    </div>
+                    <h2><a href="single-post.html">{{ $template->header }}</a></h2>
+                      @php
+                      $description = \App\Models\Description::where('id', $template->user_id)->first();
+                      @endphp
+                      @if($description)
+                        <p class="mb-4 d-block">{{ $description->text }}</p>
+                      @else
+                        <p class="mb-4 d-block">No Description</p>
+                      @endif
+                  </div>
                 </div>
-                <div class="post-entry-1">
-                  <a href="single-post.html"><img src="{{ asset('backend/assets//img/post-landscape-5.jpg') }}" alt="" class="img-fluid"></a>
-                  <div class="post-meta"><span class="date">Food</span> <span class="mx-1">&bullet;</span> <span>Jul 17th '22</span></div>
-                  <h2><a href="single-post.html">How to Avoid Distraction and Stay Focused During Video Calls?</a></h2>
-                </div>
-                <div class="post-entry-1">
-                  <a href="single-post.html"><img src="{{ asset('backend/assets/img/post-landscape-7.jpg') }}" alt="" class="img-fluid"></a>
-                  <div class="post-meta"><span class="date">Design</span> <span class="mx-1">&bullet;</span> <span>Mar 15th '22</span></div>
-                  <h2><a href="single-post.html">Why Craigslist Tampa Is One of The Most Interesting Places On the Web?</a></h2>
-                </div>
+
+                @if(($index + 1) % 3 == 0)
+          
               </div>
-              <div class="col-lg-4 border-start custom-border">
-                <div class="post-entry-1">
-                  <a href="single-post.html"><img src="{{ asset('backend/assets/img/post-landscape-3.jpg') }}" alt="" class="img-fluid"></a>
-                  <div class="post-meta"><span class="date">Business</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                  <h2><a href="single-post.html">6 Easy Steps To Create Your Own Cute Merch For Instagram</a></h2>
-                </div>
-                <div class="post-entry-1">
-                  <a href="single-post.html"><img src="{{ asset('backend/assets/img/post-landscape-6.jpg') }}" alt="" class="img-fluid"></a>
-                  <div class="post-meta"><span class="date">Tech</span> <span class="mx-1">&bullet;</span> <span>Mar 1st '22</span></div>
-                  <h2><a href="single-post.html">10 Life-Changing Hacks Every Working Mom Should Know</a></h2>
-                </div>
-                <div class="post-entry-1">
-                  <a href="single-post.html"><img src="{{ asset('backend/assets/img/post-landscape-8.jpg') }}" alt="" class="img-fluid"></a>
-                  <div class="post-meta"><span class="date">Travel</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                  <h2><a href="single-post.html">5 Great Startup Tips for Female Founders</a></h2>
-                </div>
-              </div>
-
-              <!-- Trending Section -->
-              <div class="col-lg-4">
-
-                <div class="trending">
-                  <h3>Trending</h3>
-                  <ul class="trending-post">
-                    <li>
-                      <a href="single-post.html">
-                        <span class="number">1</span>
-                        <h3>The Best Homemade Masks for Face (keep the Pimples Away)</h3>
-                        <span class="author">Jane Cooper</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="single-post.html">
-                        <span class="number">2</span>
-                        <h3>17 Pictures of Medium Length Hair in Layers That Will Inspire Your New Haircut</h3>
-                        <span class="author">Wade Warren</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="single-post.html">
-                        <span class="number">3</span>
-                        <h3>13 Amazing Poems from Shel Silverstein with Valuable Life Lessons</h3>
-                        <span class="author">Esther Howard</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="single-post.html">
-                        <span class="number">4</span>
-                        <h3>9 Half-up/half-down Hairstyles for Long and Medium Hair</h3>
-                        <span class="author">Cameron Williamson</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="single-post.html">
-                        <span class="number">5</span>
-                        <h3>Life Insurance And Pregnancy: A Working Mom’s Guide</h3>
-                        <span class="author">Jenny Wilson</span>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-
-              </div> <!-- End Trending Section -->
+              @endif
+              @endforeach
             </div>
           </div>
+          <!-- End Main Content -->
 
-        </div> <!-- End .row -->
-      </div>
+
+        </div>
+
+      </div> <!-- End .row -->
     </section> <!-- End Post Grid Section -->
 
   </main><!-- End #main -->
+
+  @foreach($users as $user) 
+
+    {{$user->name }}
+    
+  @endforeach
+  
+  @foreach($subtitles as $subtitle) 
+
+  {{$subtitle->text }}
+
+  @endforeach
+
+  @foreach($descriptions as $description)
+
+  {{$description->text}} 
+  
+  @endforeach
 
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
@@ -306,70 +308,32 @@
             <h3 class="footer-heading">Recent Posts</h3>
 
             <ul class="footer-links footer-blog-entry list-unstyled">
-              <li>
-              <!-- @foreach($titles as $title)
-                  {{ $title->text }}
-              @endforeach
-              @foreach($subtitles as $subtitle)
-                  {{ $subtitle->text }}
-              @endforeach
-              @foreach($descriptions as $description)
-                  {{ $description->text }}
-              @endforeach
-              @foreach($images as $image)
-                  {{ $image->text }}
-              @endforeach -->
-              </li>
-
               <ul>
-    @foreach($titles as $title)
-        @php
-            $subtitles = $subtitle->where('id', $title->id)->first();
-            $descriptions = $description->where('id', $title->id)->first();
-     
-        @endphp
-
-        <li>
-            <a href="single-post.html" class="d-flex align-items-center">
-    
-                  <img src="{{ asset('backend/assets/img/post-sq-3.jpg') }}" alt="" class="img-fluid me-3">
-        
-
-                <div>
-                    <div class="post-meta d-block">
-                        @if ($descriptions)
-                            <span class="date">{{ $description->text }}</span>
-                            <span class="mx-1">&bullet;</span>
-                        @endif
-
-                        @if ($subtitles)
-                            <span>{{ $subtitle->text }}</span>
-                        @endif
-                    </div>
-
-                    <span>{{ $title->text }}</span>
-                </div>
-            </a>
-        </li>
-    @endforeach
-</ul>
-
-
-
-              <li>
-                <a href="single-post.html" class="d-flex align-items-center">
-                  <img src="{{ asset('backend/assets/img/post-sq-3.jpg') }}" alt="" class="img-fluid me-3">
-                  <div>
-                    <div class="post-meta d-block"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                    <span>Life Insurance And Pregnancy: A Working Mom’s Guide</span>
-                  </div>
-                </a>
-              </li>
-
-   
-            </ul>
+                  @foreach($fTemplate as $template)
+                      @php
+                          $author = \App\Models\User::where('id', $template->user_id)->first();
+                      @endphp
+                          <li>
+                              <a href="single-post.html" class="d-flex align-items-center">
+                                  <img src="{{ asset('images/banners/' . $template->banner) }}" alt="" class="img-fluid me-3" width="100" height="100">
+                                  <div>
+                                      <div class="post-meta d-block">
+                                        @if($author)
+                                        <span class="date">{{ $author->name }}</span>
+                                        <span class="mx-1">&bullet;</span>
+                                        <span>{{ $template->created_at->format('M d, Y') }}</span>
+                                      </div>
+                                      <span>{{ $template->header }}</span>
+                                  </div>
+                              </a>
+                          </li>
+                      @endif
+                  @endforeach
+              </ul>
+          </ul>
 
           </div>
+
         </div>
       </div>
     </div>
@@ -410,14 +374,14 @@
   <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
-  <script src="{{ asset('backend/assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-  <script src="{{ asset('backend/assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
-  <script src="{{ asset('backend/assets/vendor/glightbox/js/glightbox.min.js') }}"></script>
-  <script src="{{ asset('backend/assets/vendor/aos/aos.js') }}"></script>
-  <script src="{{ asset('backend/assets/vendor/php-email-form/validate.js') }}"></script>
+  <script src="<?php echo url('backend') ?>/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="<?php echo url('backend') ?>/assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="<?php echo url('backend') ?>/assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="<?php echo url('backend') ?>/assets/vendor/aos/aos.js"></script>
+  <script src="<?php echo url('backend') ?>/assets/vendor/php-email-form/validate.js"></script>
 
   <!-- Template Main JS File -->
-  <script src="{{ asset('backend/assets/js/main.js') }}"></script>
+  <script src="<?php echo url('backend') ?>/assets/js/main.js"></script>
 
 </body>
 

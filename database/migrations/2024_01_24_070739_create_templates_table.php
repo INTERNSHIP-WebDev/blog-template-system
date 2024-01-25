@@ -13,10 +13,14 @@ return new class extends Migration
     {
         Schema::create('templates', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->text('header')->nullable();
             $table->string('banner')->nullable();
             $table->string('logo')->nullable();
             $table->timestamps();
+
+            // Define foreign key constraints
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

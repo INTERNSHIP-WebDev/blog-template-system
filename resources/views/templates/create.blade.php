@@ -60,6 +60,21 @@
                                     <!-- Existing titles will be added here dynamically -->
                                 </div>
                                 <br><button type="button" id="addTitle" class="btn btn-success">Add Title</button><br><br>
+
+                                <div id="subtitles">
+                                    <!-- Existing titles will be added here dynamically -->
+                                </div>
+                                <br><button type="button" id="addSubtitle" class="btn btn-warning">Add Subtitle</button><br><br>
+
+                                <div id="descriptions">
+                                    <!-- Existing titles will be added here dynamically -->
+                                </div>
+                                <br><button type="button" id="addDescription" class="btn btn-warning">Add Description</button><br><br>
+
+                                <div id="images">
+                                    <!-- Existing titles will be added here dynamically -->
+                                </div>
+                                <br><button type="button" id="addImage" class="btn btn-warning">Add Image</button><br><br>
                                 
 
                                 <button type="submit" class="btn btn-primary">Create Blog</button>
@@ -106,6 +121,111 @@
 
     document.getElementById('addTitle').addEventListener('click', addTitleField);
 </script>
+
+
+<script>
+    let subtitleIndex = 1; // Initialize the title index
+
+    // Function to add a new title field
+    function addSubtitleField() {
+        let subtitlesContainer = document.getElementById('subtitles');
+        let newSubtitleIndex = subtitlesContainer.children.length;
+        let newSubtitle = document.createElement('div');
+        newSubtitle.className = 'subtitle';
+        newSubtitle.innerHTML = `
+            <div class="subtitle-fields" style="margin-bottom: 20px">
+                <label for="subtitles[${newSubtitleIndex}][text]">{{ __('Subtitle') }}</label>
+                <div class="form-group d-flex">
+                    <input type="text" name="subtitles[${newSubtitleIndex}][text]" class="form-control" placeholder="Subtitle" required>
+                    <button type="button" class="btn btn-danger btn-sm ml-2" onclick="removeSubtitleField(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        subtitlesContainer.appendChild(newSubtitle);
+        subtitleIndex++; // Increment the title index for the next title
+    }
+
+    // Function to remove a title field
+    function removeSubtitleField(button) {
+        let subtitleField = button.parentElement.parentElement;
+        subtitleField.remove();
+    }
+
+    document.getElementById('addSubtitle').addEventListener('click', addSubtitleField);
+</script>
+
+
+<script>
+    let descriptionIndex = 1; // Initialize the title index
+
+    // Function to add a new title field
+    function addDescriptionField() {
+        let descriptionsContainer = document.getElementById('descriptions');
+        let newDescriptionIndex = descriptionsContainer.children.length;
+        let newDescription = document.createElement('div');
+        newDescription.className = 'description';
+        newDescription.innerHTML = `
+            <div class="description-fields" style="margin-bottom: 20px">
+                <label for="descriptions[${newDescriptionIndex}][text]">{{ __('Description') }}</label>
+                <div class="form-group d-flex">
+                    <input type="text" name="descriptions[${newDescriptionIndex}][text]" class="form-control" placeholder="Description" required>
+                    <button type="button" class="btn btn-danger btn-sm ml-2" onclick="removeDescriptionField(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        descriptionsContainer.appendChild(newDescription);
+        descriptionIndex++; // Increment the title index for the next title
+    }
+
+    // Function to remove a title field
+    function removeDescriptionField(button) {
+        let descriptionField = button.parentElement.parentElement;
+        descriptionField.remove();
+    }
+
+    document.getElementById('addDescription').addEventListener('click', addDescriptionField);
+</script>
+
+
+<script>
+    let imageIndex = 1; // Initialize the title index
+
+    // Function to add a new title field
+    function addImageField() {
+        let imagesContainer = document.getElementById('images');
+        let newImageIndex = imagesContainer.children.length;
+        let newImage = document.createElement('div');
+        newImage.className = 'image';
+        newImage.innerHTML = `
+            <div class="image-fields" style="margin-bottom: 20px">
+                <label for="images[${newImageIndex}][text]">{{ __('Image') }}</label>
+                <div class="form-group d-flex">
+                    <input type="file" name="images[${newImageIndex}][file]" class="form-control" accept="image/*" required>
+                    <button type="button" class="btn btn-danger btn-sm ml-2" onclick="removeImageField(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        imagesContainer.appendChild(newImage);
+        imageIndex++; // Increment the title index for the next title
+    }
+
+    // Function to remove a title field
+    function removeImageField(button) {
+        let imageField = button.parentElement.parentElement;
+        imageField.remove();
+    }
+
+    document.getElementById('addImage').addEventListener('click', addImageField);
+</script>
+
+
+
     <!-- end main content-->
 @endsection
 

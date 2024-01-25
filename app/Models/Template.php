@@ -14,7 +14,13 @@ class Template extends Model
         'header',
         'banner',
         'logo',
+        'user_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     // Define a "deleting" event to delete related titles
     public static function boot()
@@ -24,6 +30,9 @@ class Template extends Model
         static::deleting(function ($template) {
             // When a template is being deleted, also delete its related titles
             $template->titles()->delete();
+            $template->subtitles()->delete();
+            $template->descriptions()->delete();
+            $template->images()->delete();
         });
 
         // Listen for the updating event and delete existing images
@@ -32,11 +41,33 @@ class Template extends Model
         });
     }
 
+    protected $with = ['user', 'titles', 'subtitles', 'descriptions', 'images'];
+
     public function titles()
     {
-        // Define the relationship between Template and Title models
         return $this->hasMany(Title::class, 'temp_id');
     }
+
+    public function subtitles()
+    {
+        return $this->hasMany(Subtitle::class, 'temp_id');
+    }
+
+    public function descriptions()
+    {
+        return $this->hasMany(Description::class, 'temp_id');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class, 'temp_id');
+    }
+
+    // public function titles()
+    // {
+    //     // Define the relationship between Template and Title models
+    //     return $this->belongsTo(Title::class, 'title_id');
+    // }
 
     public function deleteExistingImages()
     {
