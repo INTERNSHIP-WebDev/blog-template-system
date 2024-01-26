@@ -1298,3 +1298,13 @@ section {
 .footer .credits a {
   color: var(--color-white);
 }
+
+/* FONT DECLARATIONS
+@font-face {
+  font-family: summernote;
+  src: url('/public/assets/fonts/summernote.tff');
+}
+
+.summernote {
+  font-family: 'summernote';
+} */
