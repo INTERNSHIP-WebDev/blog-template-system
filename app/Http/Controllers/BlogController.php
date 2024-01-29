@@ -15,7 +15,11 @@ class BlogController extends Controller
     public function view_blog($id) {
         $target_blog = Template::find($id);
 
-        print("hello");
+        $banner_dir = '/images/banners/';
+
+        $banner = $target_blog->banner;
+        $header = $target_blog->header;
+        
 
         return view('blog.sample.sample', ['blog' => $target_blog]);
     }

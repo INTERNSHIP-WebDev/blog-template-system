@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Blog</title>
+  <title>Blog | Home</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -36,7 +36,7 @@
   <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="{{ url('/') }}" class="logo d-flex align-items-center">
         <!-- Uncomment the line below if you also wish to use an image logo -->
         <!-- <img src="assets/img/logo.png" alt=""> -->
         <h1>Blog</h1>
@@ -44,9 +44,8 @@
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a href="{{ url('/') }}">Blog</a></li>
-          <li><a href="single-post.html">Single Post</a></li>
-          <li class="dropdown"><a href="category.html"><span>Categories</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
+          <li><a href="{{ url('/') }}">Home</a></li>
+          <!-- <li class="dropdown"><a href="category.html"><span>Categories</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
             <ul>
               <li><a href="search-result.html">Search Result</a></li>
               <li><a href="#">Drop Down 1</a></li>
@@ -63,19 +62,25 @@
               <li><a href="#">Drop Down 3</a></li>
               <li><a href="#">Drop Down 4</a></li>
             </ul>
-          </li>
-
+          </li> -->
           <li><a href="about.html">About</a></li>
-          <li><a href="contact.html">Contact</a></li>
+          <li><a href="#">Contact</a></li>
         </ul>
       </nav><!-- .navbar -->
 
       <div class="position-relative">
-        <a href="#" class="mx-2"><span class="bi-facebook"></span></a>
-        <a href="#" class="mx-2"><span class="bi-twitter"></span></a>
-        <a href="#" class="mx-2"><span class="bi-instagram"></span></a>
-
-        <a href="#" class="mx-2 js-search-open"><span class="bi-search"></span></a>
+        @if (Route::has('login'))
+        <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
+          @if(auth()->check())
+          <a href="{{ url('/home') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:outline-red-500">You are Logged in as "{{ auth()->user()->name }}"</a>
+          @else
+          <a href="{{ route('login') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Log in &nbsp;&nbsp;</a>
+          @if (Route::has('register'))
+          <a href="{{ route('register') }}" class="ml-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Register</a>
+          @endif
+          @endauth
+        </div>
+        @endif
         <i class="bi bi-list mobile-nav-toggle"></i>
 
         <!-- ======= Search Form ======= -->
@@ -94,7 +99,6 @@
   </header><!-- End Header -->
 
   <main id="main">
-
     <!-- ======= Hero Slider Section ======= -->
     <section id="hero-slider" class="hero-slider">
       <div class="container-md" data-aos="fade-in">
@@ -102,41 +106,25 @@
           <div class="col-12">
             <div class="swiper sliderFeaturedPosts">
               <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                  <a href="single-post.html" class="img-bg d-flex align-items-end" style="background-image: url(<?php echo url('backend') ?>/assets2/img/post-slide-1.jpg);">
-                    <div class="img-bg-inner">
-                      <h2>The Best Homemade Masks for Face (keep the Pimples Away)</h2>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem neque est mollitia! Beatae minima assumenda repellat harum vero, officiis ipsam magnam obcaecati cumque maxime inventore repudiandae quidem necessitatibus rem atque.</p>
-                    </div>
-                  </a>
-                </div>
 
+                @foreach($heroTemplates as $heroTemplate)
                 <div class="swiper-slide">
-                  <a href="single-post.html" class="img-bg d-flex align-items-end" style="background-image: url('{{ asset('backend/assets/img/post-slide-2.jpg') }}');">
+                  <a href="single-post.html" class="img-bg d-flex align-items-end" style="background-image: url('{{ asset('images/banners/' . $heroTemplate->banner) }}');">
                     <div class="img-bg-inner">
-                      <h2>17 Pictures of Medium Length Hair in Layers That Will Inspire Your New Haircut</h2>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem neque est mollitia! Beatae minima assumenda repellat harum vero, officiis ipsam magnam obcaecati cumque maxime inventore repudiandae quidem necessitatibus rem atque.</p>
+                      <h2>{{ $heroTemplate->header }}</h2>
+                      @php
+                      $description = $descriptions->where('temp_id', $heroTemplate->id)->first();
+                      @endphp
+                      @if($description)
+                      <p>{{ $description->text }}</p>
+                      @else
+                      <p>No Description</p>
+                      @endif
                     </div>
                   </a>
                 </div>
+                @endforeach
 
-                <div class="swiper-slide">
-                  <a href="single-post.html" class="img-bg d-flex align-items-end" style="background-image: url('{{ asset('backend/assets/img/post-slide-3.jpg') }}');">
-                    <div class="img-bg-inner">
-                      <h2>13 Amazing Poems from Shel Silverstein with Valuable Life Lessons</h2>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem neque est mollitia! Beatae minima assumenda repellat harum vero, officiis ipsam magnam obcaecati cumque maxime inventore repudiandae quidem necessitatibus rem atque.</p>
-                    </div>
-                  </a>
-                </div>
-
-                <div class="swiper-slide">
-                  <a href="single-post.html" class="img-bg d-flex align-items-end" style="background-image: url('{{ asset('backend/assets/img/post-slide-4.jpg') }}');">
-                    <div class="img-bg-inner">
-                      <h2>9 Half-up/half-down Hairstyles for Long and Medium Hair</h2>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem neque est mollitia! Beatae minima assumenda repellat harum vero, officiis ipsam magnam obcaecati cumque maxime inventore repudiandae quidem necessitatibus rem atque.</p>
-                    </div>
-                  </a>
-                </div>
               </div>
               <div class="custom-swiper-button-next">
                 <span class="bi-chevron-right"></span>
@@ -150,47 +138,81 @@
           </div>
         </div>
       </div>
-    </section><!-- End Hero Slider Section -->
+    </section>
+    <!-- End Hero Slider Section -->
 
     <!-- ======= Post Grid Section ======= -->
     <section id="posts" class="posts">
       <div class="container" data-aos="fade-up">
+        <div class=row>
+          <div class="col-md-8">
+          Lorem ipsum dolor sit amPraesetinclectus act temutate malesuadaLorem ipsum dolor sit amPraesetinclectus act temutate malesuada.
+          </div>
+          <div class="col-md-4">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam ab, perspiciatis beatae autem deleniti voluptate nulla a dolores, exercitationem eveniet libero laudantium recusandae officiis qui aliquid blanditiis omnis quae. Explicabo?
+          </div>
+        </div>
+        <h1 class="logo d-flex align-items-center">Latest Blog</h1>
         <!-- LATEST -->
         <div class="row g-6">
           <div class="col-lg-4">
             <div class="post-entry-1 lg">
-              <a href="{{ route('view_blog', ['id' => $latestTemplate->id]) }}"><img src="{{ asset('images/banners/' . $latestTemplate->banner) }}" alt="" class="img-fluid"></a>
-              <div class="post-meta">
-                @if($latestTemplate->title)
-                <span class="date">{{ $latestTemplate->title->text }}</span>
+              @forelse($latestTemplate ? [$latestTemplate] : [] as $template)
+              <a href="{{ route('view_blog', ['id' => $latestTemplate->id]) }}">
+                @if($template)
+                <img src="{{ asset('images/banners/' . $template->banner) }}" alt="" class="img-fluid">
                 @else
-                <span class="date">No Title</span>
+                <!-- Handle the case when $latestTemplate is null -->{{ route('view_blog', ['id' => $latestTemplate->id]) }}
+                <p>No latest template available</p>
+                @endif
+              </a>
+
+              <div class="post-meta">
+                @if($template && $template->category)
+                <span class="date">{{ $template->category->text }}</span>
+                @else
+                <span class="date">No Category</span>
                 @endif
                 <span class="mx-1">&bullet;</span>
-                <span>{{ $latestTemplate->created_at->format('M d, Y') }}</span>
+                @if($template)
+                <span>{{ $template->created_at ? $template->created_at->format('M d, Y') : 'No Date' }}</span>
+                @else
+                <span>No Date</span>
+                @endif
               </div>
-              <h2><a href="{{ route('view_blog', ['id' => $latestTemplate->id]) }}">{{ $latestTemplate->header }} {{ $latestTemplate->id }}</a></h2>
+
+              <h2><a href="{{ route('view_blog', ['id' => $latestTemplate->id]) }}">{{ $template->header }} {{ $template->id }}</a></h2>
+
               @php
-                  $description = \App\Models\Description::where('temp_id', $latestTemplate->id)->first();
+              $description = \App\Models\Description::where('temp_id', $template->id)->first();
               @endphp
+
               @if($description)
-                <p class="mb-4 d-block">{{ $description->text }}</p>
+              <p class="mb-4 d-block">{{ $description->text }}</p>
               @else
-                <p class="mb-4 d-block">No Description</p>
+              <p class="mb-4 d-block">No Description</p>
               @endif
+
               <div class="d-flex align-items-center author">
-              <div class="photo"><img src="{{ asset('backend/assets/img/person-1.jpg') }}" alt="" class="img-fluid"></div>
-              <div class="name">
-              @php
-                  $author = \App\Models\User::where('id', $latestTemplate->user_id)->first();
-              @endphp
-              @if($author)
-                    <h3 class="m-0 p-0">{{ $author->name }}</h3>
-              @else
-                    <h3 class="m-0 p-0">Unknown Author</h3>
-              @endif
+                <div class="photo">
+                  <img src="{{ asset('backend/assets/img/person-1.jpg') }}" alt="" class="img-fluid">
+                </div>
+                <div class="name">
+                  @php
+                  $author = \App\Models\User::where('id', $template->user_id)->first();
+                  @endphp
+
+                  @if($author)
+                  <h3 class="m-0 p-0">{{ $author->name }}</h3>
+                  @else
+                  <h3 class="m-0 p-0">Unknown Author</h3>
+                  @endif
                 </div>
               </div>
+              @empty
+              <!-- Handle the case when $latestTemplate is null -->
+              <p>No latest template available</p>
+              @endforelse
             </div>
           </div>
           <!-- END LATEST -->
@@ -198,73 +220,67 @@
           <!-- Main Content -->
           <div class="col-lg-8">
             <div class="row g-5">
-              @foreach($templates as $index => $template)
+              @forelse($templates as $index => $template)
               @if($index % 3 == 0)
-    
               <div class="row g-5">
                 @endif
 
                 <div class="col-lg-4">
                   <div class="post-entry-1">
-                    <a href="single-post.html"><img src="{{ asset('images/banners/' . $template->banner) }}" alt="" class="img-fluid"></a>
+                    <a href="{{ route('view_blog', ['id' => $template->id]) }}"><img src="{{ asset('images/banners/' . $template->banner) }}" alt="" class="img-fluid"></a>
                     <div class="post-meta">
-                      @php
-                      $title = $titles->where('temp_id', $template->id)->first();
-                      @endphp
-                      @if($title)
-                      <span class="date">{{ $title->text }}</span>
+                      @if($template && $template->category)
+                      <span class="date">{{ $template->category->text }}</span>
                       @else
-                      <span class="date">No Title</span>
+                      <span class="date">No Category</span>
                       @endif
                       <span class="mx-1">&bullet;</span>
-                      <span>{{ $template->created_at->format('M d, Y') }}</span>
+                      <span>{{ $template->created_at->format('M jS \'y') }}</span>
                     </div>
-                    <h2><a href="single-post.html">{{ $template->header }}</a></h2>
-                      @php
-                      $description = \App\Models\Description::where('id', $template->user_id)->first();
-                      @endphp
-                      @if($description)
-                        <p class="mb-4 d-block">{{ $description->text }}</p>
-                      @else
-                        <p class="mb-4 d-block">No Description</p>
-                      @endif
+                    <h2><a href="{{ route('view_blog', ['id' => $template->id]) }}">{{ $template->header }} {{ $template->id }}</a></h2>
+                    @php
+                    $description = $descriptions->where('temp_id', $template->id)->first();
+                    @endphp
+                    @if($description)
+                    <p class="mb-4 d-block">{{ $description->text }}</p>
+                    @else
+                    <p class="mb-4 d-block">No Description</p>
+                    @endif
                   </div>
                 </div>
 
                 @if(($index + 1) % 3 == 0)
-          
               </div>
               @endif
-              @endforeach
+              @empty
+              <p>No templates available.</p>
+              @endforelse
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination justify-content-center">
+              {{ $templates->links() }}
             </div>
           </div>
           <!-- End Main Content -->
-
 
         </div>
 
       </div> <!-- End .row -->
     </section> <!-- End Post Grid Section -->
 
+    <!-- ======= Post Grid 2 Section ======= -->
+    <section id="posts" class="posts">
+      <div class="container" data-aos="fade-up">
+        <h1 class="logo d-flex align-items-center">Categories</h1>
+
+
+      </div> <!-- End container -->
+    </section>
+    <!-- End Post Grid 2 Section -->
+
+
   </main><!-- End #main -->
-
-  @foreach($users as $user) 
-
-    {{$user->name }}
-    
-  @endforeach
-  
-  @foreach($subtitles as $subtitle) 
-
-  {{$subtitle->text }}
-
-  @endforeach
-
-  @foreach($descriptions as $description)
-
-  {{$description->text}} 
-  
-  @endforeach
 
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
@@ -281,26 +297,21 @@
           <div class="col-6 col-lg-2">
             <h3 class="footer-heading">Navigation</h3>
             <ul class="footer-links list-unstyled">
-              <li><a href="{{ url('/') }}"><i class="bi bi-chevron-right"></i> Home</a></li>
-              <!-- <li><a href="index.html"><i class="bi bi-chevron-right"></i> Blog</a></li>
-              <li><a href="category.html"><i class="bi bi-chevron-right"></i> Categories</a></li>
-              <li><a href="single-post.html"><i class="bi bi-chevron-right"></i> Single Post</a></li>
+              <li><a href="{{ url('/') }}"><i class="bi bi-chevron-right"></i> Home </a></li>
+              <li><a href="{{ route('category') }}"><i class="bi bi-chevron-right"></i> Categories </a></li>
+              <!-- <li><a href="category.html"><i class="bi bi-chevron-right"></i> Categories</a></li>
+              <li><a href="single-post.html"><i class="bi bi-chevron-right"></i> Single Post</a></li> -->
               <li><a href="about.html"><i class="bi bi-chevron-right"></i> About us</a></li>
-              <li><a href="contact.html"><i class="bi bi-chevron-right"></i> Contact</a></li> -->
+              <li><a href="#"><i class="bi bi-chevron-right"></i> Contact</a></li>
             </ul>
           </div>
           <div class="col-6 col-lg-2">
-            <h3 class="footer-heading">Categories</h3>
             <ul class="footer-links list-unstyled">
-              <li><a href="category.html"><i class="bi bi-chevron-right"></i> ??? </a></li>
-              <!-- <li><a href="category.html"><i class="bi bi-chevron-right"></i> Culture</a></li>
-              <li><a href="category.html"><i class="bi bi-chevron-right"></i> Sport</a></li>
-              <li><a href="category.html"><i class="bi bi-chevron-right"></i> Food</a></li>
-              <li><a href="category.html"><i class="bi bi-chevron-right"></i> Politics</a></li>
-              <li><a href="category.html"><i class="bi bi-chevron-right"></i> Celebrity</a></li>
-              <li><a href="category.html"><i class="bi bi-chevron-right"></i> Startups</a></li>
-              <li><a href="category.html"><i class="bi bi-chevron-right"></i> Travel</a></li> -->
-
+              <div class="col-lg-12">
+                <h3 class="footer-heading">Address Location</h3>
+                <p><i class="bi bi-geo-alt"></i> &nbsp; Andres Bonifacio Ave, Iligan City, 9200 Lanao del Norte</p>
+                <p><a href="about.html" class="footer-link-more">Learn More</a></p>
+              </div>
             </ul>
           </div>
 
@@ -309,28 +320,34 @@
 
             <ul class="footer-links footer-blog-entry list-unstyled">
               <ul>
-                  @foreach($fTemplate as $template)
-                      @php
-                          $author = \App\Models\User::where('id', $template->user_id)->first();
-                      @endphp
-                          <li>
-                              <a href="single-post.html" class="d-flex align-items-center">
-                                  <img src="{{ asset('images/banners/' . $template->banner) }}" alt="" class="img-fluid me-3" width="100" height="100">
-                                  <div>
-                                      <div class="post-meta d-block">
-                                        @if($author)
-                                        <span class="date">{{ $author->name }}</span>
-                                        <span class="mx-1">&bullet;</span>
-                                        <span>{{ $template->created_at->format('M d, Y') }}</span>
-                                      </div>
-                                      <span>{{ $template->header }}</span>
-                                  </div>
-                              </a>
-                          </li>
-                      @endif
-                  @endforeach
+                @forelse($fTemplate as $template)
+                @php
+                $category = \App\Models\Category::where('id', $template->category_id)->first();
+                @endphp
+                <li>
+                  <a href="single-post.html" class="d-flex align-items-center">
+                    <img src="{{ asset('images/banners/' . $template->banner) }}" alt="" class="img-fluid me-3" width="100" height="100">
+                    <div>
+                      <div class="post-meta d-block">
+                        @if($template && $template->category)
+                        <span class="date">{{ $template->category->text }}</span>
+                        <span class="mx-1">&bullet;</span>
+                        <span>{{ $template->created_at->format('M d, Y') }}</span>
+                        @else
+                        <!-- Handle the case when author is not available -->
+                        <span class="date">No Category</span>
+                        @endif
+                      </div>
+                      <span>{{ $template->header }}</span>
+                    </div>
+                  </a>
+                </li>
+                @empty
+                <!-- Handle the case when $fTemplate is empty -->
+                <li>No templates available</li>
+                @endforelse
               </ul>
-          </ul>
+            </ul>
 
           </div>
 

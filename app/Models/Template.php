@@ -14,12 +14,19 @@ class Template extends Model
         'header',
         'banner',
         'logo',
+        'description',
         'user_id',
+        'category_id',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class); 
     }
 
     // Define a "deleting" event to delete related titles
@@ -32,6 +39,7 @@ class Template extends Model
             $template->titles()->delete();
             $template->subtitles()->delete();
             $template->descriptions()->delete();
+            $template->comments()->delete();
             $template->images()->delete();
         });
 
@@ -41,7 +49,7 @@ class Template extends Model
         });
     }
 
-    protected $with = ['user', 'titles', 'subtitles', 'descriptions', 'images'];
+    protected $with = ['user', 'category', 'titles', 'subtitles', 'descriptions', 'images', 'comments'];
 
     public function titles()
     {
@@ -58,16 +66,15 @@ class Template extends Model
         return $this->hasMany(Description::class, 'temp_id');
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'temp_id');
+    }
+
     public function images()
     {
         return $this->hasMany(Image::class, 'temp_id');
     }
-
-    // public function titles()
-    // {
-    //     // Define the relationship between Template and Title models
-    //     return $this->belongsTo(Title::class, 'title_id');
-    // }
 
     public function deleteExistingImages()
     {
@@ -88,7 +95,6 @@ class Template extends Model
             File::delete($path);
         }
     }
-
 
     public function delete()
     {
@@ -119,5 +125,8 @@ class Template extends Model
                 unlink($logoPath);
             }
         }
+
+        // Delete associated images
+        $this->images()->delete();
     }
 }

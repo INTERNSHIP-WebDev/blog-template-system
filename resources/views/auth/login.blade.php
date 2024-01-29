@@ -1,32 +1,15 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
-    <head>
-        
-        <meta charset="utf-8" />
-        <title>Login | Blog Template System</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-        <meta content="Themesbrand" name="author" />
-        <!-- App favicon -->
-        <link rel="shortcut icon" href="<?php echo url('theme')?>/dist/assets/images/favicon.ico">
-
-        <!-- Bootstrap Css -->
-        <link href="<?php echo url('theme')?>/dist/assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
-        <!-- Icons Css -->
-        <link href="<?php echo url('theme')?>/dist/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
-        <!-- App Css-->
-        <link href="<?php echo url('theme')?>/dist/assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
-        <!-- App js -->
-        <script src="<?php echo url('theme')?>/dist/assets/js/plugin.js"></script>
-
-        @extends('layouts.login')
-
-    </head>
-
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
 <body>
+
+@extends('layouts.login')
+
+@section('content')
     
     <div class="account-pages my-5 pt-sm-5">
         <div class="container">
@@ -150,15 +133,6 @@
         </div>
         <!-- end account-pages -->
 
-        <!-- JAVASCRIPT -->
-        <script src="<?php echo url('theme')?>/dist/assets/libs/jquery/jquery.min.js"></script>
-        <script src="<?php echo url('theme')?>/dist/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="<?php echo url('theme')?>/dist/assets/libs/metismenu/metisMenu.min.js"></script>
-        <script src="<?php echo url('theme')?>/dist/assets/libs/simplebar/simplebar.min.js"></script>
-        <script src="<?php echo url('theme')?>/dist/assets/libs/node-waves/waves.min.js"></script>
-        
-        <!-- App js -->
-        <script src="<?php echo url('theme')?>/dist/assets/js/app.js"></script>
-
+        @endsection
     </body>
 </html>

@@ -4,6 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog | Edit</title>
+
+    <script src="https://cdn.tiny.cloud/1/yggdk4mzovf9ua46iairb23jkr4gu7luzq2lyqic0sf6kkm8/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            height: 1000,
+            setup: function(editor) {
+                editor.on('init change', function() {
+                    editor.save();
+                });
+            },
+            plugins: 'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss fullscreen', // Add 'fullscreen' plugin here
+            toolbar: 'undo redo | fullscreen | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+            mergetags_list: [
+                { value: 'First.Name', title: 'First Name' },
+                { value: 'Email', title: 'Email' },
+            ],
+            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+            image_title: true,
+            automatic_uploads: true,
+            images_uplaod_url: '/upload',
+            file_picker_types: 'image',
+            file_picker_callback: function(cb, value, meta) {
+                var input = document.createElement('input');
+                input.setAttribute('type', 'file');
+                input.setAttribute('accept', 'image/*');
+                input.onchange = function() {
+                    var file = this.files[0];
+
+                    var reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = function () {
+                        var id = 'blobid' + (new Date()).getTime();
+                        var blobCache = tinymce.activeEditor.editorUpload.blobCache;
+                        var base64 = reader.result.split(',')[1];
+                        var blobInfo = blobCache.create(id, file, base64);
+                        blobCache.add(blobInfo);
+                        cb(blobInfo.blobUri(), { title: file.name });
+                    };
+                };
+                input.click();
+            }
+        });
+    </script>
+
 </head>
 <body>
 
@@ -59,79 +107,32 @@
                                     @endif
                                 </div>
 
-                                <div id="titles">
-                                    @if ($titles)
-                                        @foreach ($titles as $title)
-                                            <div class="title-fields" style="margin-bottom: 20px">
-                                                <label for="titles[{{ $title->id }}][text]">Title</label>
-                                                <div class="form-group d-flex">
-                                                    <input type="text" name="titles[{{ $title->id }}][text]" class="form-control" value="{{ old('titles.' . $title->id . '.text', $title->text) }}" required>
-                                                    <input type="hidden" name="titles[{{ $title->id }}][id]" value="{{ $title->id }}">
-                                                    <button type="button" class="btn btn-danger btn-sm ml-2" onclick="removeTitleField(this)">
-                                                        <i class="fas fa-times"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
+                                <div class="mb-3">
+                                    <label for="category_id" class="form-label">Category</label>
+                                    <select class="form-control" id="category_id" name="category_id">
+                                        <option value="">Select Category</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}" {{ $template->category_id == $category->id ? 'selected' : '' }}>{{ $category->text }}</option>
                                         @endforeach
-                                    @endif
+                                    </select>
                                 </div>
-                                <button type="button" id="addTitle"  class="btn btn-success">Add Title</button><br><br>
 
-                                <div id="subtitles">
-                                    @if ($subtitles)
-                                        @foreach ($subtitles as $subtitle)
-                                            <div class="subtitle-fields" style="margin-bottom: 20px">
-                                                <label for="subtitles[{{ $subtitle->id }}][text]">Subtitle</label>
-                                                <div class="form-group d-flex">
-                                                    <input type="text" name="subtitles[{{ $subtitle->id }}][text]" class="form-control" value="{{ old('subtitles.' . $subtitle->id . '.text', $subtitle->text) }}" required>
-                                                    <input type="hidden" name="subtitles[{{ $subtitle->id }}][id]" value="{{ $subtitle->id }}">
-                                                    <button type="button" class="btn btn-danger btn-sm ml-2" onclick="removeSubtitleField(this)">
-                                                        <i class="fas fa-times"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @endif
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Content</label>
+                                    <textarea type="text" id="description" class="form-control" aria-describedby="Text help" name="description" required>{{ old('description', $template->description) }}</textarea>
                                 </div>
-                                <button type="button" id="addSubtitle"  class="btn btn-warning">Add Subtitle</button><br><br>
-
-                                <div id="descriptions">
-                                    @if ($descriptions)
-                                        @foreach ($descriptions as $description)
-                                            <div class="description-fields" style="margin-bottom: 20px">
-                                                <label for="descriptions[{{ $description->id }}][text]">Description</label>
-                                                <div class="form-group d-flex">
-                                                    <input type="text" name="descriptions[{{ $description->id }}][text]" class="form-control" value="{{ old('descriptions.' . $description->id . '.text', $description->text) }}" required>
-                                                    <input type="hidden" name="descriptions[{{ $description->id }}][id]" value="{{ $description->id }}">
-                                                    <button type="button" class="btn btn-danger btn-sm ml-2" onclick="removeDescriptionField(this)">
-                                                        <i class="fas fa-times"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @endif
+                                
+                                <div class="mb-3">
+                                    <button type="button" id="addTitle" class="btn btn-success btn-sm my-2"><i class="bi bi-plus-circle"></i> Title</button>
+                                    <button type="button" id="addSubtitle" class="btn btn-success btn-sm my-2"><i class="bi bi-plus-circle"></i> Subtitle</button>
+                                    <button type="button" id="addDescription" class="btn btn-success btn-sm my-2"><i class="bi bi-plus-circle"></i> Description</button>
+                                    <button type="button" id="addImage" class="btn btn-success btn-sm my-2"><i class="bi bi-plus-circle"></i> Image</button>
+                                    <button type="button" id="addComment" class="btn btn-success btn-sm my-2"><i class="bi bi-plus-circle"></i> Comment</button>
                                 </div>
-                                <button type="button" id="addDescription"  class="btn btn-warning">Add Description</button><br><br>
 
-                                <div id="images">
-                                    @if ($images)
-                                        @foreach ($images as $image)
-                                            <div class="image-fields" style="margin-bottom: 20px">
-                                                <label for="images[{{ $image->id }}][text]">Image</label>
-                                                <div class="form-group d-flex">
-                                                    <input type="text" name="images[{{ $image->id }}][text]" class="form-control" value="{{ old('images.' . $image->id . '.text', $image->text) }}" required>
-                                                    <input type="hidden" name="images[{{ $image->id }}][id]" value="{{ $image->id }}">
-                                                    <button type="button" class="btn btn-danger btn-sm ml-2" onclick="removeImageField(this)">
-                                                        <i class="fas fa-times"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @endif
+                                <div class="mb-3">
+                                    <button type="submit" class="btn btn-primary">Update Blog</button>
                                 </div>
-                                <button type="button" id="addImage"  class="btn btn-warning">Add Image</button><br><br>
-
-                                <button type="submit" class="btn btn-primary">Update Blog</button>
                             </form>
 
                             </div>
@@ -141,137 +142,6 @@
             </div> <!-- container-fluid -->
         </div><!-- End Page-content -->
     </div>
-
-<script>
-    let titleIndex = 1; // Initialize the title index with existing titles count
-
-    // Function to add a new title field
-    function addTitleField() {
-        let titlesContainer = document.getElementById('titles');
-        let newTitleIndex = titleIndex++;
-        let newTitle = document.createElement('div');
-        newTitle.className = 'title';
-        newTitle.innerHTML = `
-            <div class="title-fields" style="margin-bottom: 20px">
-                <label for="titles[${newTitleIndex}][text]">{{ __('Title') }}</label>
-                <div class="form-group d-flex">
-                    <input type="text" name="titles[${newTitleIndex}][text]" class="form-control" placeholder="Title" required>
-                    <button type="button" class="btn btn-danger btn-sm ml-2" onclick="removeTitleField(this)">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-        `;
-        titlesContainer.appendChild(newTitle);
-    }
-
-    // Function to remove a title field
-    function removeTitleField(button) {
-        let titleContainer = button.closest('.title-fields');
-        titleContainer.remove();
-    }
-
-    document.getElementById('addTitle').addEventListener('click', addTitleField);
-</script>
-
-
-<script>
-    let subtitleIndex = 1; // Initialize the title index with existing titles count
-
-    // Function to add a new title field
-    function addSubtitleField() {
-        let subtitlesContainer = document.getElementById('subtitles');
-        let newSubtitleIndex = subtitleIndex++;
-        let newSubtitle = document.createElement('div');
-        newSubtitle.className = 'subtitle';
-        newSubtitle.innerHTML = `
-            <div class="subtitle-fields" style="margin-bottom: 20px">
-                <label for="subtitles[${newSubtitleIndex}][text]">{{ __('Subtitle') }}</label>
-                <div class="form-group d-flex">
-                    <input type="text" name="subtitles[${newSubtitleIndex}][text]" class="form-control" placeholder="Subtitle" required>
-                    <button type="button" class="btn btn-danger btn-sm ml-2" onclick="removeSubtitleField(this)">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-        `;
-        subtitlesContainer.appendChild(newSubtitle);
-    }
-
-    // Function to remove a title field
-    function removeSubtitleField(button) {
-        let subtitleContainer = button.closest('.subtitle-fields');
-        subtitleContainer.remove();
-    }
-
-    document.getElementById('addSubtitle').addEventListener('click', addSubtitleField);
-</script>
-
-
-<script>
-    let descriptionIndex = 1; // Initialize the title index with existing description count
-
-    // Function to add a new title field
-    function addDescriptionField() {
-        let descriptionsContainer = document.getElementById('descriptions');
-        let newDescriptionIndex = descriptionIndex++;
-        let newDescription = document.createElement('div');
-        newDescription.className = 'description';
-        newDescription.innerHTML = `
-            <div class="description-fields" style="margin-bottom: 20px">
-                <label for="descriptions[${newDescriptionIndex}][text]">{{ __('Description') }}</label>
-                <div class="form-group d-flex">
-                    <input type="text" name="descriptions[${newDescriptionIndex}][text]" class="form-control" placeholder="Description" required>
-                    <button type="button" class="btn btn-danger btn-sm ml-2" onclick="removeDescriptionField(this)">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-        `;
-        descriptionsContainer.appendChild(newDescription);
-    }
-
-    // Function to remove a title field
-    function removeDescriptionField(button) {
-        let descriptionContainer = button.closest('.description-fields');
-        descriptionContainer.remove();
-    }
-
-    document.getElementById('addDescription').addEventListener('click', addDescriptionField);
-</script>
-
-<script>
-    let imageIndex = 1; // Initialize the title index with existing titles count
-
-    // Function to add a new title field
-    function addImageField() {
-        let imagesContainer = document.getElementById('images');
-        let newImageIndex = imageIndex++;
-        let newImage = document.createElement('div');
-        newImage.className = 'image';
-        newImage.innerHTML = `
-            <div class="image-fields" style="margin-bottom: 20px">
-                <label for="images[${newImageIndex}][text]">{{ __('Image') }}</label>
-                <div class="form-group d-flex">
-                    <input type="text" name="images[${newImageIndex}][text]" class="form-control" placeholder="Image" required>
-                    <button type="button" class="btn btn-danger btn-sm ml-2" onclick="removeImageField(this)">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-        `;
-        imagesContainer.appendChild(newImage);
-    }
-
-    // Function to remove a title field
-    function removeImageField(button) {
-        let imageContainer = button.closest('.image-fields');
-        imageContainer.remove();
-    }
-
-    document.getElementById('addImage').addEventListener('click', addImageField);
-</script>
-
     <!-- end main content-->
 @endsection
 

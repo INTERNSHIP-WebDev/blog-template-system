@@ -1,112 +1,57 @@
-<!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
 
-    <div class="footer-content">
-        <div class="container">
 
-            <div class="row g-5">
-                <div class="col-lg-5">
-                    <h3 class="footer-heading text-center">About ZenBlog</h3>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam ab, perspiciatis beatae autem deleniti voluptate nulla a dolores, exercitationem eveniet libero laudantium recusandae officiis qui aliquid blanditiis omnis quae. Explicabo?</p>
-                    <p><a href="about.html" class="footer-link-more">Learn More</a></p>
-                </div>
-                <div class="col-lg-2">
-                    <h3 class="footer-heading text-center">Social Media</h3>
-                    <ul class="footer-links list-unstyled">
-                        <li><a href="index.html"><i class="bi bi-chevron-right"></i> Facebook</a></li>
-                        <li><a href="index.html"><i class="bi bi-chevron-right"></i> Instagram</a></li>
-                        <li><a href="category.html"><i class="bi bi-chevron-right"></i> Twitter</a></li>
-                        <li><a href="single-post.html"><i class="bi bi-chevron-right"></i> LinkedIn Post</a></li>
-                        <li><a href="about.html"><i class="bi bi-chevron-right"></i>YouTube</a></li>
-                        <li><a href="contact.html"><i class="bi bi-chevron-right"></i> Reddit</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-5">
-                    <h3 class="footer-heading text-center">Recent Posts</h3>
+	<!-- Footer -->
 
-                    <ul class="footer-links footer-blog-entry list-unstyled">
-                        <li>
-                            <a href="single-post.html" class="d-flex align-items-center">
-                                <img src="assets/img/post-sq-1.jpg" alt="" class="img-fluid me-3">
-                                <div>
-                                    <div class="post-meta d-block"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                                    <span>5 Great Startup Tips for Female Founders</span>
-                                </div>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="single-post.html" class="d-flex align-items-center">
-                                <img src="assets/img/post-sq-2.jpg" alt="" class="img-fluid me-3">
-                                <div>
-                                    <div class="post-meta d-block"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                                    <span>What is the son of Football Coach John Gruden, Deuce Gruden doing Now?</span>
-                                </div>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="single-post.html" class="d-flex align-items-center">
-                                <img src="assets/img/post-sq-3.jpg" alt="" class="img-fluid me-3">
-                                <div>
-                                    <div class="post-meta d-block"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                                    <span>Life Insurance And Pregnancy: A Working Mom’s Guide</span>
-                                </div>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="single-post.html" class="d-flex align-items-center">
-                                <img src="assets/img/post-sq-4.jpg" alt="" class="img-fluid me-3">
-                                <div>
-                                    <div class="post-meta d-block"><span class="date">Culture</span> <span class="mx-1">&bullet;</span> <span>Jul 5th '22</span></div>
-                                    <span>How to Avoid Distraction and Stay Focused During Video Calls?</span>
-                                </div>
-                            </a>
-                        </li>
-
-                    </ul>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="footer-legal">
-        <div class="container">
-
-            <div class="row justify-content-between">
-                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                    <div class="copyright">
-                        © Copyright <strong><span>ZenBlog</span></strong>. All Rights Reserved
-                    </div>
-
-                    <div class="credits">
-                        <!-- All the links in the footer should remain intact. -->
-                        <!-- You can delete the links only if you purchased the pro version. -->
-                        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-                        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/herobiz-bootstrap-business-template/ -->
-                        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-                    </div>
-
-                </div>
-
-                <div class="col-md-6">
-                    <div class="social-links mb-3 mb-lg-0 text-center text-md-end">
-                        <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-                        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="google-plus"><i class="bi bi-skype"></i></a>
-                        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-
-</footer>
-
-<a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+	<footer class="footer">
+		<div class="container">
+			<div class="row row-lg-eq-height">
+				<div class="col-lg-9 order-lg-1 order-2">
+					<div class="footer_content">
+						<div class="footer_logo"><a href="#">avision</a></div>
+						<div class="footer_social">
+							<ul>
+                            @if(isset($socials))
+                                @if($socials['facebook'] == TRUE)
+                                <li class="footer_social_facebook"><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                                @endif
+                                @if($socials['twitter'] == TRUE)
+                                <li class="footer_social_twitter"><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                                @endif
+                                @if($socials['pinterest'] == TRUE)
+                                <li class="footer_social_pinterest"><a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a></li>
+                                @endif
+                                @if($socials['instagram'] == TRUE)
+                                <li class="footer_social_instagram"><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                                @endif
+                                @if($socials['google'] == TRUE)
+                                <li class="footer_social_google"><a href="#"><i class="fa fa-google" aria-hidden="true"></i></a></li>
+                                @endif
+                            @endif
+							</ul>
+						</div>
+						<div class="copyright"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Nissi Cup Noodles | Clint Garcia | Orange Juice Seal Escala | Anjel Baby by Troye Sivan Babanto | Sam pot </a>
+<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></div>
+					</div>
+				</div>
+				<div class="col-lg-3 order-lg-2 order-1">
+					<div class="subscribe">
+						<div class="subscribe_background"></div>
+						<div class="subscribe_content">
+							<div class="subscribe_title">Subscribe</div>
+							<form action="#">
+								<input type="email" class="sub_input" placeholder="Your Email" required="required">
+								<button class="sub_button">
+									<svg version="1.1" id="link_arrow_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+										 width="19px" height="13px" viewBox="0 0 19 13" enable-background="new 0 0 19 13" xml:space="preserve">
+										<polygon fill="#FFFFFF" points="12.475,0 11.061,0 17.081,6.021 0,6.021 0,7.021 17.038,7.021 11.06,13 12.474,13 18.974,6.5 "/>
+									</svg>
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+</div>

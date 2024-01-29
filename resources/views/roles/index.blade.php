@@ -41,7 +41,7 @@
                                 <div class="card">
                                     <div class="card-body border-bottom">
                                         <div class="d-flex align-items-center">
-                                            <h5 class="mb-0 card-title flex-grow-1">Blogs Lists</h5>
+                                            <h5 class="mb-0 card-title flex-grow-1">Roles Lists</h5>
                                             <div class="flex-shrink-0">
                                                 @can('create-role')
                                                     <a href="{{ route('roles.create') }}" class="btn btn-success btn-sm my-2"><i class="bi bi-plus-circle"></i> Add New Role</a>

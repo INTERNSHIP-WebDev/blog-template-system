@@ -47,7 +47,7 @@
                                                 <div class="d-flex flex-wrap">
                                                     <div class="me-3">
                                                         <p class="text-muted mb-2">Total Post</p>
-                                                        <h5 class="mb-0">120</h5>
+                                                        <h5 class="mb-0">{{ $totalPosts }}</h5>
                                                     </div>
     
                                                     <div class="avatar-sm ms-auto">
@@ -67,8 +67,8 @@
 
                                                 <div class="d-flex flex-wrap">
                                                     <div class="me-3">
-                                                        <p class="text-muted mb-2">Pages</p>
-                                                        <h5 class="mb-0">86</h5>
+                                                        <p class="text-muted mb-2">Concerns</p>
+                                                        <h5 class="mb-0">{{ $totalConcerns }}</h5>
                                                     </div>
     
                                                     <div class="avatar-sm ms-auto">
@@ -87,7 +87,7 @@
                                                 <div class="d-flex flex-wrap">
                                                     <div class="me-3">
                                                         <p class="text-muted mb-2">Comments</p>
-                                                        <h5 class="mb-0">4,235</h5>
+                                                        <h5 class="mb-0">{{ $totalComments }}</h5>
                                                     </div>
     
                                                     <div class="avatar-sm ms-auto">

@@ -1,6 +1,5 @@
 {{-- blog.layouts.layout --}}
 @include("blog.layouts.header")
-@include("blog.layouts.nav")
 
 @yield("content")
 

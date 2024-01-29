@@ -2,91 +2,158 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use App\Models\Title;
+use App\Models\Subtitle;
+use App\Models\Description;
+use App\Models\Image;
+use App\Models\Template;
+use App\Models\User;
 use App\Models\Category;
-use App\Http\Requests\StoreCategoryRequest;
-use App\Http\Requests\UpdateCategoryRequest;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class CategoryController extends Controller
 {
     /**
-     * Instantiate a new CategoryController instance.
+     * Create a new controller instance.
+     *
+     * @return void
      */
     public function __construct()
     {
-       $this->middleware('auth');
-       $this->middleware('permission:create-category|edit-category|delete-category', ['only' => ['index','show']]);
-       $this->middleware('permission:create-category', ['only' => ['create','store']]);
-       $this->middleware('permission:edit-category', ['only' => ['edit','update']]);
-       $this->middleware('permission:delete-category', ['only' => ['destroy']]);
+        $this->middleware('auth');
     }
 
     /**
-     * Display a listing of the resource.
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index(): View
+    public function index()
     {
-        return view('categories.index', [
-            'categories' => Category::latest()->paginate(3)
-        ]);
+        $categories = Category::all();
+        return view('categories.index', compact('categories'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new category.
+     *
+     * @return \Illuminate\View\View
      */
-    public function create(): View
+    public function create()
     {
         return view('categories.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created category in the database.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(StoreCategoryRequest $request): RedirectResponse
+    public function store(Request $request)
     {
-        Category::create($request->all());
-        return redirect()->route('categories.index')
-                ->withSuccess('New category is added successfully.');
+        try {
+            $request->validate([
+                'text' => 'required|string|max:255',
+            ]);
+
+            // Create a new category instance and save to the database
+            Category::create([
+                'text' => $request->input('text'),
+            ]);
+
+            // Alert::success('Success!', 'Added category successfully.');
+
+            // Redirect to the category index page or any other page after creation
+            return redirect()->route('categories.index')->with('success', 'Category added successfully!');
+        } catch (\Exception $e) {
+            // Alert::error('Error', 'Error Message: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function show($id)
+    {
+        $category = Category::findOrFail($id);
+        return view('categories.show', compact('category'));
     }
 
     /**
-     * Display the specified resource.
+     * Show the form for editing the specified category.
+     *
+     * @param  int  $id
+     * @return \Illuminate\View\View
      */
-    public function show(Category $category): View
+    public function edit($id)
     {
-        return view('categories.show', [
-            'category' => $category
-        ]);
+        $category = Category::findOrFail($id);
+        return view('categories.edit', compact('category'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Update the specified category in the database.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function edit(Category $category): View
+    public function update(Request $request, $id)
     {
-        return view('categories.edit', [
-            'category' => $category
-        ]);
+        try {
+            // Validate the incoming request data
+            $validatedData = $request->validate([
+                'text' => 'required|string|max:255',
+                // Add validation rules for other fields based on your Category model
+            ]);
+
+            // Find the category by ID and update its information
+            $category = Category::findOrFail($id);
+            $category->update($validatedData);
+
+            // Alert::success('Success!', 'Updated category successfully.');
+
+            // Redirect to the category index page or any other page after update
+            return redirect()->route('categories.index')->with('success', 'Category updated successfully!');
+        } catch (\Exception $e) {
+            // Alert::error('Error', 'Error Message: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse
+    public function destroy($id)
     {
-        $category->update($request->all());
-        return redirect()->back()
-                ->withSuccess('Category is updated successfully.');
+        try {
+            $category = Category::findOrFail($id);
+            $category->delete();
+
+            return response()->json(['success' => true, 'message' => 'Category deleted successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Category $category): RedirectResponse
+    public function category_page()
     {
-        $category->delete();
-        return redirect()->route('categories.index')
-                ->withSuccess('Category is deleted successfully.');
+        $titles = Title::all();
+        $heroTemplates = Template::latest('created_at')->take(4)->get();
+        $latestTemplate = Template::latest()->first();
+        
+        // Check if $latestTemplate is null
+        if ($latestTemplate) {
+            $templates = Template::whereNotIn('id', [$latestTemplate->id])->latest('created_at')->paginate(9);
+        } else {
+            $templates = Template::latest('created_at')->paginate(9);
+        }
+    
+        $fTemplate = Template::latest('created_at')->paginate(4);
+        $users = User::all();
+        $subtitles = Subtitle::all();
+        $descriptions = Description::all();
+        $categories = Category::all();
+        return view('category', compact('categories', 'heroTemplates', 'descriptions', 'subtitles', 'titles', 'fTemplate', 'latestTemplate', 'templates', 'users'));
     }
+
 }

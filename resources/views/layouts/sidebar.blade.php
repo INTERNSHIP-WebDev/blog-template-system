@@ -73,14 +73,14 @@
             </li>
 
             <li>
-                <a href="apps-filemanager.html" class="waves-effect">
+                <a href="{{ route('templates.gallery') }}" class="waves-effect">
                     <i class="bx bx-images"></i>
                     <span key="t-gallery">Gallery</span>
                 </a>
             </li>
 
             <li>
-                <a href="apps-filemanager.html" class="waves-effect">
+                <a href="{{ route('categories.index') }}" class="waves-effect">
                     <i class="bx bx-customize"></i>
                     <span key="t-category">Categories</span>
                 </a>
@@ -94,7 +94,7 @@
                     <span key="t-email">Emails</span>
                 </a>
                 <ul class="sub-menu" aria-expanded="false">
-                    <li><a href="email-inbox.html" key="t-inbox">Inbox</a></li>
+                    <li><a href="{{ route('emails.index') }}" key="t-inbox">Inbox</a></li>
                     <li><a href="email-read.html" key="t-read-email">Read Email</a></li>
                     <li>
                         <a href="javascript: void(0);">

@@ -30,13 +30,27 @@ a:hover {
   text-decoration: none;
 }
 
-h1,
+/* h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
   font-family: var(--font-primary);
+} */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'garet';
+}
+
+@font-face {
+  font-family: 'garet';
+  src: url('backend/assets/fonts/Garet-Book.ttf');
 }
 
 #main {
@@ -136,7 +150,7 @@ section {
 --------------------------------------------------------------*/
 .page-title {
   font-size: 70px;
-  color: var(--color-black);
+  color: var(--color-white);
 }
 
 /* Form Input Fieldds */
@@ -165,7 +179,7 @@ section {
   height: 90px;
   transition: all 0.5s;
   z-index: 997;
-  background: #f2f2f2;
+
 }
 
 .header.sticked {
@@ -1231,7 +1245,7 @@ section {
 --------------------------------------------------------------*/
 .footer {
   overflow: hidden;
-  background: rgba(var(--color-black-rgb), 0.9);
+  background: var(--color-prussian-blue);
   font-size: 16px;
   color: rgba(var(--color-white-rgb), 0.7);
 }
@@ -1301,7 +1315,7 @@ section {
 }
 
 .footer .footer-legal {
-  background: var(--color-black);
+  background: var(--color-rich-black);
   padding: 40px 0;
 }
 

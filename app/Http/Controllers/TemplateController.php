@@ -7,6 +7,8 @@ use App\Models\Title;
 use App\Models\Subtitle;
 use App\Models\Description;
 use App\Models\Image;
+use App\Models\Category;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreTemplateRequest;
 use App\Http\Requests\UpdateTemplateRequest;
@@ -14,7 +16,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\RedirectResponse;
 use DB;
-// use RealRashid\SweetAlert\Facades\Alert;
 
 class TemplateController extends Controller
 {
@@ -37,16 +38,11 @@ class TemplateController extends Controller
         $templates = Template::all();
         return view('templates.index', compact('templates'));
     }
-    // public function index()
-    // {
-    //     // Assuming you want to get templates for the currently authenticated user
-    //     $templates = auth()->user()->templates;
-    //     return view('templates.index', compact('templates'));
-    // }
-
+    
     public function create()
     {
-        return view('templates.create');
+        $categories = Category::all(); 
+        return view('templates.create', compact('categories'));
     }
 
     /**
@@ -57,19 +53,24 @@ class TemplateController extends Controller
         try {
             $request->validate([
                 'header' => 'nullable|string|max:255',
+                'category_id' => 'required|exists:categories,id',
                 'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:25000',
                 'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:25000',
+                'description' => 'required|string|max:250000',
                 'titles.*.text' => 'required|string|max:255',
                 'subtitles.*.text' => 'required|string|max:255',
                 'descriptions.*.text' => 'required|string|max:255',
-                // 'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:25000',
+                'comments.*.name' => 'required|string|max:255',
+                'comments.*.message' => 'required|string|max:7000',
+                // 'images.*.file' => 'required|image|mimes:jpeg,png,jpg,gif|max:25000',
             ]);
 
             // Assuming the authenticated user is creating the template
             $user_id = auth()->id();
 
-            // $bannerName = null;
-            // $logoName = null;
+            // Upload banner and logo
+            $bannerName = null;
+            $logoName = null;
     
             if ($request->hasFile('banner')) {
                 $banner = $request->file('banner');
@@ -87,9 +88,11 @@ class TemplateController extends Controller
 
             $template = Template::create([
                 'user_id' => $user_id,
+                'category_id' => $request->input('category_id'),
                 'header' => $request->input('header'),
                 'banner' => $request->input('banner'),
                 'logo' => $request->input('logo'),
+                'description' => $request->input('description'),
             ]);
 
            // Process and store each title
@@ -126,16 +129,29 @@ class TemplateController extends Controller
             }
 
             // Process and store each image
-            // if ($request->hasFile('images')) {
-            //     foreach ($request->file('images') as $imageFile) {
-            //         $imageName = 'image_' . time() . '.' . $imageFile->getClientOriginalExtension();
-            //         $imageFile->move(public_path('images/blog_images/'), $imageName);
-            //         Image::create([
-            //             'temp_id' => $template->id,
-            //             'file' => $imageName,
-            //         ]);
-            //     }
-            // }
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $imageData) {
+                    $imageName = 'image_' . time() . '.' . $imageData->getClientOriginalExtension();
+                    $imagePath = $imageData->storeAs('public/images/blog_images', $imageName);
+                    $imagePath = str_replace('public/', '', $imagePath);
+                    Image::create([
+                        'temp_id' => $template->id,
+                        'file' => $imagePath,
+                    ]);
+                }
+            }
+
+            // Process and store each comment
+            if ($request->has('comments')) {
+                foreach ($request->input('comments') as $commentData) {
+                    // You may also add validation for each description data
+                    Comment::create([
+                        'temp_id' => $template->id,
+                        'name' => $commentData['name'],
+                        'message' => $commentData['message'],
+                    ]);
+                }
+            }
 
             return redirect()->route('templates.index')->with('success', 'Template added successfully!');
         } catch (\Exception $e) {
@@ -147,15 +163,30 @@ class TemplateController extends Controller
     /**
      * Display the specified resource.
      */
+    // public function show($id)
+    // {
+    //     try {
+    //         $template = Template::findOrFail($id);
+    //         return view('templates.show', compact('template'));
+    //     } catch (ModelNotFoundException $e) {
+    //         return redirect()->route('templates.index')->with('error', 'Template not found.');
+    //     }
+    // }
+
     public function show($id)
     {
         try {
             $template = Template::findOrFail($id);
-            return view('templates.show', compact('template'));
+            // Pass the description through htmlspecialchars_decode to decode HTML entities
+            $template->description = htmlspecialchars_decode($template->description);
+
+             // Fetch comments related to this template
+            $comments = Comment::where('temp_id', $id)->get();
+            return view('templates.show', compact('template', 'comments'));
         } catch (ModelNotFoundException $e) {
             return redirect()->route('templates.index')->with('error', 'Template not found.');
         }
-    }
+    }   
 
 
     /**
@@ -165,12 +196,14 @@ class TemplateController extends Controller
     {
         try {
             $template = Template::findOrFail($id);
+            $categories = Category::all(); 
             $titles = Title::where('temp_id', $template->id)->get();
             $subtitles = Subtitle::where('temp_id', $template->id)->get();
             $descriptions = Description::where('temp_id', $template->id)->get();
+            $comments = Comment::where('temp_id', $template->id)->get();
             $images = Image::where('temp_id', $template->id)->get();
             
-            return view('templates.edit', compact('template', 'titles', 'subtitles', 'descriptions', 'images'));
+            return view('templates.edit', compact('template', 'categories', 'titles', 'subtitles', 'descriptions', 'comments', 'images'));
         } catch (ModelNotFoundException $e) {
             return redirect()->route('templates.index')->with('error', 'Template not found.');
         }
@@ -186,17 +219,23 @@ class TemplateController extends Controller
                 'header' => 'nullable|string|max:255',
                 'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:25000',
                 'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:25000',
+                'description' => 'nullable|string|max:250000',
                 'titles.*.text' => 'required|string|max:255',
                 'titles.*.id' => 'nullable|exists:titles,id',
                 'subtitles.*.text' => 'required|string|max:255', 
                 'subtitles.*.id' => 'nullable|exists:subtitles,id',
                 'descriptions.*.text' => 'required|string|max:255', 
                 'descriptions.*.id' => 'nullable|exists:descriptions,id',
-                // 'images.*.text' => 'required|string|max:255', 
-                // 'images.*.file' => 'required|image|mimes:jpeg,png,jpg,gif|max:25000', 
+                'comments.*.name' => 'required|string|max:255', 
+                'comments.*.message' => 'required|string|max:7000', 
+                'comments.*.id' => 'nullable|exists:descriptions,id',
             ]);
 
             $template = Template::findOrFail($id);
+
+            // Update category_id
+            $template->category_id = $request->input('category_id');
+            $template->save();
 
             // Assuming the authenticated user is updating the template
             $user_id = auth()->id();
@@ -209,6 +248,7 @@ class TemplateController extends Controller
                 'header' => $request->input('header'),
                 'banner' => $request->input('banner', $oldBanner),
                 'logo' => $request->input('logo', $oldLogo),
+                'description' => $request->input('description'),
             ]);
 
             if ($request->hasFile('banner')) {
@@ -318,48 +358,34 @@ class TemplateController extends Controller
                 }
             }
 
-            // // Delete images that are not present in the form
-            // $imagesToDelete = collect($template->images->pluck('id'))->diff(
-            //     collect($request->input('images'))->pluck('id')
-            // );
+            // Delete comments that are not present in the form
+            if ($template->comments) {
+                $commentsToDelete = collect($template->comments->pluck('id'))->diff(
+                    collect($request->input('comments'))->pluck('id')
+                );
 
-            // Image::whereIn('id', $imagesToDelete)->delete();
+                Comment::whereIn('id', $commentsToDelete)->delete();
+            }
 
-            //  // Process and update each image
-            // if ($request->has('images')) {
-            //     foreach ($request->input('images') as $imageData) {
-            //         // Check if the title has an 'id' - update existing title
-            //         if (isset($imageData['id'])) {
-            //             Image::findOrFail($imageData['id'])->update([
-            //                 'text' => $imageData['text'],
-            //             ]);
-            //         } else {
-            //             // Create a new image
-            //             Image::create([
-            //                 'temp_id' => $template->id,
-            //                 'file' => $imageData['file'],
-            //             ]);
-            //         }
-            //     }
-            // }
-
-
-            // Delete previous images if new ones are provided
-            // if ($request->has('images')) {
-            //     $template->images()->delete();
-            // }
-
-            // // Process and store each image
-            // if ($request->has('images')) {
-            //     foreach ($request->file('images') as $imageFile) {
-            //         $imageName = 'image_' . time() . '.' . $imageFile->getClientOriginalExtension();
-            //         $imageFile->move(public_path('images/blog_images/'), $imageName);
-            //         Image::create([
-            //             'temp_id' => $template->id,
-            //             'file' => $imageName,
-            //         ]);
-            //     }
-            // }
+            // Process and update each comment
+            if ($request->has('comments')) {
+                foreach ($request->input('comments') as $commentData) {
+                    // Check if the comment has an 'id' - update existing comment
+                    if (isset($commentData['id'])) {
+                        Comment::findOrFail($commentData['id'])->update([
+                            'name' => $commentData['name'],
+                            'message' => $commentData['message'],
+                        ]);
+                    } else {
+                        // Create a new comment
+                        Comment::create([
+                            'temp_id' => $template->id,
+                            'name' => $commentData['name'],
+                            'message' => $commentData['message'],
+                        ]);
+                    }
+                }
+            }
 
             return redirect()->route('templates.index')->with('success', 'Template updated successfully!');
         } catch (\Exception $e) {
@@ -379,4 +405,19 @@ class TemplateController extends Controller
             return redirect()->route('templates.index')
                 ->withSuccess('Template is deleted successfully.');
     }
+
+    // public function upload(Request $request){
+
+    //     $fileName=$request->file('file')->getClientOriginalName();
+    //     $path=$request->file('file')->storeAs('gallery', $fileName, 'public');
+    //     return response()->json(['location'=>"public/images/gallery/$path"]);
+
+    // }
+
+    public function gallery()
+    {
+        $templates = Template::all();
+        return view('templates.gallery', compact('templates'));
+    }
 }
+    

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Template;
+use App\Models\Concern;
+use App\Models\Comment;
 
 class HomeController extends Controller
 {
@@ -23,6 +26,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $totalPosts = Template::count();
+        $totalConcerns = Concern::count();
+        $totalComments = Comment::count();
+        return view('home', compact('totalPosts', 'totalConcerns', 'totalComments'));
     }
 }

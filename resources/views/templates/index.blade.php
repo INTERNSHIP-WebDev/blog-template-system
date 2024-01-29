@@ -56,6 +56,7 @@
                                                     <tr>
                                                         <th scope="col">No</th>
                                                         <th scope="col">Author</th>
+                                                        <th scope="col">Category</th>
                                                         <th scope="col">Header</th>
                                                         <th scope="col">Banner</th>
                                                         <th scope="col">Logo</th>
@@ -68,6 +69,7 @@
                                                             <td>{{ $loop->iteration }}</td>
                                                             <!-- Retrieve the user associated with the template -->
                                                             <td>{{ $template->user->name }}</td>
+                                                            <td>{{ $template->category->text }}</td>
                                                             <td>{{ $template->header }}</td>
                                                             <td>
                                                                 @if ($template->banner)
@@ -120,6 +122,7 @@
         <!-- Right bar overlay-->
         <div class="rightbar-overlay"></div>
 
+        
         @endsection
     </body>
 </html>

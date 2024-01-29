@@ -66,8 +66,19 @@
     <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
 
     <!-- dashboard blog init -->
-    <script src="assets/js/pages/dashboard-blog.init.js"></script>
+    <script src="<?php echo url('theme')?>/dist/assets/js/pages/dashboard-blog.init.js"></script>
 
-    <script src="assets/js/app.js"></script>
+    <script src="<?php echo url('theme')?>/dist/assets/js/app.js"></script>
+
+    <!-- file-manager js -->
+    <script src="<?php echo url('theme')?>/dist/assets/js/pages/file-manager.init.js"></script>
+
+    <script src="<?php echo url('theme')?>/dist/assets/js/app.js"></script>
+
+    <!-- email editor init -->
+    <script src="<?php echo url('theme')?>/dist/assets/js/pages/email-editor.init.js"></script>
+
+    <!-- App js -->
+    <script src="<?php echo url('theme')?>/dist/assets/js/app.js"></script>
 </body>
 </html>
