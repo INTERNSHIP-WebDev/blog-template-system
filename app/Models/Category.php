@@ -12,4 +12,9 @@ class Category extends Model
     protected $fillable = [
         'text',
     ];
+
+    public function templates()
+    {
+        return $this->hasMany(Template::class);
+    }
 }

@@ -67,8 +67,9 @@
                     <span key="t-blog">Blogs</span>
                 </a>
                 <ul class="sub-menu" aria-expanded="false">
-                    <li><a href="{{ route('templates.index') }}" key="t-blog-list">Blog List</a></li>
-                    <li><a href="blog-grid.html" key="t-blog-grid">Blog Grid</a></li>
+                    <li><a href="{{ route('templates.index') }}" key="t-blog-list">Manage Blogs</a></li>
+                    <li><a href="{{ route('templates.list') }}" key="t-blog-grid">Blog List</a></li>
+                    <li><a href="{{ route('templates.grid') }}" key="t-blog-grid">Blog Grid</a></li>
                 </ul>
             </li>
 

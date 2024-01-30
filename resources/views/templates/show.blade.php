@@ -89,15 +89,13 @@
                                                         </div>
                                                         <hr>
 
-                                                        <div class="my-5">
-                                                            <img src="assets/images/small/img-2.jpg" alt="" class="img-thumbnail mx-auto d-block">
-                                                        </div>
-
                                                         <hr>
 
                                                         <div class="mt-4">
 
-                                                        {!! $template->description !!}
+                                                        <div style="max-width: 100%; overflow-x: hidden;">
+                                                            <p>{!! $template->description !!}</p>
+                                                        </div>
                            
                                                         <hr>
                                                         <div class="mt-5">

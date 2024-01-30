@@ -21,12 +21,12 @@
 	</div>
 	<nav class="menu_nav">
 		<ul class="menu_mm">
-			<li class="menu_mm"><a href="index.html">home</a></li>
+			<li class="menu_mm"><a href="{{ url('/') }}">home</a></li>
 			<!-- <li class="menu_mm"><a href="#">Fashion</a></li>
 			<li class="menu_mm"><a href="#">Gadgets</a></li>
 			<li class="menu_mm"><a href="#">Lifestyle</a></li> -->
-			<li class="menu_mm"><a href="{{ route('about') }}">About Us</a></li>
-			<li class="menu_mm"><a href="{{ route('concern') }}">Contact</a></li>
+			<li class="menu_mm"><a href="#">About Us</a></li>
+			<li class="menu_mm"><a href="#">Contact</a></li>
 		</ul>
 	</nav>
 </div>
@@ -904,7 +904,7 @@
 													<div class="side_post_content">
 														<div class="side_post_title">{{ $sidebarPost->id }}{{ $sidebarPost->header }}</div>
 														<small class="post_meta">#<span>{{ $sidebarPost->created_at->format('M, d') }}</span></small>
-													</div>
+													</div>	
 												</div>
 											</a>
 										</div>

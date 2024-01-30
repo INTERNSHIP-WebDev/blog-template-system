@@ -4,6 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emails | Compose Message</title>
+
+    <script src="https://cdn.tiny.cloud/1/yggdk4mzovf9ua46iairb23jkr4gu7luzq2lyqic0sf6kkm8/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            height: 500,
+            setup: function(editor) {
+                editor.on('init change', function() {
+                    editor.save();
+                });
+            },
+            plugins: 'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss fullscreen', // Add 'fullscreen' plugin here
+            toolbar: 'undo redo | fullscreen | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+            mergetags_list: [
+                { value: 'First.Name', title: 'First Name' },
+                { value: 'Email', title: 'Email' },
+            ],
+            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+            image_title: true,
+            automatic_uploads: true,
+            images_uplaod_url: '/upload',
+            file_picker_types: 'image',
+            file_picker_callback: function(cb, value, meta) {
+                var input = document.createElement('input');
+                input.setAttribute('type', 'file');
+                input.setAttribute('accept', 'image/*');
+                input.onchange = function() {
+                    var file = this.files[0];
+
+                    var reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = function () {
+                        var id = 'blobid' + (new Date()).getTime();
+                        var blobCache = tinymce.activeEditor.editorUpload.blobCache;
+                        var base64 = reader.result.split(',')[1];
+                        var blobInfo = blobCache.create(id, file, base64);
+                        blobCache.add(blobInfo);
+                        cb(blobInfo.blobUri(), { title: file.name });
+                    };
+                };
+                input.click();
+            }
+        });
+    </script>
 </head>
 <body>
 
@@ -72,22 +119,26 @@
                                         
                                     <div class="card">
                                         <div class="card-body">
-                                            <form action="{{ route('emails.store') }}" method="post">
-                                                @csrf
-                                                <div class="mb-3">
-                                                    <label for="email" class="form-label">To</label>
-                                                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter recipient email" required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="subject" class="form-label">Subject</label>
-                                                    <input type="text" class="form-control" id="subject" name="subject" placeholder="Enter email subject" required>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="message" class="form-label">Message</label>
-                                                    <textarea class="form-control" id="message" name="message" rows="6" placeholder="Enter your message" required></textarea>
-                                                </div>
-                                                <button type="submit" class="btn btn-primary">Send</button>
-                                            </form>
+                                        <form action="{{ route('emails.store') }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="send_name" value="{{ Auth::user()->name }}">
+                                        <input type="hidden" name="send_email" value="{{ Auth::user()->email }}">
+                                            <div class="mb-3">
+                                                <label for="rcpt_email" class="form-label">To</label>
+                                                <input type="email" class="form-control" id="rcpt_email" name="rcpt_email" placeholder="Enter recipient email" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="subject" class="form-label">Subject</label>
+                                                <input type="text" class="form-control" id="subject" name="subject" placeholder="Enter email subject" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="message" class="form-label">Message</label>
+                                                <textarea type="text" class="form-control" id="message" name="message" aria-describedby="Text help" placeholder="What's your concern?" required></textarea>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary">Send</button>
+                                        </form>
+
                                         </div>
                                     </div>
                                 </div><!-- card -->

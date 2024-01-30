@@ -9,10 +9,19 @@ class Concern extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name',
-        'email',
+        'send_name',
+        'send_email',
+        'subject',
         'message',
+        'rcpt_name',
+        'rcpt_email',
+        'temp_id',
     ];
+
+    public function template()
+    {
+        return $this->belongsTo(Template::class, 'temp_id');
+    }
 }
 
 

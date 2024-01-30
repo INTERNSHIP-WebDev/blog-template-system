@@ -419,5 +419,36 @@ class TemplateController extends Controller
         $templates = Template::all();
         return view('templates.gallery', compact('templates'));
     }
+
+    public function grid()
+    {
+        $templates = Template::all();
+        
+        // Fetch all categories
+        $categories = Category::all();
+
+        // Fetch all categories with template count
+        $categories = Category::withCount('templates')->get();
+
+        // Fetch comments for all templates
+        $comments = Comment::whereIn('temp_id', $templates->pluck('id'))->get();
+        return view('templates.grid', compact('templates', 'comments', 'categories'));
+    }
+
+    public function list()
+    {
+        $templates = Template::all();
+        
+        // Fetch all categories
+        $categories = Category::all();
+
+        // Fetch all categories with template count
+        $categories = Category::withCount('templates')->get();
+
+        // Fetch comments for all templates
+        $comments = Comment::whereIn('temp_id', $templates->pluck('id'))->get();
+        return view('templates.list', compact('templates', 'comments', 'categories'));
+    }
+
 }
     

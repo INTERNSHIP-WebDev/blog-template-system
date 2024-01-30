@@ -11,8 +11,6 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConcernController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\MailController;
-use App\Http\Controllers\EmailController;
-// use App\Http\Controllers\EmailController;
 // use App\Http\Controllers\TitleController;
 // use App\Http\Controllers\SubtitleController;
 // use App\Http\Controllers\DescriptionController;
@@ -89,8 +87,10 @@ Route::resources([
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('templates', [App\Http\Controllers\TemplateController::class, 'index'])->name('templates.index');
+    Route::get('blogs', [App\Http\Controllers\TemplateController::class, 'index'])->name('templates.index');
     Route::get('gallery', [App\Http\Controllers\TemplateController::class, 'gallery'])->name('templates.gallery');
+    Route::get('blog-grid', [App\Http\Controllers\TemplateController::class, 'grid'])->name('templates.grid');
+    Route::get('blog-list', [App\Http\Controllers\TemplateController::class, 'list'])->name('templates.list');
     Route::get('templates/create', [App\Http\Controllers\TemplateController::class, 'create'])->name('templates.create');
     Route::post('templates', [App\Http\Controllers\TemplateController::class, 'store'])->name('templates.store');
     Route::get('/templates/{template}/edit', [TemplateController::class, 'edit'])->name('templates.edit');
@@ -111,14 +111,12 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
     Route::resource('comments', CommentController::class);
 
-    Route::get('send-mail', [MailController::class, 'index']);
-
-    Route::get('emails', [App\Http\Controllers\EmailController::class, 'index'])->name('emails.index');
-    Route::get('emails/create', [App\Http\Controllers\EmailController::class, 'create'])->name('emails.create');
-    Route::post('emails', [App\Http\Controllers\EmailController::class, 'store'])->name('emails.store');
-    Route::get('/emails/{email}/edit', [EmailController::class, 'edit'])->name('emails.edit');
-    Route::delete('/emails/{email}', [EmailController::class, 'destroy'])->name('emails.destroy');
-    Route::resource('emails', EmailController::class);
+    Route::get('emails', [App\Http\Controllers\MailController::class, 'index'])->name('emails.index');
+    Route::get('emails/create', [App\Http\Controllers\MailController::class, 'create'])->name('emails.create');
+    Route::post('emails', [App\Http\Controllers\MailController::class, 'store'])->name('emails.store');
+    Route::get('/emails/{email}/edit', [MailController::class, 'edit'])->name('emails.edit');
+    Route::delete('/emails/{email}', [MailController::class, 'destroy'])->name('emails.destroy');
+    Route::resource('emails', MailController::class);
 
     // Route::get('titles', [\App\Http\Controllers\TitleController::class, 'index'])->name('titles.index');
     // Route::get('titles/create', [App\Http\Controllers\TitleController::class, 'create'])->name('titles.create');

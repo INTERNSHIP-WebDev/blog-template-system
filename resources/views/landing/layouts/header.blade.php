@@ -33,8 +33,8 @@
 								<!-- <li><a href="#">Fashion</a></li>
 								<li><a href="#">Gadgets</a></li>
 								<li><a href="#">Lifestyle</a></li> -->
-								<li><a href="{{ route('about') }}">About</a></li>
-								<li><a href="{{ route('concern') }}">Contact</a></li>
+								<li><a href="#">About</a></li>
+								<li><a href="#">Contact</a></li>
 							</ul>
 						</nav>
 						<div class="search_container ml-auto">

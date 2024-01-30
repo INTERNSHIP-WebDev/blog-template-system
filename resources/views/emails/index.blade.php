@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emails | Inbox</title>
+    <title>Emails | Read</title>
 </head>
 <body>
 
@@ -122,12 +122,11 @@
                                                             <label for="chk19" class="toggle"></label>
                                                         </div>
                                                         <!-- Sender and subject -->
-                                                        <a href="javascript: void(0);" class="title">{{ $concern->name }}</a><span class="star-toggle far fa-star"></span>
+                                                        <a href="javascript: void(0);" class="title">{{ $concern->send_name }}</a><span class="star-toggle far fa-star"></span>
                                                     </div>
                                                     <div class="col-mail col-mail-2">
                                                         <!-- Subject and teaser -->
-                                                        <a href="javascript: void(0);" class="subject">{{ $concern->subject }} - <span class="teaser">{{ $concern->message }}</span>
-                                                        </a>
+                                                        <a href="{{ route('emails.show', $concern->id) }}" class="subject">{{ $concern->subject }} - <span class="teaser">{{ $concern->message }}</span></a>
                                                         <!-- Date -->
                                                         <div class="date">{{ $concern->created_at->format('M d') }}</div>
                                                     </div>
@@ -135,6 +134,7 @@
                                                 </li>
                                                 @endforeach
                                             </ul>
+
             
                                         </div><!-- card -->
 

@@ -121,14 +121,7 @@
                                     <label for="description" class="form-label">Content</label>
                                     <textarea type="text" id="description" class="form-control" aria-describedby="Text help" name="description" required>{{ old('description', $template->description) }}</textarea>
                                 </div>
-                                
-                                <div class="mb-3">
-                                    <button type="button" id="addTitle" class="btn btn-success btn-sm my-2"><i class="bi bi-plus-circle"></i> Title</button>
-                                    <button type="button" id="addSubtitle" class="btn btn-success btn-sm my-2"><i class="bi bi-plus-circle"></i> Subtitle</button>
-                                    <button type="button" id="addDescription" class="btn btn-success btn-sm my-2"><i class="bi bi-plus-circle"></i> Description</button>
-                                    <button type="button" id="addImage" class="btn btn-success btn-sm my-2"><i class="bi bi-plus-circle"></i> Image</button>
-                                    <button type="button" id="addComment" class="btn btn-success btn-sm my-2"><i class="bi bi-plus-circle"></i> Comment</button>
-                                </div>
+                
 
                                 <div class="mb-3">
                                     <button type="submit" class="btn btn-primary">Update Blog</button>
