@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
@@ -44,4 +45,28 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    // Define the hasLikedTemplate method
+    public function hasLikedTemplate($templateId)
+    {
+        return $this->likes()->where('temp_id', $templateId)->exists();
+    }
+
+    // Define the like method
+    public function like($template)
+    {
+        $this->likes()->attach($template);
+    }
+
+    // Define the unlike method
+    public function unlike($template)
+    {
+        $this->likes()->detach($template);
+    }
+
+    // Define the likes relationship
+    public function likes()
+    {
+        return $this->belongsToMany(Template::class, 'likes', 'user_id', 'temp_id')->withTimestamps();
+    }
 }

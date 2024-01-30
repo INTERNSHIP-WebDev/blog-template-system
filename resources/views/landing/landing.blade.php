@@ -61,10 +61,10 @@
 											@endif
 									</div>
 									<div class="home_slider_item_title">
-										<a href="post.html">{{ $latestTemplate->header }}</a>
+										<a href="{{ url('post/' . $latestTemplate->id) }}">{{ $latestTemplate->header }}</a>
 									</div>
 									<div class="home_slider_item_link">
-										<a href="post.html" class="trans_200">Continue Reading
+										<a href="{{ url('post/' . $latestTemplate->id) }}" class="trans_200">Continue Reading
 											<svg version="1.1" id="link_arrow_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="19px" height="13px" viewBox="0 0 19 13" enable-background="new 0 0 19 13" xml:space="preserve">
 												<polygon fill="#FFFFFF" points="12.475,0 11.061,0 17.081,6.021 0,6.021 0,7.021 17.038,7.021 11.06,13 12.474,13 18.974,6.5 " />
 											</svg>
@@ -93,12 +93,12 @@
 							@if($secondToLastTemplate)
 							<div class="col-lg-3 col-md-6 similar_post_col">
 								<div class="similar_post trans_200">
-									<a href="post.html">{{ $secondToLastTemplate->header }}</a>
+									<a href="{{ url('post/' . $secondToLastTemplate->id) }}">{{ $secondToLastTemplate->header }}</a>
 								</div>
 							</div>
 							@else
-							<!-- Handle the case when there is no second-to-last template -->
-							<p>No second-to-last template available</p>
+							<!-- Handle the case when there is no  template -->
+							<p>No template available</p>
 							@endif
 
 							<!-- Similar Post -->
@@ -109,12 +109,12 @@
 							@if($thirdToLastTemplate)
 							<div class="col-lg-3 col-md-6 similar_post_col">
 								<div class="similar_post trans_200">
-									<a href="post.html">{{ $thirdToLastTemplate->header }}</a>
+									<a href="{{ url('post/' . $thirdToLastTemplate->id) }}">{{ $thirdToLastTemplate->header }}</a>
 								</div>
 							</div>
 							@else
-							<!-- Handle the case when there is no second-to-last template -->
-							<p>No second-to-last template available</p>
+							<!-- Handle the case when there is no  template -->
+							<p>No template available</p>
 							@endif
 
 							<!-- Similar Post -->
@@ -125,12 +125,12 @@
 							@if($fourthToLastTemplate)
 							<div class="col-lg-3 col-md-6 similar_post_col">
 								<div class="similar_post trans_200">
-									<a href="post.html">{{ $fourthToLastTemplate->header }}</a>
+									<a href="{{ url('post/' . $fourthToLastTemplate->id) }}">{{ $fourthToLastTemplate->header }}</a>
 								</div>
 							</div>
 							@else
-							<!-- Handle the case when there is no second-to-last template -->
-							<p>No second-to-last template available</p>
+							<!-- Handle the case when there is no  template -->
+							<p>No template available</p>
 							@endif
 
 						</div>
@@ -138,7 +138,7 @@
 
 					<div class="home_slider_next_container">
 						@php
-						$fifthToLastTemplate = $latestTemplates->reverse()->skip(4)->first();
+						$fifthToLastTemplate = $latestTemplates->reverse()->skip(1)->first();
 						@endphp
 
 						@if($fifthToLastTemplate)
@@ -148,8 +148,244 @@
 								<div class="home_slider_next_title">next</div>
 								<div class="home_slider_next_link">{{ $fifthToLastTemplate->header }}</div>
 								@else
-								<!-- Handle the case when there is no second-to-last template -->
-								<p>No second-to-last template available</p>
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
+								@endif
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<!-- Slider Item -->
+			<div class="owl-item">
+				@php
+				$latestTemplate = $latestTemplates->reverse()->skip(1)->first();
+				@endphp
+
+				@if($latestTemplate)
+				<div class="home_slider_background" style="background-image: url('{{ asset('images/banners/' . $latestTemplate->banner) }}');"></div>
+				<div class="home_slider_content_container">
+					<div class="container">
+						<div class="row">
+							<div class="col">
+								<div class="home_slider_content">
+									<div class="home_slider_item_category trans_200"><a href="category.html" class="trans_200">
+											@if($latestTemplate->category)
+											{{ explode(' ', $latestTemplate->category->text)[0] }}
+											@else
+											General Blog
+											@endif
+									</div>
+									<div class="home_slider_item_title">
+										<a href="{{ url('post/' . $latestTemplate->id) }}">{{ $latestTemplate->header }}</a>
+									</div>
+									<div class="home_slider_item_link">
+										<a href="{{ url('post/' . $latestTemplate->id) }}" class="trans_200">Continue Reading
+											<svg version="1.1" id="link_arrow_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="19px" height="13px" viewBox="0 0 19 13" enable-background="new 0 0 19 13" xml:space="preserve">
+												<polygon fill="#FFFFFF" points="12.475,0 11.061,0 17.081,6.021 0,6.021 0,7.021 17.038,7.021 11.06,13 12.474,13 18.974,6.5 " />
+											</svg>
+										</a>
+									</div>
+									@else
+									<!-- Handle the case when there are no latest templates -->
+									<p>No latest templates available</p>
+									@endif
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Similar Posts -->
+				<div class="similar_posts_container">
+					<div class="container">
+						<div class="row d-flex flex-row align-items-end">
+
+							<!-- Similar Post -->
+							@php
+							$secondToLastTemplate = $latestTemplates->reverse()->skip(1)->first();
+							@endphp
+
+							@if($secondToLastTemplate)
+							<div class="col-lg-3 col-md-6 similar_post_col">
+								<div class="similar_post trans_200">
+									<a href="{{ url('post/' . $secondToLastTemplate->id) }}">{{ $secondToLastTemplate->header }}</a>
+								</div>
+							</div>
+							@else
+							<!-- Handle the case when there is no  template -->
+							<p>No template available</p>
+							@endif
+
+							<!-- Similar Post -->
+							@php
+							$thirdToLastTemplate = $latestTemplates->reverse()->skip(2)->first();
+							@endphp
+
+							@if($thirdToLastTemplate)
+							<div class="col-lg-3 col-md-6 similar_post_col">
+								<div class="similar_post trans_200">
+									<a href="{{ url('post/' . $thirdToLastTemplate->id) }}">{{ $thirdToLastTemplate->header }}</a>
+								</div>
+							</div>
+							@else
+							<!-- Handle the case when there is no  template -->
+							<p>No template available</p>
+							@endif
+
+							<!-- Similar Post -->
+							@php
+							$fourthToLastTemplate = $latestTemplates->reverse()->skip(3)->first();
+							@endphp
+
+							@if($fourthToLastTemplate)
+							<div class="col-lg-3 col-md-6 similar_post_col">
+								<div class="similar_post trans_200">
+									<a href="{{ url('post/' . $fourthToLastTemplate->id) }}">{{ $fourthToLastTemplate->header }}</a>
+								</div>
+							</div>
+							@else
+							<!-- Handle the case when there is no  template -->
+							<p>No template available</p>
+							@endif
+
+						</div>
+					</div>
+
+					<div class="home_slider_next_container">
+						@php
+						$fifthToLastTemplate = $latestTemplates->reverse()->skip(2)->first();
+						@endphp
+
+						@if($fifthToLastTemplate)
+						<div class="home_slider_next" style="background-image: url('{{ asset('images/banners/' . $fifthToLastTemplate->banner) }}');">
+							<div class="home_slider_next_background trans_400"></div>
+							<div class="home_slider_next_content trans_400">
+								<div class="home_slider_next_title">next</div>
+								<div class="home_slider_next_link">{{ $fifthToLastTemplate->header }}</div>
+								@else
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
+								@endif
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<!-- Slider Item -->
+			<div class="owl-item">
+				@php
+				$latestTemplate = $latestTemplates->reverse()->skip(2)->first();
+				@endphp
+
+				@if($latestTemplate)
+				<div class="home_slider_background" style="background-image: url('{{ asset('images/banners/' . $latestTemplate->banner) }}');"></div>
+				<div class="home_slider_content_container">
+					<div class="container">
+						<div class="row">
+							<div class="col">
+								<div class="home_slider_content">
+									<div class="home_slider_item_category trans_200"><a href="category.html" class="trans_200">
+											@if($latestTemplate->category)
+											{{ explode(' ', $latestTemplate->category->text)[0] }}
+											@else
+											General Blog
+											@endif
+									</div>
+									<div class="home_slider_item_title">
+										<a href="{{ url('post/' . $latestTemplate->id) }}">{{ $latestTemplate->header }}</a>
+									</div>
+									<div class="home_slider_item_link">
+										<a href="{{ url('post/' . $latestTemplate->id) }}" class="trans_200">Continue Reading
+											<svg version="1.1" id="link_arrow_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="19px" height="13px" viewBox="0 0 19 13" enable-background="new 0 0 19 13" xml:space="preserve">
+												<polygon fill="#FFFFFF" points="12.475,0 11.061,0 17.081,6.021 0,6.021 0,7.021 17.038,7.021 11.06,13 12.474,13 18.974,6.5 " />
+											</svg>
+										</a>
+									</div>
+									@else
+									<!-- Handle the case when there are no latest templates -->
+									<p>No latest templates available</p>
+									@endif
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Similar Posts -->
+				<div class="similar_posts_container">
+					<div class="container">
+						<div class="row d-flex flex-row align-items-end">
+
+							<!-- Similar Post -->
+							@php
+							$secondToLastTemplate = $latestTemplates->reverse()->skip(1)->first();
+							@endphp
+
+							@if($secondToLastTemplate)
+							<div class="col-lg-3 col-md-6 similar_post_col">
+								<div class="similar_post trans_200">
+									<a href="{{ url('post/' . $secondToLastTemplate->id) }}">{{ $secondToLastTemplate->header }}</a>
+								</div>
+							</div>
+							@else
+							<!-- Handle the case when there is no  template -->
+							<p>No template available</p>
+							@endif
+
+							<!-- Similar Post -->
+							@php
+							$thirdToLastTemplate = $latestTemplates->reverse()->skip(2)->first();
+							@endphp
+
+							@if($thirdToLastTemplate)
+							<div class="col-lg-3 col-md-6 similar_post_col">
+								<div class="similar_post trans_200">
+									<a href="{{ url('post/' . $thirdToLastTemplate->id) }}">{{ $thirdToLastTemplate->header }}</a>
+								</div>
+							</div>
+							@else
+							<!-- Handle the case when there is no  template -->
+							<p>No template available</p>
+							@endif
+
+							<!-- Similar Post -->
+							@php
+							$fourthToLastTemplate = $latestTemplates->reverse()->skip(3)->first();
+							@endphp
+
+							@if($fourthToLastTemplate)
+							<div class="col-lg-3 col-md-6 similar_post_col">
+								<div class="similar_post trans_200">
+									<a href="{{ url('post/' . $fourthToLastTemplate->id) }}">{{ $fourthToLastTemplate->header }}</a>
+								</div>
+							</div>
+							@else
+							<!-- Handle the case when there is no  template -->
+							<p>No template available</p>
+							@endif
+
+						</div>
+					</div>
+
+					<div class="home_slider_next_container">
+						@php
+						$fifthToLastTemplate = $latestTemplates->last();
+						@endphp
+
+						@if($fifthToLastTemplate)
+						<div class="home_slider_next" style="background-image: url('{{ asset('images/banners/' . $fifthToLastTemplate->banner) }}');">
+							<div class="home_slider_next_background trans_400"></div>
+							<div class="home_slider_next_content trans_400">
+								<div class="home_slider_next_title">next</div>
+								<div class="home_slider_next_link">{{ $fifthToLastTemplate->header }}</div>
+								@else
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
 								@endif
 							</div>
 						</div>
@@ -278,8 +514,8 @@
 									</div>
 								</div>
 								@else
-								<!-- Handle the case when there is no second-to-last template -->
-								<p>No second-to-last template available</p>
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
 								@endif
 
 
@@ -293,21 +529,21 @@
 								<div class="card card_small_with_image grid-item">
 									<img class="card-img-top" src="{{ asset('images/banners/' . $thirdToLastTemplate->banner) }}" alt="" width="330" height="195">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="post.html">{{ $thirdToLastTemplate->header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $thirdToLastTemplate->id) }}">{{ $thirdToLastTemplate->header }}</a></div>
 										@if($thirdToLastTemplate->user)
 										@php
 										$userNameWords = explode(' ', $thirdToLastTemplate->user->name);
 										$firstTwoWords = implode(' ', array_slice($userNameWords, 0, 2));
 										@endphp
-										<small class="post_meta"><a href="#">{{ $firstTwoWords }}</a><span>{{ $thirdToLastTemplate->created_at->format('M d, Y \a\t h:i A') }}</span></small>
+										<small class="post_meta"><a href="{{ url('post/' . $thirdToLastTemplate->id) }}">{{ $firstTwoWords }}</a><span>{{ $thirdToLastTemplate->created_at->format('M d, Y \a\t h:i A') }}</span></small>
 										@else
 										<span class="date">No User</span>
 										@endif
 									</div>
 								</div>
 								@else
-								<!-- Handle the case when there is no second-to-last template -->
-								<p>No second-to-last template available</p>
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
 								@endif
 
 
@@ -320,12 +556,12 @@
 								<div class="card card_default card_default_with_background grid-item">
 									<div class="card_background" style="background-image:url('{{ asset('images/banners/' . $fourthToLastTemplate->banner) }}')"></div>
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="post.html">{{ $fourthToLastTemplate->header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $fourthToLastTemplate->id) }}">{{ $fourthToLastTemplate->header }}</a></div>
 									</div>
 								</div>
 								@else
-								<!-- Handle the case when there is no second-to-last template -->
-								<p>No second-to-last template available</p>
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
 								@endif
 
 								<!-- Default Card No Image -->
@@ -340,8 +576,8 @@
 									</div>
 								</div>
 								@else
-								<!-- Handle the case when there is no second-to-last template -->
-								<p>No second-to-last template available</p>
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
 								@endif
 
 								<!-- Default Card No Image -->
@@ -356,8 +592,8 @@
 									</div>
 								</div>
 								@else
-								<!-- Handle the case when there is no second-to-last template -->
-								<p>No second-to-last template available</p>
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
 								@endif
 
 								<!-- Default Card With Background -->
@@ -373,8 +609,8 @@
 									</div>
 								</div>
 								@else
-								<!-- Handle the case when there is no second-to-last template -->
-								<p>No second-to-last template available</p>
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
 								@endif
 
 
@@ -426,8 +662,8 @@
 									</div>
 								</div>
 								@else
-								<!-- Handle the case when there is no second-to-last template -->
-								<p>No second-to-last template available</p>
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
 								@endif
 
 								<!-- Small Card Without Image -->
@@ -463,8 +699,8 @@
 									</div>
 								</div>
 								@else
-								<!-- Handle the case when there is no second-to-last template -->
-								<p>No second-to-last template available</p>
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
 								@endif
 
 								<!-- Small Card With Image -->
@@ -501,8 +737,8 @@
 									</div>
 								</div>
 								@else
-								<!-- Handle the case when there is no second-to-last template -->
-								<p>No second-to-last template available</p>
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
 								@endif
 
 
@@ -540,8 +776,8 @@
 									</div>
 								</div>
 								@else
-								<!-- Handle the case when there is no second-to-last template -->
-								<p>No second-to-last template available</p>
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
 								@endif
 
 								<!-- Small Card With Background -->
@@ -578,8 +814,8 @@
 									</div>
 								</div>
 								@else
-								<!-- Handle the case when there is no second-to-last template -->
-								<p>No second-to-last template available</p>
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
 								@endif
 
 								<!-- Small Card With Background -->
@@ -616,8 +852,8 @@
 									</div>
 								</div>
 								@else
-								<!-- Handle the case when there is no second-to-last template -->
-								<p>No second-to-last template available</p>
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
 								@endif
 
 								<!-- Small Card With Image -->
@@ -654,8 +890,8 @@
 									</div>
 								</div>
 								@else
-								<!-- Handle the case when there is no second-to-last template -->
-								<p>No second-to-last template available</p>
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
 								@endif
 
 								<!-- Small Card Without Image -->
@@ -691,8 +927,8 @@
 									</div>
 								</div>
 								@else
-								<!-- Handle the case when there is no second-to-last template -->
-								<p>No second-to-last template available</p>
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
 								@endif
 
 								<!-- Small Card Without Image -->
@@ -728,8 +964,8 @@
 									</div>
 								</div>
 								@else
-								<!-- Handle the case when there is no second-to-last template -->
-								<p>No second-to-last template available</p>
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
 								@endif
 
 								<!-- Default Card With Background -->
@@ -753,21 +989,11 @@
 												@endif
 											</a>
 										</div>
-
-										@if($tenthBlog->user)
-										@php
-										$userNameWords = explode(' ', $tenthBlog->user->name);
-										$firstTwoWords = implode(' ', array_slice($userNameWords, 0, 2));
-										@endphp
-										<small class="post_meta"><a href="#">{{ $firstTwoWords }}</a><span>{{ $tenthBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
-										@else
-										<span class="date">No User</span>
-										@endif
 									</div>
 								</div>
 								@else
-								<!-- Handle the case when there is no second-to-last template -->
-								<p>No second-to-last template available</p>
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
 								@endif
 
 								<!-- Default Card With Background -->
@@ -791,21 +1017,11 @@
 												@endif
 											</a>
 										</div>
-
-										@if($eleventhBlog->user)
-										@php
-										$userNameWords = explode(' ', $eleventhBlog->user->name);
-										$firstTwoWords = implode(' ', array_slice($userNameWords, 0, 2));
-										@endphp
-										<small class="post_meta"><a href="#">{{ $firstTwoWords }}</a><span>{{ $eleventhBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
-										@else
-										<span class="date">No User</span>
-										@endif
 									</div>
 								</div>
 								@else
-								<!-- Handle the case when there is no second-to-last template -->
-								<p>No second-to-last template available</p>
+								<!-- Handle the case when there is no  template -->
+								<p>No template available</p>
 								@endif
 							</div>
 
@@ -814,8 +1030,9 @@
 
 				</div>
 				<div class="load_more">
-					<div id="load_more" class="load_more_button text-center trans_200">Load More</div>
+					<div href="{{ route('more') }}" class="load_more_button text-center trans_200"><a href="{{ route('more') }}" >View All Blogs</a></div>
 				</div>
+				
 			</div>
 
 			<!-- Sidebar -->
@@ -868,13 +1085,13 @@
 														</div>
 													</div>
 													<div class="side_post_content">
-														<div class="side_post_title">{{ $sidebarPost->id }}{{ $sidebarPost->header }}</div>
+														<div class="side_post_title">{{ $sidebarPost->id }}{{ implode(' ', array_slice(str_word_count($sidebarPost->header, 1), 0, 5)) }}</div>
 														@if($sidebarPost && $sidebarPost->user)
 														@php
 														$userNameWords = explode(' ', $sidebarPost->user->name);
 														$firstWord = reset($userNameWords);
 														@endphp
-														<small class="post_meta">{{ $firstWord }}<span>{{ $sidebarPost->created_at->format('M, d') }}</span></small>
+														<small class="post_meta">{{ $firstWord }}<span>{{ $sidebarPost->created_at->format('M d') }}</span></small>
 														@else
 														<span class="date">No User</span>
 														@endif
@@ -902,9 +1119,19 @@
 														</div>
 													</div>
 													<div class="side_post_content">
-														<div class="side_post_title">{{ $sidebarPost->id }}{{ $sidebarPost->header }}</div>
-														<small class="post_meta">#<span>{{ $sidebarPost->created_at->format('M, d') }}</span></small>
-													</div>	
+														<div class="side_post_title">{{ $sidebarPost->id }}{{ implode(' ', array_slice(str_word_count($sidebarPost->header, 1), 0, 5)) }}</div>
+														<small class="post_meta">
+															@if($sidebarPost && $sidebarPost->user)
+															@php
+															$userNameWords = explode(' ', $sidebarPost->user->name);
+															$firstWord = reset($userNameWords);
+															@endphp
+															<small class="post_meta">{{ $firstWord }}<span>{{ $sidebarPost->created_at->format('M d') }}</span></small>
+															@else
+															<span class="date">No User</span>
+															@endif
+														</small>
+													</div>
 												</div>
 											</a>
 										</div>
@@ -929,8 +1156,17 @@
 															</div>
 														</div>
 														<div class="side_post_content">
-															<div class="side_post_title">{{ $sidebarPost->id }}{{ $sidebarPost->header }}</div>
-															<small class="post_meta">#<span>{{ $sidebarPost->created_at->format('M, d') }}</span></small>
+															<div class="side_post_title">{{ $sidebarPost->id }}{{ implode(' ', array_slice(str_word_count($sidebarPost->header, 1), 0, 5)) }}</div>
+															<small class="post_meta"> @if($sidebarPost && $sidebarPost->user)
+																@php
+																$userNameWords = explode(' ', $sidebarPost->user->name);
+																$firstWord = reset($userNameWords);
+																@endphp
+																<small class="post_meta">{{ $firstWord }}<span>{{ $sidebarPost->created_at->format('M d') }}</span></small>
+																@else
+																<span class="date">No User</span>
+																@endif
+															</small>
 														</div>
 													</div>
 												</a>
@@ -964,251 +1200,9 @@
 						</div>
 					</div>
 					@else
-					<!-- Handle the case when there is no second-to-last template -->
-					<p>No second-to-last template available</p>
+					<!-- Handle the case when there is no  template -->
+					<p>No template available</p>
 					@endif
-
-					<!-- Newest Videos -->
-
-					<div class="sidebar_section newest_videos">
-						<div class="sidebar_title_container">
-							<div class="sidebar_title">Newest Videos</div>
-							<div class="sidebar_slider_nav">
-								<div class="custom_nav_container sidebar_slider_nav_container">
-									<div class="custom_prev custom_prev_vid">
-										<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="7px" height="12px" viewBox="0 0 7 12" enable-background="new 0 0 7 12" xml:space="preserve">
-											<polyline fill="#bebebe" points="0,5.61 5.609,0 7,0 7,1.438 2.438,6 7,10.563 7,12 5.609,12 -0.002,6.39 " />
-										</svg>
-									</div>
-									<ul id="custom_dots" class="custom_dots custom_dots_vid">
-										<li class="custom_dot custom_dot_vid active"><span></span></li>
-										<li class="custom_dot custom_dot_vid"><span></span></li>
-										<li class="custom_dot custom_dot_vid"><span></span></li>
-									</ul>
-									<div class="custom_next custom_next_vid">
-										<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="7px" height="12px" viewBox="0 0 7 12" enable-background="new 0 0 7 12" xml:space="preserve">
-											<polyline fill="#bebebe" points="6.998,6.39 1.389,12 -0.002,12 -0.002,10.562 4.561,6 -0.002,1.438 -0.002,0 1.389,0 7,5.61 " />
-										</svg>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="sidebar_section_content">
-
-							<!-- Sidebar Slider -->
-							<div class="sidebar_slider_container">
-								<div class="owl-carousel owl-theme sidebar_slider_vid">
-
-									<!-- Newest Videos Slider Item -->
-									<div class="owl-item">
-
-										<!-- Newest Videos Post -->
-										<div class="side_post">
-											<a href="post.html">
-												<div class="d-flex flex-row align-items-xl-center align-items-start justify-content-start">
-													<div class="side_post_image">
-														<div><img src="landing_assets/images/vid_1.jpg" alt=""></div>
-													</div>
-													<div class="side_post_content">
-														<div class="side_post_title">How Did van Gogh’s Turbulent Mind</div>
-														<small class="post_meta">Katy Liu<span>Sep 29</span></small>
-													</div>
-												</div>
-											</a>
-										</div>
-
-										<!-- Newest Videos Post -->
-										<div class="side_post">
-											<a href="post.html">
-												<div class="d-flex flex-row align-items-xl-center align-items-start justify-content-start">
-													<div class="side_post_image">
-														<div><img src="landing_assets/images/vid_2.jpg" alt=""></div>
-													</div>
-													<div class="side_post_content">
-														<div class="side_post_title">How Did van Gogh’s Turbulent Mind</div>
-														<small class="post_meta">Katy Liu<span>Sep 29</span></small>
-													</div>
-												</div>
-											</a>
-										</div>
-
-										<!-- Newest Videos Post -->
-										<div class="side_post">
-											<a href="post.html">
-												<div class="d-flex flex-row align-items-xl-center align-items-start justify-content-start">
-													<div class="side_post_image">
-														<div><img src="landing_assets/images/vid_3.jpg" alt=""></div>
-													</div>
-													<div class="side_post_content">
-														<div class="side_post_title">How Did van Gogh’s Turbulent Mind</div>
-														<small class="post_meta">Katy Liu<span>Sep 29</span></small>
-													</div>
-												</div>
-											</a>
-										</div>
-
-										<!-- Newest Videos Post -->
-										<div class="side_post">
-											<a href="post.html">
-												<div class="d-flex flex-row align-items-xl-center align-items-start justify-content-start">
-													<div class="side_post_image">
-														<div><img src="landing_assets/images/vid_4.jpg" alt=""></div>
-													</div>
-													<div class="side_post_content">
-														<div class="side_post_title">How Did van Gogh’s Turbulent Mind</div>
-														<small class="post_meta">Katy Liu<span>Sep 29</span></small>
-													</div>
-												</div>
-											</a>
-										</div>
-
-									</div>
-
-									<!-- Newest Videos Slider Item -->
-									<div class="owl-item">
-
-										<!-- Newest Videos Post -->
-										<div class="side_post">
-											<a href="post.html">
-												<div class="d-flex flex-row align-items-xl-center align-items-start justify-content-start">
-													<div class="side_post_image">
-														<div><img src="landing_assets/images/vid_1.jpg" alt=""></div>
-													</div>
-													<div class="side_post_content">
-														<div class="side_post_title">How Did van Gogh’s Turbulent Mind</div>
-														<small class="post_meta">Katy Liu<span>Sep 29</span></small>
-													</div>
-												</div>
-											</a>
-										</div>
-
-										<!-- Newest Videos Post -->
-										<div class="side_post">
-											<a href="post.html">
-												<div class="d-flex flex-row align-items-xl-center align-items-start justify-content-start">
-													<div class="side_post_image">
-														<div><img src="landing_assets/images/vid_2.jpg" alt=""></div>
-													</div>
-													<div class="side_post_content">
-														<div class="side_post_title">How Did van Gogh’s Turbulent Mind</div>
-														<small class="post_meta">Katy Liu<span>Sep 29</span></small>
-													</div>
-												</div>
-											</a>
-										</div>
-
-										<!-- Newest Videos Post -->
-										<div class="side_post">
-											<a href="post.html">
-												<div class="d-flex flex-row align-items-xl-center align-items-start justify-content-start">
-													<div class="side_post_image">
-														<div><img src="landing_assets/images/vid_3.jpg" alt=""></div>
-													</div>
-													<div class="side_post_content">
-														<div class="side_post_title">How Did van Gogh’s Turbulent Mind</div>
-														<small class="post_meta">Katy Liu<span>Sep 29</span></small>
-													</div>
-												</div>
-											</a>
-										</div>
-
-										<!-- Newest Videos Post -->
-										<div class="side_post">
-											<a href="post.html">
-												<div class="d-flex flex-row align-items-xl-center align-items-start justify-content-start">
-													<div class="side_post_image">
-														<div><img src="landing_assets/images/vid_4.jpg" alt=""></div>
-													</div>
-													<div class="side_post_content">
-														<div class="side_post_title">How Did van Gogh’s Turbulent Mind</div>
-														<small class="post_meta">Katy Liu<span>Sep 29</span></small>
-													</div>
-												</div>
-											</a>
-										</div>
-
-									</div>
-
-									<!-- Newest Videos Slider Item -->
-									<div class="owl-item">
-
-										<!-- Newest Videos Post -->
-										<div class="side_post">
-											<a href="post.html">
-												<div class="d-flex flex-row align-items-xl-center align-items-start justify-content-start">
-													<div class="side_post_image">
-														<div><img src="landing_assets/images/vid_1.jpg" alt=""></div>
-													</div>
-													<div class="side_post_content">
-														<div class="side_post_title">How Did van Gogh’s Turbulent Mind</div>
-														<small class="post_meta">Katy Liu<span>Sep 29</span></small>
-													</div>
-												</div>
-											</a>
-										</div>
-
-										<!-- Newest Videos Post -->
-										<div class="side_post">
-											<a href="post.html">
-												<div class="d-flex flex-row align-items-xl-center align-items-start justify-content-start">
-													<div class="side_post_image">
-														<div><img src="landing_assets/images/vid_2.jpg" alt=""></div>
-													</div>
-													<div class="side_post_content">
-														<div class="side_post_title">How Did van Gogh’s Turbulent Mind</div>
-														<small class="post_meta">Katy Liu<span>Sep 29</span></small>
-													</div>
-												</div>
-											</a>
-										</div>
-
-										<!-- Newest Videos Post -->
-										<div class="side_post">
-											<a href="post.html">
-												<div class="d-flex flex-row align-items-xl-center align-items-start justify-content-start">
-													<div class="side_post_image">
-														<div><img src="landing_assets/images/vid_3.jpg" alt=""></div>
-													</div>
-													<div class="side_post_content">
-														<div class="side_post_title">How Did van Gogh’s Turbulent Mind</div>
-														<small class="post_meta">Katy Liu<span>Sep 29</span></small>
-													</div>
-												</div>
-											</a>
-										</div>
-
-										<!-- Newest Videos Post -->
-										<div class="side_post">
-											<a href="post.html">
-												<div class="d-flex flex-row align-items-xl-center align-items-start justify-content-start">
-													<div class="side_post_image">
-														<div><img src="landing_assets/images/vid_4.jpg" alt=""></div>
-													</div>
-													<div class="side_post_content">
-														<div class="side_post_title">How Did van Gogh’s Turbulent Mind</div>
-														<small class="post_meta">Katy Liu<span>Sep 29</span></small>
-													</div>
-												</div>
-											</a>
-										</div>
-
-									</div>
-
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- Advertising 2 -->
-
-					<div class="sidebar_section">
-						<div class="advertising_2">
-							<div class="advertising_background" style="background-image:url(landing_assets/images/post_18.jpg)"></div>
-							<div class="advertising_2_content d-flex flex-column align-items-center justify-content-center">
-								<div class="advertising_2_link"><a href="#">Turbulent <span>Mind</span></a></div>
-							</div>
-						</div>
-					</div>
 
 				</div>
 			</div>

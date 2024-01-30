@@ -3,18 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Template;
-use App\Models\Title;
-use App\Models\Subtitle;
-use App\Models\Description;
-use App\Models\Image;
 use App\Models\Category;
 use App\Models\Comment;
+use App\Models\Like;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreTemplateRequest;
 use App\Http\Requests\UpdateTemplateRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use DB;
 
 class TemplateController extends Controller
@@ -57,12 +56,9 @@ class TemplateController extends Controller
                 'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:25000',
                 'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:25000',
                 'description' => 'required|string|max:250000',
-                'titles.*.text' => 'required|string|max:255',
-                'subtitles.*.text' => 'required|string|max:255',
-                'descriptions.*.text' => 'required|string|max:255',
+                'views' => 'nullable|integer',
                 'comments.*.name' => 'required|string|max:255',
                 'comments.*.message' => 'required|string|max:7000',
-                // 'images.*.file' => 'required|image|mimes:jpeg,png,jpg,gif|max:25000',
             ]);
 
             // Assuming the authenticated user is creating the template
@@ -71,80 +67,33 @@ class TemplateController extends Controller
             // Upload banner and logo
             $bannerName = null;
             $logoName = null;
-    
+
             if ($request->hasFile('banner')) {
                 $banner = $request->file('banner');
                 $bannerName = 'banner_' . time() . '.' . $banner->getClientOriginalExtension();
                 $banner->move(public_path('images/banners/'), $bannerName);
-                $request->merge(['banner' => $bannerName]);
             }
-    
+
             if ($request->hasFile('logo')) {
                 $logo = $request->file('logo');
                 $logoName = 'logo_' . time() . '.' . $logo->getClientOriginalExtension();
                 $logo->move(public_path('images/logos/'), $logoName);
-                $request->merge(['logo' => $logoName]);
             }
 
             $template = Template::create([
                 'user_id' => $user_id,
                 'category_id' => $request->input('category_id'),
                 'header' => $request->input('header'),
-                'banner' => $request->input('banner'),
-                'logo' => $request->input('logo'),
+                'banner' => $bannerName,
+                'logo' => $logoName,
                 'description' => $request->input('description'),
+                'views' => 0,
             ]);
-
-           // Process and store each title
-            if ($request->has('titles')) {
-                foreach ($request->input('titles') as $titleData) {
-                    // You may also add validation for each title data
-                    Title::create([
-                        'temp_id' => $template->id,
-                        'text' => $titleData['text'],
-                    ]);
-                }
-            }
-
-            // Process and store each subtitle
-            if ($request->has('subtitles')) {
-                foreach ($request->input('subtitles') as $subtitleData) {
-                    // You may also add validation for each subtitle data
-                    Subtitle::create([
-                        'temp_id' => $template->id,
-                        'text' => $subtitleData['text'],
-                    ]);
-                }
-            }
-
-            // Process and store each description
-            if ($request->has('descriptions')) {
-                foreach ($request->input('descriptions') as $descriptionData) {
-                    // You may also add validation for each description data
-                    Description::create([
-                        'temp_id' => $template->id,
-                        'text' => $descriptionData['text'],
-                    ]);
-                }
-            }
-
-            // Process and store each image
-            if ($request->hasFile('images')) {
-                foreach ($request->file('images') as $imageData) {
-                    $imageName = 'image_' . time() . '.' . $imageData->getClientOriginalExtension();
-                    $imagePath = $imageData->storeAs('public/images/blog_images', $imageName);
-                    $imagePath = str_replace('public/', '', $imagePath);
-                    Image::create([
-                        'temp_id' => $template->id,
-                        'file' => $imagePath,
-                    ]);
-                }
-            }
 
             // Process and store each comment
             if ($request->has('comments')) {
                 foreach ($request->input('comments') as $commentData) {
-                    // You may also add validation for each description data
+                    // You may also add validation for each comment data
                     Comment::create([
                         'temp_id' => $template->id,
                         'name' => $commentData['name'],
@@ -160,19 +109,6 @@ class TemplateController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    // public function show($id)
-    // {
-    //     try {
-    //         $template = Template::findOrFail($id);
-    //         return view('templates.show', compact('template'));
-    //     } catch (ModelNotFoundException $e) {
-    //         return redirect()->route('templates.index')->with('error', 'Template not found.');
-    //     }
-    // }
-
     public function show($id)
     {
         try {
@@ -180,14 +116,20 @@ class TemplateController extends Controller
             // Pass the description through htmlspecialchars_decode to decode HTML entities
             $template->description = htmlspecialchars_decode($template->description);
 
+            // Increment the view count
+            $template->increment('views');
+            
              // Fetch comments related to this template
             $comments = Comment::where('temp_id', $id)->get();
-            return view('templates.show', compact('template', 'comments'));
+
+            // Calculate total likes for the template
+            $totalTempLikes = Like::where('temp_id', $id)->count();
+
+            return view('templates.show', compact('template', 'comments', 'totalTempLikes'));
         } catch (ModelNotFoundException $e) {
             return redirect()->route('templates.index')->with('error', 'Template not found.');
         }
     }   
-
 
     /**
      * Show the form for editing the specified resource.
@@ -197,13 +139,9 @@ class TemplateController extends Controller
         try {
             $template = Template::findOrFail($id);
             $categories = Category::all(); 
-            $titles = Title::where('temp_id', $template->id)->get();
-            $subtitles = Subtitle::where('temp_id', $template->id)->get();
-            $descriptions = Description::where('temp_id', $template->id)->get();
             $comments = Comment::where('temp_id', $template->id)->get();
-            $images = Image::where('temp_id', $template->id)->get();
             
-            return view('templates.edit', compact('template', 'categories', 'titles', 'subtitles', 'descriptions', 'comments', 'images'));
+            return view('templates.edit', compact('template', 'categories', 'comments'));
         } catch (ModelNotFoundException $e) {
             return redirect()->route('templates.index')->with('error', 'Template not found.');
         }
@@ -220,12 +158,7 @@ class TemplateController extends Controller
                 'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:25000',
                 'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:25000',
                 'description' => 'nullable|string|max:250000',
-                'titles.*.text' => 'required|string|max:255',
-                'titles.*.id' => 'nullable|exists:titles,id',
-                'subtitles.*.text' => 'required|string|max:255', 
-                'subtitles.*.id' => 'nullable|exists:subtitles,id',
-                'descriptions.*.text' => 'required|string|max:255', 
-                'descriptions.*.id' => 'nullable|exists:descriptions,id',
+                'views' => 'nullable|integer',
                 'comments.*.name' => 'required|string|max:255', 
                 'comments.*.message' => 'required|string|max:7000', 
                 'comments.*.id' => 'nullable|exists:descriptions,id',
@@ -249,6 +182,7 @@ class TemplateController extends Controller
                 'banner' => $request->input('banner', $oldBanner),
                 'logo' => $request->input('logo', $oldLogo),
                 'description' => $request->input('description'),
+                'views' => $request->input('views'),
             ]);
 
             if ($request->hasFile('banner')) {
@@ -283,110 +217,6 @@ class TemplateController extends Controller
                 $template->update(['logo' => $logoName]);
             }
 
-            // Delete titles that are not present in the form
-            $titlesToDelete = collect($template->titles->pluck('id'))->diff(
-                collect($request->input('titles'))->pluck('id')
-            );
-
-            Title::whereIn('id', $titlesToDelete)->delete();
-
-             // Process and update each title
-            if ($request->has('titles')) {
-                foreach ($request->input('titles') as $titleData) {
-                    // Check if the title has an 'id' - update existing title
-                    if (isset($titleData['id'])) {
-                        Title::findOrFail($titleData['id'])->update([
-                            'text' => $titleData['text'],
-                        ]);
-                    } else {
-                        // Create a new title
-                        Title::create([
-                            'temp_id' => $template->id,
-                            'text' => $titleData['text'],
-                        ]);
-                    }
-                }
-            }
-
-            // Delete subtitles that are not present in the form
-            $subtitlesToDelete = collect($template->subtitles->pluck('id'))->diff(
-                collect($request->input('subtitles'))->pluck('id')
-            );
-
-            Subtitle::whereIn('id', $subtitlesToDelete)->delete();
-
-             // Process and update each subtitle
-            if ($request->has('subtitles')) {
-                foreach ($request->input('subtitles') as $subtitleData) {
-                    // Check if the title has an 'id' - update existing title
-                    if (isset($subtitleData['id'])) {
-                        Subtitle::findOrFail($subtitleData['id'])->update([
-                            'text' => $subtitleData['text'],
-                        ]);
-                    } else {
-                        // Create a new subtitle
-                        Subtitle::create([
-                            'temp_id' => $template->id,
-                            'text' => $subtitleData['text'],
-                        ]);
-                    }
-                }
-            }
-
-            // Delete descriptions that are not present in the form
-            $descriptionsToDelete = collect($template->descriptions->pluck('id'))->diff(
-                collect($request->input('descriptions'))->pluck('id')
-            );
-
-            Description::whereIn('id', $descriptionsToDelete)->delete();
-
-             // Process and update each description
-            if ($request->has('descriptions')) {
-                foreach ($request->input('descriptions') as $descriptionData) {
-                    // Check if the title has an 'id' - update existing title
-                    if (isset($descriptionData['id'])) {
-                        Description::findOrFail($descriptionData['id'])->update([
-                            'text' => $descriptionData['text'],
-                        ]);
-                    } else {
-                        // Create a new description
-                        Description::create([
-                            'temp_id' => $template->id,
-                            'text' => $descriptionData['text'],
-                        ]);
-                    }
-                }
-            }
-
-            // Delete comments that are not present in the form
-            if ($template->comments) {
-                $commentsToDelete = collect($template->comments->pluck('id'))->diff(
-                    collect($request->input('comments'))->pluck('id')
-                );
-
-                Comment::whereIn('id', $commentsToDelete)->delete();
-            }
-
-            // Process and update each comment
-            if ($request->has('comments')) {
-                foreach ($request->input('comments') as $commentData) {
-                    // Check if the comment has an 'id' - update existing comment
-                    if (isset($commentData['id'])) {
-                        Comment::findOrFail($commentData['id'])->update([
-                            'name' => $commentData['name'],
-                            'message' => $commentData['message'],
-                        ]);
-                    } else {
-                        // Create a new comment
-                        Comment::create([
-                            'temp_id' => $template->id,
-                            'name' => $commentData['name'],
-                            'message' => $commentData['message'],
-                        ]);
-                    }
-                }
-            }
-
             return redirect()->route('templates.index')->with('success', 'Template updated successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
@@ -405,14 +235,6 @@ class TemplateController extends Controller
             return redirect()->route('templates.index')
                 ->withSuccess('Template is deleted successfully.');
     }
-
-    // public function upload(Request $request){
-
-    //     $fileName=$request->file('file')->getClientOriginalName();
-    //     $path=$request->file('file')->storeAs('gallery', $fileName, 'public');
-    //     return response()->json(['location'=>"public/images/gallery/$path"]);
-
-    // }
 
     public function gallery()
     {
@@ -449,6 +271,32 @@ class TemplateController extends Controller
         $comments = Comment::whereIn('temp_id', $templates->pluck('id'))->get();
         return view('templates.list', compact('templates', 'comments', 'categories'));
     }
+    
+    public function toggleLike(Request $request, $id)
+    {
+        $template = Template::findOrFail($id);
+        $user = auth()->user();
+
+        if (!$template->isLikedByUser($user)) {
+            // User hasn't liked the template, so add a like
+            $user->like($template);
+            $liked = true;
+        } else {
+            // User has already liked the template, so remove the like
+            $user->unlike($template);
+            $liked = false;
+        }
+
+        // Calculate total likes for the template
+        $totalLikes = $template->likes()->count();
+
+        return response()->json([
+            'success' => true,
+            'liked' => $liked,
+            'totalLikes' => $totalLikes,
+        ]);
+    }
+
 
 }
     

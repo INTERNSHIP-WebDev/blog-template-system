@@ -97,23 +97,14 @@
                 <ul class="sub-menu" aria-expanded="false">
                     <li><a href="{{ route('emails.index') }}" key="t-inbox">Inbox</a></li>
                     <li><a href="email-read.html" key="t-read-email">Read Email</a></li>
-                    <li>
-                        <a href="javascript: void(0);">
-                            <span key="t-email-templates">Templates</span>
-                        </a>
-                        <ul class="sub-menu" aria-expanded="true">
-                            <li><a href="email-template-basic.html" key="t-basic-action">Basic Action</a></li>
-                            <li><a href="email-template-alert.html" key="t-alert-email">Alert Email</a></li>
-                            <li><a href="email-template-billing.html" key="t-bill-email">Billing Email</a></li>
-                        </ul>
-                    </li>
+                    
                 </ul>
             </li>
 
             <li>
                 <a href="comments.html" class="waves-effect">
-                    <i class="bx bx-comment-dots"></i>
-                    <span key="t-comment">Comments</span>
+                    <i class="bx bx-chat"></i>
+                    <span key="t-comment">Chat</span>
                 </a>
             </li>
 

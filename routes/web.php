@@ -11,6 +11,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConcernController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\LandingController;
 // use App\Http\Controllers\TitleController;
 // use App\Http\Controllers\SubtitleController;
 // use App\Http\Controllers\DescriptionController;
@@ -40,6 +41,8 @@ use App\Models\Category;
 |
 */
 
+// LANDING PAGE
+
 Route::get('/', function () {
     $titles = Title::all();
     $heroTemplates = Template::latest('created_at')->take(4)->get();
@@ -55,24 +58,26 @@ Route::get('/', function () {
     return view('landing/landing', compact('sidebarPosts', 'categories', 'heroTemplates', 'descriptions', 'subtitles', 'titles', 'fTemplate', 'latestTemplates', 'users'));
 });
 
-
-
+# NON AUTHENTICATED PAGES
 Route::get('/category', [CategoryController::class, 'category_page'])->name('category');
+# GUEST EMAIL
+Route::get('/concern', [App\Http\Controllers\ConcernController::class, 'show'])->name('concern.index');
+Route::post('concerns', [App\Http\Controllers\ConcernController::class, 'store'])->name('concern.store');
 
-Route::get('/concern', [ConcernController::class, 'show']);
-Route::post('/submit-concern', [ConcernController::class, 'store'])->name('concern.store');
+# MORE
+Route::get('/all_blogs', [LandingController::class, 'more'])->name('more'); #all blog
+Route::get('/all_activities', [HomeController::class, 'all_activity'])->name('templates.all_activities'); #all activity
 
+# ABOUT
 Route::get('/about', [AboutController::class, 'show'])->name('about');
 
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::get('/blog', function () {
-    return view('/blog/sample/sample');
-});
-
-Route::get('/view_blog/{id}', [BlogController::class, 'view_blog'])->name('view_blog');
+Route::get('/post/{id}', [BlogController::class, 'view_blog'])->name('view_blog');
+Route::get('/post/create_comment/{id}', [BlogController::class, 'create_comment'])->name('create_comment');
+Route::get('/post/blog_contacts/{id}', [BlogController::class, 'blog_contacts'])->name('blog_contacts');
 
 Route::resources([
     'roles' => RoleController::class,
@@ -95,6 +100,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('templates', [App\Http\Controllers\TemplateController::class, 'store'])->name('templates.store');
     Route::get('/templates/{template}/edit', [TemplateController::class, 'edit'])->name('templates.edit');
     Route::delete('/templates/{template}', [TemplateController::class, 'destroy'])->name('templates.destroy');
+    Route::post('/templates/{id}/like', [TemplateController::class, 'toggleLike'])->name('templates.toggleLike');
     Route::resource('templates', TemplateController::class);
 
     Route::get('categories', [App\Http\Controllers\CategoryController::class, 'index'])->name('categories.index');
@@ -117,6 +123,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/emails/{email}/edit', [MailController::class, 'edit'])->name('emails.edit');
     Route::delete('/emails/{email}', [MailController::class, 'destroy'])->name('emails.destroy');
     Route::resource('emails', MailController::class);
+    
 
     // Route::get('titles', [\App\Http\Controllers\TitleController::class, 'index'])->name('titles.index');
     // Route::get('titles/create', [App\Http\Controllers\TitleController::class, 'create'])->name('titles.create');

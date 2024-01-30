@@ -8,14 +8,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- LINK TAGS -->
-<link rel="stylesheet" type="text/css" href="landing_assets/styles/bootstrap4/bootstrap.min.css">
-<link href="landing_assets/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" type="text/css" href="landing_assets/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
-<link rel="stylesheet" type="text/css" href="landing_assets/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
-<link rel="stylesheet" type="text/css" href="landing_assets/plugins/OwlCarousel2-2.2.1/animate.css">
-<link rel="stylesheet" type="text/css" href="landing_assets/plugins/jquery.mb.YTPlayer-3.1.12/jquery.mb.YTPlayer.css">
-<link rel="stylesheet" type="text/css" href="landing_assets/styles/post_nosidebar.css">
-<link rel="stylesheet" type="text/css" href="landing_assets/styles/post_nosidebar_responsive.css">
+<link rel="stylesheet" type="text/css" href="{{ asset('landing_assets/styles/bootstrap4/bootstrap.min.css') }}">
+<link href="{{ asset('landing_assets/plugins/font-awesome-4.7.0/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="{{ asset('landing_assets/plugins/OwlCarousel2-2.2.1/owl.carousel.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('landing_assets/plugins/OwlCarousel2-2.2.1/owl.theme.default.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('landing_assets/plugins/OwlCarousel2-2.2.1/animate.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('landing_assets/plugins/jquery.mb.YTPlayer-3.1.12/jquery.mb.YTPlayer.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('landing_assets/styles/post_nosidebar.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('landing_assets/styles/post_nosidebar_responsive.css') }}">
 
 </head>
 <body>
@@ -29,12 +29,13 @@
 			<div class="row">
 				<div class="col">
 					<div class="header_content d-flex flex-row align-items-center justify-content-start">
-						<div class="logo"><a href="#">jea</a></div>
+						<div class="logo"><a href="/">jea</a></div>
+						{{ $template_id }}
 						<nav class="main_nav">
 							<ul>
-								<li class="active"><a href="index.html">Home</a></li>
-								<li><a href="#">This Post</a></li>
-								<li><a href="contact.html">Contact</a></li>
+								<li><a href="/">Home</a></li>
+								<li class="active"><a href="#">This Post</a></li>
+								<li><a href="{{ route('blog_contacts', ['id' => $template_id]) }}">Contact</a></li>
 							</ul>
 						</nav>
 						<div class="search_container ml-auto">

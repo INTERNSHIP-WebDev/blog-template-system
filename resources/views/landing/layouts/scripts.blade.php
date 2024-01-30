@@ -9,5 +9,42 @@
 <script src="{{ asset('landing_assets/plugins/masonry/masonry.js') }}"></script>
 <script src="{{ asset('landing_assets/plugins/masonry/images_loaded.js') }}"></script>
 <script src="{{ asset('landing_assets/js/custom.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rellax/1.12.1/rellax.min.js"></script>
+<script>
+	$(document).ready(function() {
+		let page = 1; // Initial page number
+
+		// Function to load more data
+		function loadMoreData(page) {
+			$.ajax({
+				url: '/get-latest-templates?page=' + page,
+				method: 'GET',
+				dataType: 'json',
+				success: function(data) {
+					if (data.data.length > 0) {
+						// Append new data to the container
+						// (Assuming you have a container with the id 'latest-templates-container')
+						$('#latest-templates-container').append(data.data);
+					} else {
+						// No more data
+						$('#load-more-btn').hide();
+					}
+				},
+				error: function() {
+					console.log('Error loading data.');
+				}
+			});
+		}
+
+		// Initial load
+		loadMoreData(page);
+
+		// Load more button click event
+		$('#load-more-btn').on('click', function() {
+			page++;
+			loadMoreData(page);
+		});
+	});
+</script>
 </body>
 </html>

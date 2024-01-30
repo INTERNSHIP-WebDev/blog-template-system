@@ -1,1006 +1,637 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        .comment-item:hover {
+            background-color: #f7f7f7;
+            cursor: pointer;
+        }
+    </style>
 </head>
+
 <body>
 
-@extends('layouts.app')
+    @extends('layouts.app')
 
-@section('content')
-            <!-- ============================================================== -->
-            <!-- Start right Content here -->
-            <!-- ============================================================== -->
-            <div class="main-content">
+    @section('content')
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="main-content">
 
-                <div class="page-content">
-                    <div class="container-fluid">
+        <div class="page-content">
+            <div class="container-fluid">
 
-                        <!-- start page title -->
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0 font-size-18">Blog</h4>
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                            <h4 class="mb-sm-0 font-size-18">Dashboard</h4>
 
-                                    <div class="page-title-right">
-                                        <ol class="breadcrumb m-0">
-                                            <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
-                                            <li class="breadcrumb-item active">Blog</li>
-                                        </ol>
-                                    </div>
-
-                                </div>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
+                                    <li class="breadcrumb-item active">Blog</li>
+                                </ol>
                             </div>
+
                         </div>
-                        <!-- end page title -->
+                    </div>
+                </div>
+                <!-- end page title -->
 
+                <div class="row">
+
+                    <div class="col-xl-8">
                         <div class="row">
-
-                            <div class="col-xl-8">
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <div class="card mini-stats-wid">
-                                            <div class="card-body">
-                                                
-                                                <div class="d-flex flex-wrap">
-                                                    <div class="me-3">
-                                                        <p class="text-muted mb-2">Total Post</p>
-                                                        <h5 class="mb-0">{{ $totalPosts }}</h5>
-                                                    </div>
-    
-                                                    <div class="avatar-sm ms-auto">
-                                                        <div class="avatar-title bg-light rounded-circle text-primary font-size-20">
-                                                            <i class="bx bxs-book-bookmark"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-lg-4">
-                                        <div class="card blog-stats-wid">
-                                            <div class="card-body">
-
-                                                <div class="d-flex flex-wrap">
-                                                    <div class="me-3">
-                                                        <p class="text-muted mb-2">Concerns</p>
-                                                        <h5 class="mb-0">{{ $totalConcerns }}</h5>
-                                                    </div>
-    
-                                                    <div class="avatar-sm ms-auto">
-                                                        <div class="avatar-title bg-light rounded-circle text-primary font-size-20">
-                                                            <i class="bx bxs-note"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="card blog-stats-wid">
-                                            <div class="card-body">
-                                                <div class="d-flex flex-wrap">
-                                                    <div class="me-3">
-                                                        <p class="text-muted mb-2">Comments</p>
-                                                        <h5 class="mb-0">{{ $totalComments }}</h5>
-                                                    </div>
-    
-                                                    <div class="avatar-sm ms-auto">
-                                                        <div class="avatar-title bg-light rounded-circle text-primary font-size-20">
-                                                            <i class="bx bxs-message-square-dots"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- end row -->
-
-                                <div class="card">
+                            <div class="col-lg-4">
+                                <div class="card mini-stats-wid">
                                     <div class="card-body">
-                                        <div class="d-flex flex-wrap align-items-start">
-                                            <h5 class="card-title me-2">Visitors</h5>
-                                            <div class="ms-auto">
-                                                <div class="toolbar d-flex flex-wrap gap-2 text-end">
-                                                    <button type="button" class="btn btn-light btn-sm">
-                                                        ALL
-                                                    </button>
-                                                    <button type="button" class="btn btn-light btn-sm">
-                                                        1M
-                                                    </button>
-                                                    <button type="button" class="btn btn-light btn-sm">
-                                                        6M
-                                                    </button>
-                                                    <button type="button" class="btn btn-light btn-sm active">
-                                                        1Y
-                                                    </button>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row text-center">
-                                            <div class="col-lg-4">
-                                                <div class="mt-4">
-                                                    <p class="text-muted mb-1">Today</p>
-                                                    <h5>1024</h5>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-lg-4">
-                                                <div class="mt-4">
-                                                    <p class="text-muted mb-1">This Month</p>
-                                                    <h5>12356 <span class="text-success font-size-13">0.2 % <i class="mdi mdi-arrow-up ms-1"></i></span></h5>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-4">
-                                                <div class="mt-4">
-                                                    <p class="text-muted mb-1">This Year</p>
-                                                    <h5>102354 <span class="text-success font-size-13">0.1 % <i class="mdi mdi-arrow-up ms-1"></i></span></h5>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <hr class="mb-4">
-                                        
-                                        <div class="apex-charts" data-colors='["--bs-primary", "--bs-warning"]' id="area-chart" dir="ltr"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end col -->
-
-                            <div class="col-xl-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 me-3">
-                                                <img src="<?php echo url('theme')?>/dist/assets/images/users/avatar-1.jpg" alt="" class="avatar-sm rounded-circle img-thumbnail">
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <div class="d-flex">
-                                                    <div class="flex-grow-1">
-                                                        <div class="text-muted">
-                                                            <h5 class="mb-1">Henry wells</h5>
-                                                            <p class="mb-0">UI / UX Designer</p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="flex-shrink-0 dropdown ms-2">
-                                                        <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <i class="bx bxs-cog align-middle me-1"></i> Setting
-                                                        </button>
-                                                        <div class="dropdown-menu dropdown-menu-end">
-                                                            <a class="dropdown-item" href="#">Action</a>
-                                                            <a class="dropdown-item" href="#">Another action</a>
-                                                            <a class="dropdown-item" href="#">Something else</a>
-                                                        </div>
-                                                    </div>  
-                                                </div>
-                                                
-
-                                                <hr>
-
-                                                <div class="row">
-                                                    <div class="col-4">
-                                                        <div>
-                                                            <p class="text-muted text-truncate mb-2">Total Post</p>
-                                                            <h5 class="mb-0">32</h5>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <div>
-                                                            <p class="text-muted text-truncate mb-2">Subscribes</p>
-                                                            <h5 class="mb-0">10k</h5>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex flex-wrap align-items-start">
-                                            <h5 class="card-title mb-3 me-2">Subscribes</h5>
-
-                                            <div class="dropdown ms-auto">
-                                                <a class="text-muted font-size-16" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
-                                                    <i class="mdi mdi-dots-horizontal"></i>
-                                                </a>
-                                              
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <a class="dropdown-item" href="#">Action</a>
-                                                    <a class="dropdown-item" href="#">Another action</a>
-                                                    <a class="dropdown-item" href="#">Something else here</a>
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="#">Separated link</a>
-                                                </div>
-                                            </div>
-                                        </div>
 
                                         <div class="d-flex flex-wrap">
-                                            <div>
-                                                <p class="text-muted mb-1">Total Subscribe</p>
-                                                <h4 class="mb-3">10,512</h4>
-                                                <p class="text-success mb-0"><span>0.6 % <i class="mdi mdi-arrow-top-right ms-1"></i></span></p>
+                                            <div class="me-3">
+                                                <p class="text-muted mb-2">Total Post</p>
+                                                <h5 class="mb-0">{{ $totalPosts }}</h5>
                                             </div>
-                                            <div class="ms-auto align-self-end">
-                                                <i class="bx bx-group display-4 text-light"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div class="card">
-                                    <div class="card-body p-4">
-                                        <div class="text-center">
-                                            <div class="avatar-md mx-auto mb-4">
-                                                <div class="avatar-title bg-light rounded-circle text-primary h1">
-                                                    <i class="mdi mdi-email-open"></i>
+                                            <div class="avatar-sm ms-auto">
+                                                <div class="avatar-title bg-light rounded-circle text-primary font-size-20">
+                                                    <i class="bx bxs-book-bookmark"></i>
                                                 </div>
                                             </div>
+                                        </div>
 
-                                            <div class="row justify-content-center">
-                                                <div class="col-xl-10">
-                                                    <h4 class="text-primary">Subscribe !</h4>
-                                                    <p class="text-muted font-size-14 mb-4">Subscribe our newletter and get notification to stay update.</p>
+                                    </div>
+                                </div>
+                            </div>
 
-                                                    <div class="input-group bg-light rounded">
-                                                        <input type="email" class="form-control bg-transparent border-0" placeholder="Enter Email address" aria-label="Recipient's username" aria-describedby="button-addon2">
-                                                        
-                                                        <button class="btn btn-primary" type="button" id="button-addon2">
-                                                            <i class="bx bxs-paper-plane"></i>
-                                                        </button>
-                                                        
-                                                    </div>
-                                                    
+                            <div class="col-lg-4">
+                                <div class="card blog-stats-wid">
+                                    <div class="card-body">
+
+                                        <div class="d-flex flex-wrap">
+                                            <div class="me-3">
+                                                <p class="text-muted mb-2">Total Mails</p>
+                                                <h5 class="mb-0">{{ $totalConcerns }}</h5>
+                                            </div>
+
+                                            <div class="avatar-sm ms-auto">
+                                                <div class="avatar-title bg-light rounded-circle text-primary font-size-20">
+                                                    <i class="bx bxs-envelope"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card blog-stats-wid">
+                                    <div class="card-body">
+                                        <div class="d-flex flex-wrap">
+                                            <div class="me-3">
+                                                <p class="text-muted mb-2">Total Comments</p>
+                                                <h5 class="mb-0">{{ $totalComments }}</h5>
+                                            </div>
+
+                                            <div class="avatar-sm ms-auto">
+                                                <div class="avatar-title bg-light rounded-circle text-primary font-size-20">
+                                                    <i class="bx bxs-message-square-dots"></i>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- end col -->
-
                         </div>
                         <!-- end row -->
 
-                        <div class="row">
-                            <div class="col-xl-4 col-lg-6">
-                                <div class="card">
-                                    <div class="card-header bg-transparent border-bottom">
-                                        <div class="d-flex flex-wrap align-items-start">
-                                            <div class="me-2">
-                                                <h5 class="card-title mt-1 mb-0">Posts</h5>
-                                            </div>
-                                            <ul class="nav nav-tabs nav-tabs-custom card-header-tabs ms-auto" role="tablist">
-                                                <li class="nav-item">
-                                                    <a class="nav-link active" data-bs-toggle="tab" href="#post-recent" role="tab">
-                                                        Recent
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" data-bs-toggle="tab" href="#post-popular" role="tab">
-                                                        Popular
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        
-                                    </div>
-                                    
-                                    <div class="card-body">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex flex-wrap align-items-start">
+                                    <h5 class="card-title me-2">Visitors</h5>
+                                    <div class="ms-auto">
+                                        <div class="toolbar d-flex flex-wrap gap-2 text-end">
+                                            <button type="button" class="btn btn-light btn-sm">
+                                                ALL
+                                            </button>
+                                            <button type="button" class="btn btn-light btn-sm">
+                                                1M
+                                            </button>
+                                            <button type="button" class="btn btn-light btn-sm">
+                                                6M
+                                            </button>
+                                            <button type="button" class="btn btn-light btn-sm active">
+                                                1Y
+                                            </button>
 
-                                        <div data-simplebar style="max-height: 295px;">
-                                            <!-- Tab panes -->
-                                            <div class="tab-content">
-                                                <div class="tab-pane active" id="post-recent" role="tabpanel">
-                                                    <ul class="list-group list-group-flush">
-                                                        <li class="list-group-item py-3">
-                                                            <div class="d-flex">
-                                                                <div class="me-3">
-                                                                    <img src="<?php echo url('theme')?>/dist/assets/images/small/img-2.jpg" alt="" class="avatar-md h-auto d-block rounded">
-                                                                </div>
-                                                                
-                                                                <div class="align-self-center overflow-hidden me-auto">
-                                                                    <div>
-                                                                        <h5 class="font-size-14 text-truncate"><a href="javascript: void(0);" class="text-dark">Beautiful Day with Friends</a></h5>
-                                                                        <p class="text-muted mb-0">10 Nov, 2020</p>
-                                                                    </div>
-                                                                </div>
-                
-                                                                <div class="dropdown ms-2">
-                                                                    <a class="text-muted font-size-14" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        <i class="mdi mdi-dots-horizontal"></i>
-                                                                    </a>
-                                                                    
-                                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                                        <a class="dropdown-item" href="#">Action</a>
-                                                                        <a class="dropdown-item" href="#">Another action</a>
-                                                                        <a class="dropdown-item" href="#">Something else here</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-
-                                                        <li class="list-group-item py-3">
-                                                            <div class="d-flex">
-                                                                <div class="me-3">
-                                                                    <img src="<?php echo url('theme')?>/dist/assets/images/small/img-6.jpg" alt="" class="avatar-md h-auto d-block rounded">
-                                                                </div>
-                                                                <div class="align-self-center overflow-hidden me-auto">
-                                                                    <div>
-                                                                        <h5 class="font-size-14 text-truncate"><a href="javascript: void(0);" class="text-dark">Drawing a sketch</a></h5>
-                                                                        <p class="text-muted mb-0">02 Nov, 2020</p>
-                                                                    </div>
-                                                                </div>
-        
-                                                                <div class="dropdown ms-2">
-                                                                    <a class="text-muted font-size-14" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        <i class="mdi mdi-dots-horizontal"></i>
-                                                                    </a>
-                                                                    
-                                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                                        <a class="dropdown-item" href="#">Action</a>
-                                                                        <a class="dropdown-item" href="#">Another action</a>
-                                                                        <a class="dropdown-item" href="#">Something else here</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-
-                                                        <li class="list-group-item py-3">
-                                                            <div class="d-flex">
-                                                                <div class="me-3">
-                                                                    <img src="<?php echo url('theme')?>/dist/assets/images/small/img-2.jpg" alt="" class="avatar-md h-auto d-block rounded">
-                                                                </div>
-
-                                                                <div class="align-self-center overflow-hidden me-auto">
-                                                                    <div>
-                                                                        <h5 class="font-size-14 text-truncate"><a href="javascript: void(0);" class="text-dark">Project discussion with team</a></h5>
-                                                                        <p class="text-muted mb-0">24 Oct, 2020</p>
-                                                                    </div>
-                                                                </div>
-        
-                                                                <div class="dropdown ms-2">
-                                                                    <a class="text-muted font-size-14" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        <i class="mdi mdi-dots-horizontal"></i>
-                                                                    </a>
-                                                                    
-                                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                                        <a class="dropdown-item" href="#">Action</a>
-                                                                        <a class="dropdown-item" href="#">Another action</a>
-                                                                        <a class="dropdown-item" href="#">Something else here</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-
-                                                        <li class="list-group-item py-3">
-                                                            <div class="d-flex">
-                                                                <div class="me-3">
-                                                                    <img src="<?php echo url('theme')?>/dist/assets/images/small/img-1.jpg" alt="" class="avatar-md h-auto d-block rounded">
-                                                                </div>
-                                                                    
-                                                                <div class="align-self-center overflow-hidden me-auto">
-                                                                    <div>
-                                                                        <h5 class="font-size-14 text-truncate"><a href="javascript: void(0);" class="text-dark">Riding bike on road</a></h5>
-                                                                        <p class="text-muted mb-0">20 Oct, 2020</p>
-                                                                    </div>
-                                                                </div>
-        
-                                                                <div class="dropdown ms-2">
-                                                                    <a class="text-muted font-size-14" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        <i class="mdi mdi-dots-horizontal"></i>
-                                                                    </a>
-                                                                    
-                                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                                        <a class="dropdown-item" href="#">Action</a>
-                                                                        <a class="dropdown-item" href="#">Another action</a>
-                                                                        <a class="dropdown-item" href="#">Something else here</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <!-- end tab pane -->
-
-                                                <div class="tab-pane" id="post-popular" role="tabpanel">
-                                                    
-                                                    <ul class="list-group list-group-flush">
-
-                                                        <li class="list-group-item py-3">
-                                                            <div class="d-flex">
-                                                                <div class="me-3">
-                                                                    <img src="<?php echo url('theme')?>/dist/assets/images/small/img-6.jpg" alt="" class="avatar-md h-auto d-block rounded">
-                                                                </div>
-                                                                    
-                                                                <div class="align-self-center overflow-hidden me-auto">
-                                                                    <div>
-                                                                        <h5 class="font-size-14 text-truncate"><a href="javascript: void(0);" class="text-dark">Drawing a sketch</a></h5>
-                                                                        <p class="text-muted mb-0">02 Nov, 2020</p>
-                                                                    </div>
-                                                                </div>
-        
-                                                                <div class="dropdown ms-2">
-                                                                    <a class="text-muted font-size-14" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        <i class="mdi mdi-dots-horizontal"></i>
-                                                                    </a>
-                                                                    
-                                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                                        <a class="dropdown-item" href="#">Action</a>
-                                                                        <a class="dropdown-item" href="#">Another action</a>
-                                                                        <a class="dropdown-item" href="#">Something else here</a>
-                                                                    </div>
-                                                                </div>
-                                                                
-                                                            </div>
-                                                        </li>
-
-                                                        <li class="list-group-item py-3">
-                                                            <div class="d-flex">
-                                                                <div class="me-3">
-                                                                    <img src="<?php echo url('theme')?>/dist/assets/images/small/img-2.jpg" alt="" class="avatar-md h-auto d-block rounded">
-                                                                </div>
-                                                                    
-                                                                <div class="align-self-center overflow-hidden me-auto">
-                                                                    <div>
-                                                                        <h5 class="font-size-14 text-truncate"><a href="javascript: void(0);" class="text-dark">Beautiful Day with Friends</a></h5>
-                                                                        <p class="text-muted mb-0">10 Nov, 2020</p>
-                                                                    </div>
-                                                                </div>
-        
-                                                                <div class="dropdown ms-2">
-                                                                    <a class="text-muted font-size-14" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        <i class="mdi mdi-dots-horizontal"></i>
-                                                                    </a>
-                                                                    
-                                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                                        <a class="dropdown-item" href="#">Action</a>
-                                                                        <a class="dropdown-item" href="#">Another action</a>
-                                                                        <a class="dropdown-item" href="#">Something else here</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-
-                                                        <li class="list-group-item py-3">
-                                                            <div class="d-flex">
-                                                                <div class="me-3">
-                                                                    <img src="<?php echo url('theme')?>/dist/assets/images/small/img-1.jpg" alt="" class="avatar-md h-auto d-block rounded">
-                                                                </div>
-                                                                    
-                                                                <div class="align-self-center overflow-hidden me-auto">
-                                                                    <div>
-                                                                        <h5 class="font-size-14 text-truncate"><a href="javascript: void(0);" class="text-dark">Riding bike on road</a></h5>
-                                                                        <p class="text-muted mb-0">20 Oct, 2020</p>
-                                                                    </div>
-                                                                </div>
-        
-                                                                <div class="dropdown ms-2">
-                                                                    <a class="text-muted font-size-14" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        <i class="mdi mdi-dots-horizontal"></i>
-                                                                    </a>
-                                                                    
-                                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                                        <a class="dropdown-item" href="#">Action</a>
-                                                                        <a class="dropdown-item" href="#">Another action</a>
-                                                                        <a class="dropdown-item" href="#">Something else here</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-
-                                                        <li class="list-group-item py-3">
-                                                            <div class="d-flex">
-                                                                <div class="me-3">
-                                                                    <img src="<?php echo url('theme')?>/dist/assets/images/small/img-2.jpg" alt="" class="avatar-md h-auto d-block rounded">
-                                                                </div>
-                                                                    
-                                                                <div class="align-self-center overflow-hidden me-auto">
-                                                                    <div>
-                                                                        <h5 class="font-size-14 text-truncate"><a href="javascript: void(0);" class="text-dark">Project discussion with team</a></h5>
-                                                                        <p class="text-muted mb-0">24 Oct, 2020</p>
-                                                                    </div>
-                                                                </div>
-        
-                                                                <div class="dropdown ms-2">
-                                                                    <a class="text-muted font-size-14" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        <i class="mdi mdi-dots-horizontal"></i>
-                                                                    </a>
-                                                                    
-                                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                                        <a class="dropdown-item" href="#">Action</a>
-                                                                        <a class="dropdown-item" href="#">Another action</a>
-                                                                        <a class="dropdown-item" href="#">Something else here</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-
-                                                    </ul>
-                                                </div>
-                                                <!-- end tab pane -->
-                                            </div>
-                                            <!-- end tab content -->
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- end col -->
-                            
-                            <div class="col-xl-4 col-lg-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex flex-wrap align-items-start">
-                                            <div class="me-2">
-                                                <h5 class="card-title mb-3">Comments</h5>
-                                            </div>
-                                            <div class="dropdown ms-auto">
-                                                <a class="text-muted font-size-16" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
-                                                    <i class="mdi mdi-dots-horizontal"></i>
-                                                </a>
-                                              
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <a class="dropdown-item" href="#">Action</a>
-                                                    <a class="dropdown-item" href="#">Another action</a>
-                                                    <a class="dropdown-item" href="#">Something else here</a>
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="#">Separated link</a>
-                                                </div>
-                                            </div>
+
+                                <div class="row text-center">
+                                    <div class="col-lg-4">
+                                        <div class="mt-4">
+                                            <p class="text-muted mb-1">Today</p>
+                                            <h5>1024</h5>
                                         </div>
+                                    </div>
 
-                                        <div data-simplebar style="max-height: 310px;">
-                                            <ul class="list-group list-group-flush">
-                                                <li class="list-group-item py-3">
-                                                    <div class="d-flex">
-                                                        <div class="flex-shrink-0 me-3">
-                                                            <div class="avatar-xs">
-                                                                <div class="avatar-title rounded-circle bg-light text-primary">
-                                                                    <i class="bx bxs-user"></i>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <h5 class="font-size-14 mb-1">Delores Williams <small class="text-muted float-end">1 hr Ago</small></h5>
-                                                            <p class="text-muted">If several languages coalesce, the grammar of the resulting of the individual</p>
-                                                            <div>
-                                                                <a href="javascript: void(0);" class="text-success"><i class="mdi mdi-reply me-1"></i> Reply</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-
-                                                <li class="list-group-item py-3">
-                                                    <div class="d-flex">
-                                                        <div class="flex-shrink-0 me-3">
-                                                            <div class="avatar-xs">
-                                                                <img src="<?php echo url('theme')?>/dist/assets/images/users/avatar-2.jpg" alt="" class="img-fluid d-block rounded-circle">
-                                                            </div>
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <h5 class="font-size-14 mb-1">Clarence Smith <small class="text-muted float-end">2 hrs Ago</small></h5>
-                                                            <p class="text-muted">Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet</p>
-                                                            <div>
-                                                                <a href="javascript: void(0);" class="text-success"><i class="mdi mdi-reply"></i> Reply</a>
-                                                            </div>
-        
-                                                            <div class="d-flex pt-3">
-                                                                <div class="flex-shrink-0 me-3">
-                                                                    <div class="avatar-xs">
-                                                                        <div class="avatar-title rounded-circle bg-light text-primary">
-                                                                            <i class="bx bxs-user"></i>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="flex-grow-1">
-                                                                    <h5 class="font-size-14 mb-1">Silvia Martinez <small class="text-muted float-end">2 hrs Ago</small></h5>
-                                                                    <p class="text-muted">To take a trivial example, which of us ever undertakes</p>
-                                                                    <div>
-                                                                        <a href="javascript: void(0);" class="text-success"><i class="mdi mdi-reply"></i> Reply</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-
-                                                <li class="list-group-item py-3">
-                                                    <div class="d-flex">
-                                                        <div class="flex-shrink-0 me-3">
-                                                            <div class="avatar-xs">
-                                                                <div class="avatar-title rounded-circle bg-light text-primary">
-                                                                    <i class="bx bxs-user"></i>
-                                                                </div>
-                                                            </div>
-                                                        </div>  
-                                                        <div class="flex-grow-1">
-                                                            <h5 class="font-size-14 mb-1">Keith McCoy <small class="text-muted float-end">12 Aug</small></h5>
-                                                            <p class="text-muted">Donec posuere vulputate arcu. phasellus accumsan cursus velit</p>
-                                                            <div>
-                                                                <a href="javascript: void(0);" class="text-success"><i class="mdi mdi-reply"></i> Reply</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-
-                                                
-                                            </ul>
+                                    <div class="col-lg-4">
+                                        <div class="mt-4">
+                                            <p class="text-muted mb-1">This Month</p>
+                                            <h5>12356 <span class="text-success font-size-13">0.2 % <i class="mdi mdi-arrow-up ms-1"></i></span></h5>
                                         </div>
+                                    </div>
 
+                                    <div class="col-lg-4">
+                                        <div class="mt-4">
+                                            <p class="text-muted mb-1">This Year</p>
+                                            <h5>102354 <span class="text-success font-size-13">0.1 % <i class="mdi mdi-arrow-up ms-1"></i></span></h5>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- end col -->
 
-                            <div class="col-xl-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex flex-wrap align-items-start">
-                                            <div class="me-2">
-                                                <h5 class="card-title mb-3">Top Visitors</h5>
+                                <hr class="mb-4">
+
+                                <!-- <canvas id="weekly-postings-chart" style="max-height: 300px;"></canvas> -->
+
+                                <!-- <div class="apex-charts" data-colors='["--bs-primary", "--bs-warning"]' id="area-chart" dir="ltr"></div> -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end col -->
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0 me-3">
+                                        <img src="<?php echo url('theme') ?>/dist/assets/images/users/avatar-1.jpg" alt="" class="avatar-sm rounded-circle img-thumbnail">
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex">
+                                            <div class="flex-grow-1">
+                                                <div class="text-muted">
+                                                    <h5 class="mb-1">{{ $user->name }}</h5>
+                                                    <p class="mb-0">{{ $user->role }}</p>
+                                                </div>
                                             </div>
-                                            <div class="dropdown ms-auto">
-                                                <a class="text-muted font-size-16" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
-                                                    <i class="mdi mdi-dots-horizontal"></i>
-                                                </a>
-                                              
+
+                                            <div class="flex-shrink-0 dropdown ms-2">
+                                                <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="bx bxs-cog align-middle me-1"></i> Setting
+                                                </button>
                                                 <div class="dropdown-menu dropdown-menu-end">
                                                     <a class="dropdown-item" href="#">Action</a>
                                                     <a class="dropdown-item" href="#">Another action</a>
-                                                    <a class="dropdown-item" href="#">Something else here</a>
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="#">Separated link</a>
+                                                    <a class="dropdown-item" href="#">Something else</a>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row text-center">
-                                            <div class="col-6">
-                                                <div class="mt-3">
-                                                    <p class="text-muted mb-1">Today</p>
-                                                    <h5>1024</h5>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-6">
-                                                <div class="mt-3">
-                                                    <p class="text-muted mb-1">This Month</p>
-                                                    <h5>12356 <span class="text-success font-size-13">0.2 % <i class="mdi mdi-arrow-up ms-1"></i></span></h5>
-                                                </div>
-                                            </div>
-                                        </div>
+
 
                                         <hr>
 
-                                        <div>
-                                            <ul class="list-group list-group-flush">
-                                                <li class="list-group-item">
-                                                    <div class="py-2">
-                                                        <h5 class="font-size-14">California <span class="float-end">78%</span></h5>
-                                                        <div class="progress animated-progess progress-sm">
-                                                            <div class="progress-bar" role="progressbar" style="width: 78%" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </div>
-                                                </li>    
-                                                <li class="list-group-item">
-                                                    <div class="py-2">
-                                                        <h5 class="font-size-14">Nevada <span class="float-end">69%</span></h5>
-                                                        <div class="progress animated-progess progress-sm">
-                                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 69%" aria-valuenow="69" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class="list-group-item">
-                                                    <div class="py-2">
-                                                        <h5 class="font-size-14">Texas <span class="float-end">61%</span></h5>
-                                                        <div class="progress animated-progess progress-sm">
-                                                            <div class="progress-bar bg-success" role="progressbar" style="width: 61%" aria-valuenow="61" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </div>
-                                                </li>   
-                                                
-                                            </ul>
-                                            
-                                            
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end col -->
-                        </div>
-                        <!-- end row -->
-                        
-
-                        <div class="row">
-                            <div class="col-xl-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-start">
-                                            <div class="me-2">
-                                                <h5 class="card-title mb-4">Activity</h5>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <div>
+                                                    <p class="text-muted text-truncate mb-2">Total Posts</p>
+                                                    <h5 class="mb-0">{{ $totalUserPosts }}</h5>
+                                                </div>
                                             </div>
-                                            <div class="dropdown ms-auto">
-                                                <a class="text-muted font-size-16" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
-                                                    <i class="mdi mdi-dots-horizontal"></i>
-                                                </a>
-                                              
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <a class="dropdown-item" href="#">Action</a>
-                                                    <a class="dropdown-item" href="#">Another action</a>
-                                                    <a class="dropdown-item" href="#">Something else here</a>
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="#">Separated link</a>
+                                            <div class="col-4">
+                                                <div>
+                                                    <p class="text-muted text-truncate mb-2">Comments</p>
+                                                    <h5 class="mb-0">{{ $totalUserComments }}</h5>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div data-simplebar class="mt-2" style="max-height: 280px;">
-                                            <ul class="verti-timeline list-unstyled">
-                                                <li class="event-list active">
-                                                    <div class="event-timeline-dot">
-                                                        <i class="bx bxs-right-arrow-circle font-size-18 bx-fade-right"></i>
-                                                    </div>
-                                                    <div class="d-flex">
-                                                        <div class="flex-shrink-0 me-3">
-                                                            <h5 class="font-size-14">10 Nov <i class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"></i></h5>
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <div>
-                                                                Posted <span class="fw-semibold">Beautiful Day with Friends</span> blog... <a href="javascript: void(0);">View</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class="event-list">
-                                                    <div class="event-timeline-dot">
-                                                        <i class="bx bx-right-arrow-circle font-size-18"></i>
-                                                    </div>
-                                                    <div class="d-flex">
-                                                        <div class="flex-shrink-0 me-3">
-                                                            <h5 class="font-size-14">08 Nov <i class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"></i></h5>
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <div>
-                                                                If several languages coalesce, the grammar of the resulting... <a href="javascript: void(0);">Read</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class="event-list">
-                                                    <div class="event-timeline-dot">
-                                                        <i class="bx bx-right-arrow-circle font-size-18"></i>
-                                                    </div>
-                                                    <div class="d-flex">
-                                                        <div class="flex-shrink-0 me-3">
-                                                            <h5 class="font-size-14">02 Nov <i class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"></i></h5>
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <div>
-                                                                Create <span class="fw-semibold">Drawing a sketch blog</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class="event-list">
-                                                    <div class="event-timeline-dot">
-                                                        <i class="bx bx-right-arrow-circle font-size-18"></i>
-                                                    </div>
-                                                    <div class="d-flex">
-                                                        <div class="flex-shrink-0 me-3">
-                                                            <h5 class="font-size-14">24 Oct <i class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"></i></h5>
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <div>
-                                                                In enim justo, rhoncus ut, imperdiet a venenatis vitae
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class="event-list">
-                                                    <div class="event-timeline-dot">
-                                                        <i class="bx bx-right-arrow-circle font-size-18"></i>
-                                                    </div>
-                                                    <div class="d-flex">
-                                                        <div class="flex-shrink-0 me-3">
-                                                            <h5 class="font-size-14">21 Oct <i class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"></i></h5>
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <div>
-                                                                Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        
-                                        <div class="text-center mt-4"><a href="javascript: void(0);" class="btn btn-primary waves-effect waves-light btn-sm">View More <i class="mdi mdi-arrow-right ms-1"></i></a></div>
                                     </div>
+
+
                                 </div>
-                                <!-- end card -->
+
                             </div>
-                            <!-- end col -->
-                            <div class="col-xl-8">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-start">
-                                            <div class="me-2">
-                                                <h5 class="card-title mb-4">Popular post</h5>
-                                            </div>
-                                            <div class="dropdown ms-auto">
-                                                <a class="text-muted font-size-16" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
-                                                    <i class="mdi mdi-dots-horizontal"></i>
-                                                </a>
-
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <a class="dropdown-item" href="#">Action</a>
-                                                    <a class="dropdown-item" href="#">Another action</a>
-                                                    <a class="dropdown-item" href="#">Something else here</a>
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="#">Separated link</a>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="table-responsive">
-                                            <table class="table align-middle table-nowrap mb-0">
-                                                <tr>
-                                                    <th scope="col" colspan="2">Post</th>
-                                                    <th scope="col">Likes</th>
-                                                    <th scope="col">Comments</th>
-                                                    <th scope="col">Action</th>
-                                                  </tr>
-                                                <tbody>
-                                                    <tr>
-                                                        <td style="width: 100px;"><img src="<?php echo url('theme')?>/dist/assets/images/small/img-2.jpg" alt="" class="avatar-md h-auto d-block rounded"></td>
-                                                        <td>
-                                                            <h5 class="font-size-13 text-truncate mb-1"><a href="javascript: void(0);" class="text-dark">Beautiful Day with Friends</a></h5>
-                                                            <p class="text-muted mb-0">10 Nov, 2020</p>
-                                                        </td>
-                                                        <td><i class="bx bx-like align-middle me-1"></i> 125</td>
-                                                        <td><i class="bx bx-comment-dots align-middle me-1"></i> 68</td>
-                                                        <td>
-                                                            <div class="dropdown">
-                                                                <a class="text-muted font-size-16" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
-                                                                    <i class="mdi mdi-dots-horizontal"></i>
-                                                                </a>
-                                                              
-                                                                <div class="dropdown-menu dropdown-menu-end">
-                                                                    <a class="dropdown-item" href="#">Action</a>
-                                                                    <a class="dropdown-item" href="#">Another action</a>
-                                                                    <a class="dropdown-item" href="#">Something else here</a>
-                                                                    <div class="dropdown-divider"></div>
-                                                                    <a class="dropdown-item" href="#">Separated link</a>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td><img src="<?php echo url('theme')?>/dist/assets/images/small/img-6.jpg" alt="" class="avatar-md h-auto d-block rounded"></td>
-                                                        <td>
-                                                            <h5 class="font-size-13 text-truncate mb-1"><a href="javascript: void(0);" class="text-dark">Drawing a sketch</a></h5>
-                                                            <p class="text-muted mb-0">02 Nov, 2020</p>
-                                                        </td>
-                                                        <td><i class="bx bx-like align-middle me-1"></i> 102</td>
-                                                        <td><i class="bx bx-comment-dots align-middle me-1"></i> 48</td>
-                                                        <td>
-                                                            <div class="dropdown">
-                                                                <a class="text-muted font-size-16" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
-                                                                    <i class="mdi mdi-dots-horizontal"></i>
-                                                                </a>
-                                                              
-                                                                <div class="dropdown-menu dropdown-menu-end">
-                                                                    <a class="dropdown-item" href="#">Action</a>
-                                                                    <a class="dropdown-item" href="#">Another action</a>
-                                                                    <a class="dropdown-item" href="#">Something else here</a>
-                                                                    <div class="dropdown-divider"></div>
-                                                                    <a class="dropdown-item" href="#">Separated link</a>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td><img src="<?php echo url('theme')?>/dist/assets/images/small/img-1.jpg" alt="" class="avatar-md h-auto d-block rounded"></td>
-                                                        <td>
-                                                            <h5 class="font-size-13 text-truncate mb-1"><a href="javascript: void(0);" class="text-dark">Riding bike on road</a></h5>
-                                                            <p class="text-muted mb-0">24 Oct, 2020</p>
-                                                        </td>
-                                                        <td><i class="bx bx-like align-middle me-1"></i> 98</td>
-                                                        <td><i class="bx bx-comment-dots align-middle me-1"></i> 35</td>
-                                                        <td>
-                                                            <div class="dropdown">
-                                                                <a class="text-muted font-size-16" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
-                                                                    <i class="mdi mdi-dots-horizontal"></i>
-                                                                </a>
-                                                              
-                                                                <div class="dropdown-menu dropdown-menu-end">
-                                                                    <a class="dropdown-item" href="#">Action</a>
-                                                                    <a class="dropdown-item" href="#">Another action</a>
-                                                                    <a class="dropdown-item" href="#">Something else here</a>
-                                                                    <div class="dropdown-divider"></div>
-                                                                    <a class="dropdown-item" href="#">Separated link</a>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td><img src="<?php echo url('theme')?>/dist/assets/images/small/img-2.jpg" alt="" class="avatar-md h-auto d-block rounded"></td>
-                                                        <td>
-                                                            <h5 class="font-size-13 text-truncate mb-1"><a href="javascript: void(0);" class="text-dark">Project discussion with team</a></h5>
-                                                            <p class="text-muted mb-0">15 Oct, 2020</p>
-                                                        </td>
-                                                        <td><i class="bx bx-like align-middle me-1"></i> 92</td>
-                                                        <td><i class="bx bx-comment-dots align-middle me-1"></i> 22</td>
-                                                        <td>
-                                                            <div class="dropdown">
-                                                                <a class="text-muted font-size-16" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
-                                                                    <i class="mdi mdi-dots-horizontal"></i>
-                                                                </a>
-                                                              
-                                                                <div class="dropdown-menu dropdown-menu-end">
-                                                                    <a class="dropdown-item" href="#">Action</a>
-                                                                    <a class="dropdown-item" href="#">Another action</a>
-                                                                    <a class="dropdown-item" href="#">Something else here</a>
-                                                                    <div class="dropdown-divider"></div>
-                                                                    <a class="dropdown-item" href="#">Separated link</a>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            
-                                              
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- end card -->
-                            </div>
-                            <!-- end col -->
                         </div>
-                        <!-- end row -->
-                        
-                    </div> <!-- container-fluid -->
+
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex flex-wrap align-items-start">
+                                    <h5 class="card-title mb-3 me-2">Likes</h5>
+
+                                    <div class="dropdown ms-auto">
+                                        <a class="text-muted font-size-16" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                                            <i class="mdi mdi-dots-horizontal"></i>
+                                        </a>
+
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Separated link</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @php
+                                $totalLikes = 0;
+                                foreach ($templates as $template) {
+                                $totalLikes += $template->likes()->count();
+                                }
+                                @endphp
+
+                                <div class="d-flex flex-wrap">
+                                    <div>
+                                        <p class="text-muted mb-1">Total Likes</p>
+                                        <h4 class="mb-3">{{ $totalLikes }}</h4>
+                                    </div>
+                                    <div class="ms-auto align-self-end">
+                                        <i class="bx bx-like display-4 text-light"></i>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end col -->
+
                 </div>
-                <!-- End Page-content -->
-            </div>
-            <!-- end main content-->
+                <!-- end row -->
+
+                <div class="row">
+                    <div class="col-xl-4 col-lg-6">
+                        <div class="card">
+                            <div class="card-header bg-transparent border-bottom">
+                                <div class="d-flex flex-wrap align-items-start">
+                                    <div class="me-2">
+                                        <h5 class="card-title mt-1 mb-0">Mails</h5>
+                                    </div>
+                                    <ul class="nav nav-tabs nav-tabs-custom card-header-tabs ms-auto" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" data-bs-toggle="tab" href="#post-recent" role="tab">
+                                                Recent
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+
+                            </div>
+
+                            <div class="card-body">
+
+                                <div data-simplebar style="max-height: 295px;">
+                                    <!-- Tab panes -->
+                                    <div class="tab-content">
+                                        @forelse($concerns as $concern)
+                                        @if($concern->rcpt_email === auth()->user()->email)
+                                        <div class="tab-pane active" id="post-recent" role="tabpanel">
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item py-3">
+                                                    <div class="d-flex">
+                                                        <div class="me-3">
+                                                            <img src="{{ asset('images/banners/' . $concern->banner) }}" alt="Concern Banner" class="avatar-md h-auto d-block rounded" width="100%" height="50">
+                                                        </div>
+                                                        <div class="align-self-center overflow-hidden me-auto">
+                                                            <div>
+                                                                <h5 class="font-size-14 text-truncate"><a href="javascript: void(0);" class="text-dark">{{ $concern->header }}</a></h5>
+                                                                <p class="text-muted mb-0">{{ $concern->created_at->format('d M, Y') }}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="dropdown ms-2">
+                                                            <a class="text-muted font-size-14" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <i class="mdi mdi-dots-horizontal"></i>
+                                                            </a>
+                                                            <div class="dropdown-menu dropdown-menu-end">
+                                                                <a class="dropdown-item" href="#">Action</a>
+                                                                <a class="dropdown-item" href="#">Another action</a>
+                                                                <a class="dropdown-item" href="#">Something else here</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        @endif
+                                        @empty
+                                        <div class="text-muted">No concerns found.</div>
+                                        @endforelse
+                                        <!-- end tab pane -->
+                                    </div>
+                                    <!-- end tab content -->
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end col -->
+
+                    <div class="col-xl-4 col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex flex-wrap align-items-start">
+                                    <div class="me-2">
+                                        <h5 class="card-title mb-3">Comments</h5>
+                                    </div>
+                                    <div class="dropdown ms-auto">
+                                        <a class="text-muted font-size-16" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                                            <i class="mdi mdi-dots-horizontal"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Separated link</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div data-simplebar style="max-height: 310px;">
+                                    <ul class="list-group list-group-flush">
+                                        @foreach($comments as $comment)
+                                        @if($comment->template->user_id === auth()->id())
+                                        <li class="list-group-item py-3 comment-item">
+                                            <a href="{{ route('templates.show', $comment->template->id) }}" class="text-decoration-none">
+                                                <div class="d-flex">
+                                                    <div class="flex-shrink-0 me-3">
+                                                        <div class="avatar-xs">
+                                                            <div class="avatar-title rounded-circle bg-light text-primary">
+                                                                <i class="bx bxs-user"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <h5 class="font-size-14 mb-1">{{ $comment->name }}<span style="color: black; margin-left: 5px; margin-right: 5px;">commented on your blog</span>"{{ $comment->template->header }}""{{ $comment->template->header }}"<span style="color: black;">.</span></h5>
+                                                        <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        @endif
+                                        @endforeach
+                                        @if($comments->isEmpty())
+                                        <div class="text-muted">No comments found.</div>
+                                        @endif
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- end col -->
+
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex flex-wrap align-items-start">
+                                    <div class="me-2">
+                                        <h5 class="card-title mb-3">Top Visitors</h5>
+                                    </div>
+                                    <div class="dropdown ms-auto">
+                                        <a class="text-muted font-size-16" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                                            <i class="mdi mdi-dots-horizontal"></i>
+                                        </a>
+
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Separated link</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row text-center">
+                                    <div class="col-6">
+                                        <div class="mt-3">
+                                            <p class="text-muted mb-1">Today</p>
+                                            <h5>1024</h5>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="mt-3">
+                                            <p class="text-muted mb-1">This Month</p>
+                                            <h5>12356 <span class="text-success font-size-13">0.2 % <i class="mdi mdi-arrow-up ms-1"></i></span></h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr>
+
+                                <div>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            <div class="py-2">
+                                                <h5 class="font-size-14">California <span class="float-end">78%</span></h5>
+                                                <div class="progress animated-progess progress-sm">
+                                                    <div class="progress-bar" role="progressbar" style="width: 78%" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <div class="py-2">
+                                                <h5 class="font-size-14">Nevada <span class="float-end">69%</span></h5>
+                                                <div class="progress animated-progess progress-sm">
+                                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 69%" aria-valuenow="69" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <div class="py-2">
+                                                <h5 class="font-size-14">Texas <span class="float-end">61%</span></h5>
+                                                <div class="progress animated-progess progress-sm">
+                                                    <div class="progress-bar bg-success" role="progressbar" style="width: 61%" aria-valuenow="61" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                            </div>
+                                        </li>
+
+                                    </ul>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end col -->
+                </div>
+                <!-- end row -->
+
+
+                <div class="row">
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start">
+                                    <div class="me-2">
+                                        <h5 class="card-title mb-4">Activity</h5>
+                                    </div>
+                                    <div class="dropdown ms-auto">
+                                        <a class="text-muted font-size-16" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                                            <i class="mdi mdi-dots-horizontal"></i>
+                                        </a>
+
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Separated link</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div data-simplebar class="mt-2" style="max-height: 280px;">
+                                    <ul class="verti-timeline list-unstyled">
+
+
+                                        <li class="event-list active">
+                                            <div class="event-timeline-dot">
+                                                <i class="bx bxs-right-arrow-circle font-size-18 bx-fade-right"></i>
+                                            </div>
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0 me-3">
+                                                    <h5 class="font-size-14">{{ date('d M', strtotime($latestTemplate->created_at)) }}<i class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"></i></h5>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <div>
+                                                        <span class="fw-semibold">
+                                                            {{ implode(' ', array_slice(str_word_count($latestTemplate->user->name, 1), 0, 2)) }}
+                                                        </span>
+                                                        Posted
+                                                        <span class="fw-semibold">{{ $latestTemplate->header }}</span>
+                                                        blog... <a href="{{ url('post/' . $latestTemplate->id) }}">View</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+
+                                        @foreach ($activityTemplate->skip(1) as $template)
+                                        <li class="event-list">
+                                            <div class="event-timeline-dot">
+                                                <i class="bx bx-right-arrow-circle font-size-18"></i>
+                                            </div>
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0 me-3">
+                                                    <h5 class="font-size-14">{{ date('d M', strtotime($template->created_at)) }}<i class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"></i></h5>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <div>
+                                                        <span class="fw-semibold">
+                                                            {{ implode(' ', array_slice(str_word_count($template->user->name, 1), 0, 2)) }}
+                                                        </span>
+                                                        Posted
+                                                        <span class="fw-semibold">{{ $template->header }}</span>
+                                                        blog... <a href="{{ url('post/' . $template->id) }}">View</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        @endforeach
+
+
+
+                                    </ul>
+                                </div>
+
+                                <div class="text-center mt-4"><a href="javascript: void(0);" class="btn btn-primary waves-effect waves-light btn-sm">View More <i class="mdi mdi-arrow-right ms-1"></i></a></div>
+                            </div>
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col -->
+                    <div class="col-xl-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start">
+                                    <div class="me-2">
+                                        <h5 class="card-title mb-4">Popular Posts</h5>
+                                    </div>
+                                    <div class="dropdown ms-auto">
+                                        <a class="text-muted font-size-16" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                                            <i class="mdi mdi-dots-horizontal"></i>
+                                        </a>
+
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Separated link</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table align-middle table-nowrap mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" colspan="2">Post</th>
+                                                <th scope="col">Views</th>
+                                                <th scope="col">Likes</th>
+                                                <th scope="col">Comments</th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($mostViewedTemplates as $template)
+                                            <tr>
+                                                <td><img src="{{ asset('images/banners/' . $template->banner) }}" alt="Template Banner" class="avatar-md h-auto d-block rounded" width="100%" height="50"></td>
+                                                <td>
+                                                    <h5 class="font-size-13 text-truncate mb-1"><a href="javascript: void(0);" class="text-dark">{{ $template->header }}</a></h5>
+                                                    <p class="text-muted mb-0">{{ $template->created_at->format('d M, Y') }}</p>
+                                                </td>
+                                                <td><i class="bi bi-eye align-middle me-1"></i>{{ $template->views }}</td>
+                                                <td><i class="bx bx-like align-middle me-1"></i>{{ $template->likeCount }}</td> <!-- Updated likes count -->
+                                                <td><i class="bx bx-comment-dots align-middle me-1"></i>{{ $template->comments->count() }}</td>
+                                                <td>
+                                                    <div>
+                                                        <a href="{{ route('templates.show', $template->id) }}" class="text-primary">Read more <i class="mdi mdi-arrow-right"></i></a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            @empty
+                                            <tr>
+                                                <td colspan="6" class="text-muted">No posts found.</td>
+                                            </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end col -->
+                </div>
+                <!-- end row -->
+
+            </div> <!-- container-fluid -->
         </div>
-        <!-- END layout-wrapper -->
+        <!-- End Page-content -->
+    </div>
+    <!-- end main content-->
+    </div>
+    <!-- END layout-wrapper -->
 
-        <!-- Right bar overlay-->
-        <div class="rightbar-overlay"></div>
+    <!-- Right bar overlay-->
+    <div class="rightbar-overlay"></div>
 
-        <!-- JAVASCRIPT -->
-        <script src="<?php echo url('theme')?>/dist/assets/libs/jquery/jquery.min.js"></script>
-        <script src="<?php echo url('theme')?>/dist/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="<?php echo url('theme')?>/dist/assets/libs/metismenu/metisMenu.min.js"></script>
-        <script src="<?php echo url('theme')?>/dist/assets/libs/simplebar/simplebar.min.js"></script>
-        <script src="<?php echo url('theme')?>/dist/assets/libs/node-waves/waves.min.js"></script>
+    @endsection
+</body>
 
-        <!-- apexcharts -->
-        <script src="<?php echo url('theme')?>/dist/assets/libs/apexcharts/apexcharts.min.js"></script>
-
-        <!-- dashboard blog init -->
-        <script src="<?php echo url('theme')?>/dist/assets/js/pages/dashboard-blog.init.js"></script>
-        <script src="<?php echo url('theme')?>/dist/assets/js/app.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-        @endsection
-    </body>
 </html>

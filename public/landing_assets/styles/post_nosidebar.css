@@ -592,14 +592,31 @@ section
 	width: 100%;
 	height: 560px;
 }
-.home_background
-{
+.home_background {
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-}
+	background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('{{ $bannerUrl }}');
+	background-size: cover; 
+	background-position: center; 
+  }
+  
+  .parallax-window {
+	background-attachment: fixed;
+  }
+  
+  .home_background::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.1);
+  }
+  
 .home_content
 {
 	position: absolute;
@@ -619,7 +636,8 @@ section
 }
 .post_category
 {
-	width: 83px;
+	width: fit-content;
+	padding: 0 10px;
 	height: 28px;
 	background: rgba(255,255,255,0.2);
 	border-radius: 14px;
@@ -942,7 +960,7 @@ section
 .comment_input
 {
 	display: inline-block;
-	width: calc(50% - 15px);
+	width: calc(100% - 15px);
 	height: 42px;
 	border: none;
 	outline: none;
@@ -1251,9 +1269,15 @@ section
 {
 	width: calc(100% + 30px);
 }
+.grid-experiment
+{
+	display: flex;
+	justify-content: center;
+}
 .grid-item
 {
 	float: left;
+	margin-left: 10px;
 }
 .card_largest_with_image,
 .card_large_with_background,
@@ -1397,6 +1421,10 @@ section
 .load_more_button:hover
 {
 	background: #d7d7d7;
+}
+.see_fewer {
+	margin-top: 50px;
+	margin-bottom: 140px;
 }
 
 /*********************************
@@ -1578,4 +1606,14 @@ section
 .sub_input:focus
 {
 	border-bottom: solid 1px rgba(255,255,255,1);
+}
+.comment_alert {
+	display: flex;
+	position: fixed;
+	width: 25%;
+	justify-content: center;
+	align-items: center;
+	top: 10%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }

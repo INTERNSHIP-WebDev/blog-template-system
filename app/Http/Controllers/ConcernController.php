@@ -5,32 +5,58 @@ namespace App\Http\Controllers;
 use App\Models\Concern;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\DemoMail;
+use Illuminate\Support\Facades\Auth;
+
 
 class ConcernController extends Controller
 {
     public function show()
     {
-        return view('concern.concern');
+        return view('concern.index');
     }
 
     public function store(Request $request)
     {
-        // Validate the incoming request data
+        // Validate the request data
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'subject' => 'required|string|max:255',
             'message' => 'required|string',
+            'rcpt_name' => 'nullable|string|max:255',
+            'rcpt_email' => 'nullable|email|max:255',
         ]);
 
-        // Create a new concern record in the database
-        Concern::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'message' => $request->input('message'),
-        ]);
+        // Get the authenticated user's name and email
+        $userName = Auth::user()->name;
+        $userEmail = Auth::user()->email;
 
-        // Redirect back or show a success message
-        return redirect()->back()->with('success', 'Your message has been sent. Thank you!');
+        // Ensure that recipient email address is not empty and is valid
+        if (!empty($request->rcpt_email)) {
+            // Create a new Concern instance
+            $concern = new Concern();
+            $concern->send_name = $userName;
+            $concern->send_email = $userEmail;
+            $concern->subject = $request->subject;
+            $concern->message = $request->message;
+            $concern->rcpt_name = $request->rcpt_name;
+            $concern->rcpt_email = $request->rcpt_email;
+            $concern->save();
+
+            // Send the email with dynamic subject and body
+            $mailData = [
+                'title' => $concern->subject,
+                'body' => $concern->message,   
+            ];
+
+            Mail::to($concern->rcpt_email)->send(new DemoMail($mailData));
+            Mail::to($concern->send_email)->send(new DemoMail($mailData));
+
+            // Redirect to a success page or do whatever is appropriate
+            return redirect()->route('concern.index')->with('success', 'Email sent successfully!');
+        } else {
+            // Handle the case where the recipient email address is empty
+            return redirect()->back()->with('error', 'Recipient email address is required.');
+        }
     }
 
     // public function sendEmail(Request $request)

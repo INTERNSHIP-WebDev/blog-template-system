@@ -15,6 +15,7 @@ class Template extends Model
         'banner',
         'logo',
         'description',
+        'views',
         'user_id',
         'category_id',
     ];
@@ -129,4 +130,18 @@ class Template extends Model
         // Delete associated images
         $this->images()->delete();
     }
+
+    // Define the isLikedByUser method
+    public function isLikedByUser($user)
+    {
+        // Check if the user has liked this template
+        return $this->likes()->where('user_id', $user->id)->exists();
+    }
+
+    // Define the likes relationship
+    public function likes()
+    {
+        return $this->belongsToMany(User::class, 'likes', 'temp_id', 'user_id')->withTimestamps();
+    }
+
 }

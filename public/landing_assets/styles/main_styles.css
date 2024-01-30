@@ -1137,7 +1137,7 @@ section
 {
 	display: block;
 	font-family: 'Ubuntu', sans-serif;
-	color: rgba(0,0,0,0.4);
+	color: black;
 	font-size: 12px;
 	font-weight: 500;
 	margin-top: 22px;
@@ -1148,7 +1148,7 @@ section
 	display: inline-block;
 	position: relative;
 	font-family: 'Ubuntu', sans-serif;
-	color: rgba(0,0,0,0.4);
+	color: black;
 	font-size: 12px;
 	font-weight: 500;
 }
