@@ -28,15 +28,19 @@
 			<div class="row">
 				<div class="col">
 					<div class="header_content d-flex flex-row align-items-center justify-content-start">
-						<div class="logo"><a href="#">Blog | Travel</a></div>
+						<div class="logo">
+							<a href="{{ url('/') }}">
+							Blog | Travel
+							</a>
+						</div>
 						<nav class="main_nav">
 							<ul>
-								<li class="active"><a href="index.html">Home</a></li>
+								<li class="active"><a href="{{ url('/') }}">Home</a></li>
 								<!-- <li><a href="#">Fashion</a></li>
 								<li><a href="#">Gadgets</a></li>
 								<li><a href="#">Lifestyle</a></li> -->
-								<li><a href="#">About</a></li>
-								<li><a href="#">Contact</a></li>
+								<li><a href="{{ route('about') }}">About</a></li>
+								<li><a href="{{ route('concern.index') }}">Contact</a></li>
 							</ul>
 						</nav>
 						<div class="search_container ml-auto">

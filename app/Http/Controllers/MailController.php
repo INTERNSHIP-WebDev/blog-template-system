@@ -19,14 +19,81 @@ class MailController extends Controller
         return view('emails.index', compact('concerns'));
     }
 
+    public function inbox()
+    {
+        $concerns = Concern::all();
+        $total_concerns = $concerns->count();
+
+        $InboxCount = Concern::where('rcpt_email', auth()->user()->email)->count();
+        $SentMailCount = Concern::where('send_email', auth()->user()->email)->count();
+        $DraftCount = Concern::where('status', 2)->where('send_email', auth()->user()->email)->count();
+        $TrashCount = Concern::where('status', 3)->where('send_email', auth()->user()->email)->count();
+
+        return view('emails.inbox', compact('concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
+    }
+
+
+    public function sent()
+    {
+        $concerns = Concern::all();
+        $total_concerns = $concerns->count();
+
+        $InboxCount = Concern::where('rcpt_email', auth()->user()->email)->count();
+        $SentMailCount = Concern::where('send_email', auth()->user()->email)->count();
+        $DraftCount = Concern::where('status', 2)->where('send_email', auth()->user()->email)->count();
+        $TrashCount = Concern::where('status', 3)->where('send_email', auth()->user()->email)->count();
+
+        return view('emails.sent-mail', compact('concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
+    }
+
+    public function draft()
+    {
+        $concerns = Concern::all();
+        $total_concerns = $concerns->count();
+
+        $InboxCount = Concern::where('rcpt_email', auth()->user()->email)->count();
+        $SentMailCount = Concern::where('send_email', auth()->user()->email)->count();
+        $DraftCount = Concern::where('status', 2)->where('send_email', auth()->user()->email)->count();
+        $TrashCount = Concern::where('status', 3)->where('send_email', auth()->user()->email)->count();
+
+        $drafts = Concern::where('status', 2)->where('send_email', Auth::user()->email)->get();
+        return view('emails.draft', compact('drafts', 'concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
+    }
+
+    public function trash()
+    {
+        $concerns = Concern::all();
+        $total_concerns = $concerns->count();
+
+        $InboxCount = Concern::where('rcpt_email', auth()->user()->email)->count();
+        $SentMailCount = Concern::where('send_email', auth()->user()->email)->count();
+        $DraftCount = Concern::where('status', 2)->where('send_email', auth()->user()->email)->count();
+        $TrashCount = Concern::where('status', 3)->where('send_email', auth()->user()->email)->count();
+
+        $concerns = Concern::all();
+        return view('emails.trash', compact('concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         // Fetch concerns for use in the create view
         $concerns = Concern::all(); 
-        return view('emails.create', compact('concerns'));
+
+        $InboxCount = Concern::where('rcpt_email', auth()->user()->email)->count();
+        $SentMailCount = Concern::where('send_email', auth()->user()->email)->count();
+        $DraftCount = Concern::where('status', 2)->where('send_email', auth()->user()->email)->count();
+        $TrashCount = Concern::where('status', 3)->where('send_email', auth()->user()->email)->count();
+
+        // Retrieve the latest draft for the authenticated user
+        $latestDraft = Concern::where('status', 2)
+            ->where('send_email', Auth::user()->email)
+            ->latest()
+            ->first();
+
+        return view('emails.create', compact('concerns', 'InboxCount', 'SentMailCount', 'latestDraft', 'DraftCount', 'TrashCount'));
     }
 
     /**
@@ -65,10 +132,10 @@ class MailController extends Controller
             ];
 
             Mail::to($concern->rcpt_email)->send(new DemoMail($mailData));
-            Mail::to($concern->send_email)->send(new DemoMail($mailData));
+            // Mail::to($concern->send_email)->send(new DemoMail($mailData));
 
             // Redirect to a success page or do whatever is appropriate
-            return redirect()->route('emails.index')->with('success', 'Email sent successfully!');
+            return redirect()->route('emails.inbox')->with('success', 'Email sent successfully!');
         } else {
             // Handle the case where the recipient email address is empty
             return redirect()->back()->with('error', 'Recipient email address is required.');
@@ -83,17 +150,97 @@ class MailController extends Controller
     {
         // Find the email by ID
         $email = Concern::findOrFail($id);
+
+        // Mark the email as read
+        $email->update(['status' => 1]);
+
+        $InboxCount = Concern::where('rcpt_email', auth()->user()->email)->count();
+        $SentMailCount = Concern::where('send_email', auth()->user()->email)->count();
+        $DraftCount = Concern::where('status', 2)->where('send_email', auth()->user()->email)->count();
+        $TrashCount = Concern::where('status', 3)->where('send_email', auth()->user()->email)->count();
         
         // Return the view to show the email
-        return view('emails.show', compact('email'));
+        return view('emails.show', compact('email', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
     }
     
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroyInbox(Request $request, $id)
     {
-        // Logic to delete the email
+        $selectedIds = $request->input('ids', []);
+        
+        if (!empty($selectedIds)) {
+            Concern::whereIn('id', $selectedIds)->delete();
+
+            return response()->json(['message' => 'Selected emails deleted successfully']);
+        } else {
+            return response()->json(['error' => 'No emails selected for deletion'], 400);
+        }
     }
+
+    /**
+     * Mark selected emails as status.
+     */
+    public function markAsRead(Request $request)
+    {
+        $selectedIds = $request->input('ids', []);
+
+        if (!empty($selectedIds)) {
+            Concern::whereIn('id', $selectedIds)->update(['status' => 1]);
+
+            return response()->json(['message' => 'Selected emails marked as read successfully']);
+        } else {
+            return response()->json(['error' => 'No emails selected'], 400);
+        }
+    }
+
+    /**
+     * Mark selected emails as unread.
+     */
+    public function markAsUnread(Request $request)
+    {
+        $selectedIds = $request->input('ids', []);
+
+        if (!empty($selectedIds)) {
+            Concern::whereIn('id', $selectedIds)->update(['status' => 0]);
+
+            return response()->json(['message' => 'Selected emails marked as unread successfully']);
+        } else {
+            return response()->json(['error' => 'No emails selected'], 400);
+        }
+    }
+
+    /**
+     * Store a newly created draft in storage.
+     */
+    public function storeDraft(Request $request)
+    {
+        // Validate the request data
+        $request->validate([
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string',
+            'rcpt_name' => 'nullable|string|max:255',
+            'rcpt_email' => 'nullable|email|max:255',
+        ]);
+
+        // Create or update the draft instance
+        $draft = Concern::updateOrCreate(
+            [
+                'send_email' => Auth::user()->email,
+                'status' => 2,
+            ],
+            [
+                'send_name' => Auth::user()->name,
+                'subject' => $request->subject,
+                'message' => $request->message,
+                'rcpt_name' => $request->rcpt_name,
+                'rcpt_email' => $request->rcpt_email,
+            ]
+        );
+
+        return redirect()->route('emails.draft')->with('success', 'Draft saved successfully!');
+    }
+
 }

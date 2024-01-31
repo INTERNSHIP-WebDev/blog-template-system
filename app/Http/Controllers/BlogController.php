@@ -48,7 +48,9 @@ class BlogController extends Controller
             $remainingComments = $comments->skip(3);
             $comment_count = $comments->count();
 
-            return view('blog.sample.sample', compact('template', 'firstFiveComments', 'remainingComments', 'latest', 'banner_dir', 'formattedtimestamp', 'comment_count'));
+            $templates = Template::all();
+
+            return view('blog.sample.sample', compact('template', 'templates', 'firstFiveComments', 'remainingComments', 'latest', 'banner_dir', 'formattedtimestamp', 'comment_count'));
         } catch (ModelNotFoundException $e) {
             return redirect()->route('templates.index')->with('error', 'Template not found.');
         }
@@ -65,7 +67,7 @@ class BlogController extends Controller
             $comment->name = $commentName;
             $comment->message = $commentText;
             $comment->save();
-            return Redirect::back()->withInput()->with('status', 'Comment posted successfully');
+            return Redirect::back()->withInput()->with(['status', 'Comment posted successfully']);
         } catch (ModelNotFoundException $e) {
             return redirect()->route('templates.index')->with('error', 'Template not found.');
         }
@@ -73,9 +75,16 @@ class BlogController extends Controller
 
     public function blog_contacts($id) {
         try {
-            return view('blog.sample.contact');
+            $template = Template::findOrFail($id);
+            $contacts = true;
+            return view('blog.sample.contact', compact('template', 'contacts'));
         } catch (ModelNotFoundException $e) {
             return redirect()->route('blog.sample.sample')->with('error', 'Template not found.');
         }
+    }
+
+    public function send_specific_concern($id) {
+        $template = Template::findOrFail($id);
+        return Redirect::back()->withInput()->with('status', 'Email sent successfully');
     }
 }

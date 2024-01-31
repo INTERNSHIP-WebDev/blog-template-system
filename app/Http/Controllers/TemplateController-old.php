@@ -35,9 +35,11 @@ class TemplateController extends Controller
      */
     public function index()
     {
-        $templates = Template::all();
+        $templates = Template::paginate(5);
         return view('templates.index', compact('templates'));
     }
+
+    
     public function create()
     {
         $categories = Category::all(); 

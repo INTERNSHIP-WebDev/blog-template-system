@@ -25,6 +25,11 @@
         })
     });
 </script>
-
+<script>
+    // Use setTimeout to hide the element after 2000 milliseconds (2 seconds)
+    setTimeout(function() {
+        document.getElementById('status_card').style.display = 'none';
+    }, 2000);
+</script>
 </body>
 </html>

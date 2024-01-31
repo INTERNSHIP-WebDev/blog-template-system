@@ -9,6 +9,42 @@ $socials = [
     'google' => TRUE
 ];
 ?>
+
+<style>
+	.rounded-circle {
+    width: 70px;
+    height: 70px; 
+    border-radius: 50%;
+    object-fit: cover; 
+}
+
+.home_content {
+    position: relative;
+	padding: 50px;
+    border: 2px solid transparent; 
+    animation: borderAnimation 1s ease-in-out forwards;
+}
+
+@keyframes borderAnimation {
+    to {
+        border-color: #fff;
+    }
+}
+
+
+.post_title {
+    opacity: 0;
+    animation: fadeIn 3s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+</style>
+
 @extends("blog.layouts.layout", ['socials' => $socials, 'template_id' => $template->id])
 
 @section("title", "Sample Blog")
@@ -21,10 +57,15 @@ $socials = [
 		</div>
 	@endif
 	<!-- Menu -->
-	{{  }}
 	<div class="menu d-flex flex-column align-items-end justify-content-start text-right menu_mm trans_400">
 		<div class="menu_close_container"><div class="menu_close"><div></div><div></div></div></div>
-		<div class="logo menu_mm"><a href="#">jea</a></div>
+		<div class="logo menu_mm">
+			@if ($template->logo)
+				<img src="{{ asset('images/logos/' . $template->logo) }}" alt="Logo Image" class="rounded-circle">
+			@else
+				No photo
+			@endif
+		</div>
 		<div class="search">
 			<form action="#">
 				<input type="search" class="header_search_input menu_mm" required="required" placeholder="Type to Search...">
@@ -51,7 +92,7 @@ $socials = [
 			<div class="post_category trans_200"><a href="category.html" class="trans_200">{{ $template->category->text }}</a></div>
 			<div class="post_title">{{ $template->header }}</div>
 			<div class="post_author d-flex flex-row align-items-center justify-content-center">
-				<div class="author_image"><div><img src="{{ asset('landing_assets/images/author.jpg') }}" alt=""></div></div>
+				<div class="author_image"><div><img src="{{ asset('/images/logos/logo_1706680612.png') }}" alt=""></div></div>
 				<div class="post_meta"><a href="#">{{ $template->user->name }}</a><span>{{ $formattedtimestamp }}<!--Sep 29, 2017 at 9:48 am--></span></div>
 			</div>
 		</div>
@@ -143,7 +184,7 @@ $socials = [
 					<!-- Comments -->
 					<div class="comments">
 						<div class="comments_title">Comments <span>({{ $comment_count }})</span></div>
-						<div class="comments_container">
+						<div class="comments_container mb-5">
 							<ul class="comment_list">
 							@forelse ($firstFiveComments as $key => $comment) 
 								@php
@@ -152,7 +193,7 @@ $socials = [
 								<li class="comment">
 									<div class="comment_body">
 										<div class="comment_panel d-flex flex-row align-items-center justify-content-start">
-											<div class="comment_author_image"><div><img src="{{ asset('landing_assets/images/comment_author_1.jpg') }}" alt=""></div></div>
+											<div class="comment_author_image"><div><img src="{{ asset('/images/logos/logo_1706680612.png') }}" alt=""></div></div>
 											<small class="post_meta"><a href="#">{{ $comment->name }}</a><span>{{ $formattedtimestamp }}</span></small>
 											<button type="button" class="reply_button ml-auto">Reply</button>
 										</div>
@@ -190,12 +231,15 @@ $socials = [
 							</ul>
 						</div>
 					</div>
+					@if($remainingComments->count() == 0)
+					@else
 					<div class="load_more">
 						<div id="load_more" class="load_more_button text-center trans_200">Load More</div>
 					</div>
 					<div class="see_fewer">
 						<div id="see_fewer" class="load_more_button text-center trans_200">See Fewer</div>
 					</div>
+					@endif
 				</div>
 			</div>
 		</div>

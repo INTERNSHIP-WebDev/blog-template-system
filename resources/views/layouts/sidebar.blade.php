@@ -95,8 +95,11 @@
                     <span key="t-email">Emails</span>
                 </a>
                 <ul class="sub-menu" aria-expanded="false">
-                    <li><a href="{{ route('emails.index') }}" key="t-inbox">Inbox</a></li>
-                    <li><a href="email-read.html" key="t-read-email">Read Email</a></li>
+                    <li><a href="{{ route('emails.create') }}" key="t-inbox">Compose</a></li>
+                    <li><a href="{{ route('emails.inbox') }}" key="t-inbox">Inbox</a></li>
+                    <li><a href="{{ route('emails.sent-mail') }}" key="t-inbox">Sent</a></li>
+                    <li><a href="{{ route('emails.draft') }}" key="t-inbox">Draft</a></li>
+                    <li><a href="{{ route('emails.trash') }}" key="t-inbox">Trash</a></li>
                     
                 </ul>
             </li>

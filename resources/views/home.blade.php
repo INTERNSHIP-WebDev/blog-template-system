@@ -38,7 +38,7 @@
 
                             <div class="page-title-right">
                                 <ol class="breadcrumb m-0">
-                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboard</a></li>
                                     <li class="breadcrumb-item active">Blog</li>
                                 </ol>
                             </div>
@@ -175,7 +175,7 @@
                             <div class="card-body">
                                 <div class="d-flex">
                                     <div class="flex-shrink-0 me-3">
-                                        <img src="<?php echo url('theme') ?>/dist/assets/images/users/avatar-1.jpg" alt="" class="avatar-sm rounded-circle img-thumbnail">
+                                        <img src="{{ asset('/images/logos/logo_1706680612.png') }}" alt="" class="avatar-sm rounded-circle img-thumbnail">
                                     </div>
                                     <div class="flex-grow-1">
                                         <div class="d-flex">
@@ -372,7 +372,14 @@
                                                         </div>
                                                     </div>
                                                     <div class="flex-grow-1">
-                                                        <h5 class="font-size-14 mb-1">{{ $comment->name }}<span style="color: black; margin-left: 5px; margin-right: 5px;">commented on your blog</span>"{{ $comment->template->header }}""{{ $comment->template->header }}"<span style="color: black;">.</span></h5>
+                                                        <h5 class="font-size-14 mb-1">{{ $comment->name }}<span style="color: black; margin-left: 5px; margin-right: 5px;">commented on your blog</span>
+                                                            "@php
+                                                            $words = str_word_count($comment->template->header, 1);
+                                                            $limitedWords = implode(' ', array_slice($words, 0, 5));
+                                                            @endphp
+
+                                                            {{ count($words) > 5 ? $limitedWords . '...' : $limitedWords }}"
+                                                        </h5>
                                                         <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
                                                     </div>
                                                 </div>
@@ -491,10 +498,9 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div data-simplebar class="mt-2" style="max-height: 280px;">
                                     <ul class="verti-timeline list-unstyled">
-
-
                                         <li class="event-list active">
                                             <div class="event-timeline-dot">
                                                 <i class="bx bxs-right-arrow-circle font-size-18 bx-fade-right"></i>
@@ -509,7 +515,14 @@
                                                             {{ implode(' ', array_slice(str_word_count($latestTemplate->user->name, 1), 0, 2)) }}
                                                         </span>
                                                         Posted
-                                                        <span class="fw-semibold">{{ $latestTemplate->header }}</span>
+                                                        <span class="fw-semibold">
+                                                            "@php
+                                                            $words = str_word_count($latestTemplate->header, 1);
+                                                            $limitedWords = implode(' ', array_slice($words, 0, 5));
+                                                            @endphp
+
+                                                            {{ count($words) > 5 ? $limitedWords . '...' : $limitedWords }}"
+                                                        </span>
                                                         blog... <a href="{{ url('post/' . $latestTemplate->id) }}">View</a>
                                                     </div>
                                                 </div>
@@ -531,20 +544,24 @@
                                                             {{ implode(' ', array_slice(str_word_count($template->user->name, 1), 0, 2)) }}
                                                         </span>
                                                         Posted
-                                                        <span class="fw-semibold">{{ $template->header }}</span>
+                                                        <span class="fw-semibold">
+                                                            "@php
+                                                            $words = str_word_count($latestTemplate->header, 1);
+                                                            $limitedWords = implode(' ', array_slice($words, 0, 5));
+                                                            @endphp
+
+                                                            {{ count($words) > 5 ? $limitedWords . '...' : $limitedWords }}"
+                                                        </span>
                                                         blog... <a href="{{ url('post/' . $template->id) }}">View</a>
                                                     </div>
                                                 </div>
                                             </div>
                                         </li>
                                         @endforeach
-
-
-
                                     </ul>
                                 </div>
 
-                                <div class="text-center mt-4"><a href="javascript: void(0);" class="btn btn-primary waves-effect waves-light btn-sm">View More <i class="mdi mdi-arrow-right ms-1"></i></a></div>
+                                <div class="text-center mt-4"><a href="{{ route('templates.all_activities') }}" class="btn btn-primary waves-effect waves-light btn-sm">View All <i class="mdi mdi-arrow-right ms-1"></i></a></div>
                             </div>
                         </div>
                         <!-- end card -->
@@ -588,7 +605,14 @@
                                             <tr>
                                                 <td><img src="{{ asset('images/banners/' . $template->banner) }}" alt="Template Banner" class="avatar-md h-auto d-block rounded" width="100%" height="50"></td>
                                                 <td>
-                                                    <h5 class="font-size-13 text-truncate mb-1"><a href="javascript: void(0);" class="text-dark">{{ $template->header }}</a></h5>
+                                                    <h5 class="font-size-13 text-truncate mb-1"><a href="javascript: void(0);" class="text-dark">
+                                                            @php
+                                                            $words = str_word_count($template->header, 1);
+                                                            $limitedWords = implode(' ', array_slice($words, 0, 5));
+                                                            @endphp
+
+                                                            {{ count($words) > 5 ? $limitedWords . '...' : $limitedWords }}
+                                                        </a></h5>
                                                     <p class="text-muted mb-0">{{ $template->created_at->format('d M, Y') }}</p>
                                                 </td>
                                                 <td><i class="bi bi-eye align-middle me-1"></i>{{ $template->views }}</td>

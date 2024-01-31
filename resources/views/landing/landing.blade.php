@@ -12,7 +12,8 @@
 			<div></div>
 		</div>
 	</div>
-	<div class="logo menu_mm"><a href="#">Blog | Travel</a></div>
+	<div class="logo menu_mm"><a href="{{ url('/') }}">
+		Blog | Travel</a></div>
 	<div class="search">
 		<form action="#">
 			<input type="search" class="header_search_input menu_mm" required="required" placeholder="Type to Search...">
@@ -55,7 +56,7 @@
 								<div class="home_slider_content">
 									<div class="home_slider_item_category trans_200"><a href="category.html" class="trans_200">
 											@if($latestTemplate->category)
-											{{ explode(' ', $latestTemplate->category->text)[0] }}
+											{{ $latestTemplate->category->text }}
 											@else
 											General Blog
 											@endif
@@ -172,11 +173,11 @@
 							<div class="col">
 								<div class="home_slider_content">
 									<div class="home_slider_item_category trans_200"><a href="category.html" class="trans_200">
-											@if($latestTemplate->category)
-											{{ explode(' ', $latestTemplate->category->text)[0] }}
-											@else
-											General Blog
-											@endif
+									@if($latestTemplate->category)
+									{{ $latestTemplate->category->text }}
+									@else
+									General Blog
+									@endif
 									</div>
 									<div class="home_slider_item_title">
 										<a href="{{ url('post/' . $latestTemplate->id) }}">{{ $latestTemplate->header }}</a>
@@ -290,11 +291,11 @@
 							<div class="col">
 								<div class="home_slider_content">
 									<div class="home_slider_item_category trans_200"><a href="category.html" class="trans_200">
-											@if($latestTemplate->category)
-											{{ explode(' ', $latestTemplate->category->text)[0] }}
-											@else
-											General Blog
-											@endif
+									@if($latestTemplate->category)
+									{{ $latestTemplate->category->text }}
+									@else
+									General Blog
+									@endif
 									</div>
 									<div class="home_slider_item_title">
 										<a href="{{ url('post/' . $latestTemplate->id) }}">{{ $latestTemplate->header }}</a>
@@ -572,7 +573,7 @@
 								@if($fifthToLastTemplate)
 								<div class="card card_default card_default_no_image grid-item">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="post.html">{{ $fifthToLastTemplate->header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $fifthToLastTemplate->id) }}">{{ $fifthToLastTemplate->header }}</a></div>
 									</div>
 								</div>
 								@else
@@ -588,7 +589,7 @@
 								@if($sixthToLastTemplate)
 								<div class="card card_default card_default_no_image grid-item">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="post.html">{{ $sixthToLastTemplate->header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $sixthToLastTemplate->id) }}">{{ $sixthToLastTemplate->header }}</a></div>
 									</div>
 								</div>
 								@else
@@ -605,7 +606,7 @@
 								<div class="card card_default card_default_with_background grid-item">
 									<div class="card_background" style="background-image:url('{{ asset('images/banners/' . $seventhToLastTemplate->banner) }}')"></div>
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="post.html">{{ $seventhToLastTemplate->header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $seventhToLastTemplate->id) }}">{{ $seventhToLastTemplate->header }}</a></div>
 									</div>
 								</div>
 								@else
@@ -637,7 +638,7 @@
 								<div class="card card_small_with_image grid-item">
 									<img class="card-img-top" src="{{ asset('images/banners/' . $latestBlog->banner) }}" alt="" width="330" height="195">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="post.html">1{{ $latestBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $latestBlog->id) }}">1{{ $latestBlog -> header }}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -655,7 +656,7 @@
 										$userNameWords = explode(' ', $latestBlog->user->name);
 										$firstTwoWords = implode(' ', array_slice($userNameWords, 0, 2));
 										@endphp
-										<small class="post_meta"><a href="#">{{ $firstTwoWords }}</a><span>{{ $latestBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
+										<small class="post_meta"><a href="{{ url('post/' . $latestBlog->id) }}">{{ $firstTwoWords }}</a><span>{{ $latestBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
 										@else
 										<span class="date">No User</span>
 										@endif
@@ -674,7 +675,7 @@
 								@if($secondBlog)
 								<div class="card card_default card_small_no_image grid-item">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="post.html">2{{ $secondBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $secondBlog->id) }}">2{{ $secondBlog -> header }}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -692,7 +693,7 @@
 										$userNameWords = explode(' ', $secondBlog->user->name);
 										$firstTwoWords = implode(' ', array_slice($userNameWords, 0, 2));
 										@endphp
-										<small class="post_meta"><a href="#">{{ $firstTwoWords }}</a><span>{{ $secondBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
+										<small class="post_meta"><a href="{{ url('post/' . $secondBlog->id) }}">{{ $firstTwoWords }}</a><span>{{ $secondBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
 										@else
 										<span class="date">No User</span>
 										@endif
@@ -712,7 +713,7 @@
 								<div class="card card_small_with_image grid-item">
 									<img class="card-img-top" src="{{ asset('images/banners/' . $thirdBlog->banner) }}" alt="" width="330" height="195">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="post.html">3{{ $thirdBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $thirdBlog->id) }}">3{{ $thirdBlog -> header }}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -730,7 +731,7 @@
 										$userNameWords = explode(' ', $thirdBlog->user->name);
 										$firstTwoWords = implode(' ', array_slice($userNameWords, 0, 2));
 										@endphp
-										<small class="post_meta"><a href="#">{{ $firstTwoWords }}</a><span>{{ $thirdBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
+										<small class="post_meta"><a href="{{ url('post/' . $thirdBlog->id) }}">{{ $firstTwoWords }}</a><span>{{ $thirdBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
 										@else
 										<span class="date">No User</span>
 										@endif
@@ -751,7 +752,7 @@
 								<div class="card card_small_with_image grid-item">
 									<img class="card-img-top" src="{{ asset('images/banners/' . $fourthBlog->banner) }}" width="330" height="88">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="post.html">4{{ $fourthBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $fourthBlog->id) }}">4{{ $fourthBlog -> header }}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -769,7 +770,7 @@
 										$userNameWords = explode(' ', $fourthBlog->user->name);
 										$firstTwoWords = implode(' ', array_slice($userNameWords, 0, 2));
 										@endphp
-										<small class="post_meta"><a href="#">{{ $firstTwoWords }}</a><span>{{ $fourthBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
+										<small class="post_meta"><a href="{{ url('post/' . $fourthBlog->id) }}">{{ $firstTwoWords }}</a><span>{{ $fourthBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
 										@else
 										<span class="date">No User</span>
 										@endif
@@ -787,9 +788,9 @@
 
 								@if($fifthBlog)
 								<div class="card card_default card_small_with_background grid-item">
-									<div class="card_background" style="background-image:url('{{ asset('images/banners/' . $latestTemplate->banner) }}')"></div>
+									<div class="card_background" style="background-image:url('{{ asset('images/banners/' . $fifthBlog->banner) }}')"></div>
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="post.html">5{{ $fifthBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $fifthBlog->id) }}">5{{ $fifthBlog -> header }}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -807,7 +808,7 @@
 										$userNameWords = explode(' ', $fifthBlog->user->name);
 										$firstTwoWords = implode(' ', array_slice($userNameWords, 0, 2));
 										@endphp
-										<small class="post_meta"><a href="#">{{ $firstTwoWords }}</a><span>{{ $fifthBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
+										<small class="post_meta"><a href="{{ url('post/' . $fifthBlog->id) }}">{{ $firstTwoWords }}</a><span>{{ $fifthBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
 										@else
 										<span class="date">No User</span>
 										@endif
@@ -825,9 +826,9 @@
 
 								@if($sixthBlog)
 								<div class="card card_default card_small_with_background grid-item">
-									<div class="card_background" style="background-image:url('{{ asset('images/banners/' . $latestTemplate->banner) }}')"></div>
+									<div class="card_background" style="background-image:url('{{ asset('images/banners/' . $sixthBlog->banner) }}')"></div>
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="post.html">6{{ $sixthBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $sixthBlog->id) }}">6{{ $sixthBlog -> header }}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -845,7 +846,7 @@
 										$userNameWords = explode(' ', $sixthBlog->user->name);
 										$firstTwoWords = implode(' ', array_slice($userNameWords, 0, 2));
 										@endphp
-										<small class="post_meta"><a href="#">{{ $firstTwoWords }}</a><span>6{{ $sixthBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
+										<small class="post_meta"><a href="{{ url('post/' . $sixthBlog->id) }}">{{ $firstTwoWords }}</a><span>6{{ $sixthBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
 										@else
 										<span class="date">No User</span>
 										@endif
@@ -865,7 +866,7 @@
 								<div class="card card_small_with_image grid-item">
 									<img class="card-img-top" src="{{ asset('images/banners/' . $seventhBlog->banner) }}" alt="" width="330" height="150">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="post.html">7{{ $seventhBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $seventhBlog->id) }}">7{{ $seventhBlog -> header }}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -883,7 +884,7 @@
 										$userNameWords = explode(' ', $seventhBlog->user->name);
 										$firstTwoWords = implode(' ', array_slice($userNameWords, 0, 2));
 										@endphp
-										<small class="post_meta"><a href="#">{{ $firstTwoWords }}</a><span>{{ $seventhBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
+										<small class="post_meta"><a href="{{ url('post/' . $seventhBlog->id) }}">{{ $firstTwoWords }}</a><span>{{ $seventhBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
 										@else
 										<span class="date">No User</span>
 										@endif
@@ -902,7 +903,7 @@
 								@if($eightBlog)
 								<div class="card card_default card_small_no_image grid-item">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="post.html">8{{ $eightBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $eightBlog->id) }}">8{{ $eightBlog -> header }}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -920,7 +921,7 @@
 										$userNameWords = explode(' ', $eightBlog->user->name);
 										$firstTwoWords = implode(' ', array_slice($userNameWords, 0, 2));
 										@endphp
-										<small class="post_meta"><a href="#">{{ $firstTwoWords }}</a><span>{{ $eightBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
+										<small class="post_meta"><a href="{{ url('post/' . $eightBlog->id) }}">{{ $firstTwoWords }}</a><span>{{ $eightBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
 										@else
 										<span class="date">No User</span>
 										@endif
@@ -939,7 +940,7 @@
 								@if($ninthBlog)
 								<div class="card card_default card_small_no_image grid-item">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="post.html">9{{ $ninthBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $ninthBlog->id) }}">9{{ $ninthBlog -> header }}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -957,7 +958,7 @@
 										$userNameWords = explode(' ', $ninthBlog->user->name);
 										$firstTwoWords = implode(' ', array_slice($userNameWords, 0, 2));
 										@endphp
-										<small class="post_meta"><a href="#">{{ $firstTwoWords }}</a><span>{{ $ninthBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
+										<small class="post_meta"><a href="{{ url('post/' . $ninthBlog->id) }}">{{ $firstTwoWords }}</a><span>{{ $ninthBlog->created_at->format('M d, Y \a\t h:i A') }}</span></small>
 										@else
 										<span class="date">No User</span>
 										@endif
@@ -977,7 +978,7 @@
 								<div class="card card_default card_default_with_background grid-item">
 									<div class="card_background" style="background-image:url('{{ asset('images/banners/' . $tenthBlog->banner) }}')" width="330" height="50"></div>
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="post.html">10{{ $tenthBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $tenthBlog->id) }}">10{{ $tenthBlog -> header }}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -1005,7 +1006,7 @@
 								<div class="card card_default card_default_with_background grid-item">
 									<div class="card_background" style="background-image:url('{{ asset('images/banners/' . $eleventhBlog->banner) }}')" width="330" height="50"></div>
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="post.html">11{{ $eleventhBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $eleventhBlog->id) }}">11{{ $eleventhBlog -> header }}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -1195,7 +1196,7 @@
 							<div class="advertising_background" style="background-image: url('{{ asset('images/banners/' . $latestTemplate->banner) }}');"></div>
 							<div class="advertising_content d-flex flex-column align-items-start justify-content-end">
 								<div class="advertising_perc">-15%</div>
-								<div class="advertising_link"><a href="#">{{ $latestTemplate->header }}</a></div>
+								<div class="advertising_link"><a href="{{ url('post/' . $latestTemplate->id) }}">{{ $latestTemplate->header }}</a></div>
 							</div>
 						</div>
 					</div>

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email');
             $table->longText('message');
+            $table->boolean('read')->default(false);
             $table->timestamps();
         });
     }
@@ -26,5 +27,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('concerns');
+
+        Schema::table('concerns', function (Blueprint $table) {
+            $table->dropColumn('read');
+        });
     }
+    
 };

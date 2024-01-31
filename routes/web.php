@@ -54,8 +54,9 @@ Route::get('/', function () {
     $subtitles = Subtitle::all();
     $descriptions = Description::all();
     $categories = Category::all();
+    $templates = Template::all();
 
-    return view('landing/landing', compact('sidebarPosts', 'categories', 'heroTemplates', 'descriptions', 'subtitles', 'titles', 'fTemplate', 'latestTemplates', 'users'));
+    return view('landing/landing', compact('templates', 'sidebarPosts', 'categories', 'heroTemplates', 'descriptions', 'subtitles', 'titles', 'fTemplate', 'latestTemplates', 'users'));
 });
 
 # NON AUTHENTICATED PAGES
@@ -78,6 +79,8 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/post/{id}', [BlogController::class, 'view_blog'])->name('view_blog');
 Route::get('/post/create_comment/{id}', [BlogController::class, 'create_comment'])->name('create_comment');
 Route::get('/post/blog_contacts/{id}', [BlogController::class, 'blog_contacts'])->name('blog_contacts');
+Route::post('/post/send_specific_concern/{id}', [BlogController::class, 'send_specific_concern'])->name('send_specific_concern');
+
 
 Route::resources([
     'roles' => RoleController::class,
@@ -102,6 +105,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/templates/{template}', [TemplateController::class, 'destroy'])->name('templates.destroy');
     Route::post('/templates/{id}/like', [TemplateController::class, 'toggleLike'])->name('templates.toggleLike');
     Route::resource('templates', TemplateController::class);
+    Route::get('pagination/fetch_data', [App\Http\Controllers\TemplateController::class, 'fetch_data'])->name('templates.fetch_data');
+    Route::get('pagination/fetch_data_more', [App\Http\Controllers\HomeController::class, 'fetch_data_more'])->name('templates.fetch_data_more');
 
     Route::get('categories', [App\Http\Controllers\CategoryController::class, 'index'])->name('categories.index');
     Route::get('categories/create', [App\Http\Controllers\CategoryController::class, 'create'])->name('categories.create');
@@ -117,18 +122,20 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
     Route::resource('comments', CommentController::class);
 
+    Route::delete('emails/inbox/{id}', [App\Http\Controllers\MailController::class, 'destroyInbox'])->name('emails.destroyInbox');
+    Route::delete('emails/sent-mail/{id}', [App\Http\Controllers\MailController::class, 'destroyInbox'])->name('emails.destroyInbox');
+
     Route::get('emails', [App\Http\Controllers\MailController::class, 'index'])->name('emails.index');
+    Route::get('emails/inbox', [App\Http\Controllers\MailController::class, 'inbox'])->name('emails.inbox');
+    Route::get('emails/sent-mail', [App\Http\Controllers\MailController::class, 'sent'])->name('emails.sent-mail');
+    Route::get('emails/draft', [App\Http\Controllers\MailController::class, 'draft'])->name('emails.draft');
+    Route::get('emails/trash', [App\Http\Controllers\MailController::class, 'trash'])->name('emails.trash');
     Route::get('emails/create', [App\Http\Controllers\MailController::class, 'create'])->name('emails.create');
     Route::post('emails', [App\Http\Controllers\MailController::class, 'store'])->name('emails.store');
     Route::get('/emails/{email}/edit', [MailController::class, 'edit'])->name('emails.edit');
-    Route::delete('/emails/{email}', [MailController::class, 'destroy'])->name('emails.destroy');
+    Route::delete('emails', [MailController::class, 'destroy'])->name('emails.destroy');
     Route::resource('emails', MailController::class);
-    
 
-    // Route::get('titles', [\App\Http\Controllers\TitleController::class, 'index'])->name('titles.index');
-    // Route::get('titles/create', [App\Http\Controllers\TitleController::class, 'create'])->name('titles.create');
-    // Route::post('titles', [App\Http\Controllers\TitleController::class, 'store'])->name('titles.store');
-    // Route::get('/titles/{title}/edit', [TitleController::class, 'edit'])->name('titles.edit');
-    // Route::delete('/titles/{title}', [TitleController::class, 'destroy'])->name('titles.destroy');
-    // Route::resource('titles', TitleController::class);
+    Route::post('/emails/mark-as-read', [MailController::class, 'markAsRead'])->name('emails.markAsRead');
+    Route::post('/emails/mark-as-unread', [MailController::class, 'markAsUnread'])->name('emails.markAsUnread');
 });

@@ -16,6 +16,7 @@ class Concern extends Model
         'rcpt_name',
         'rcpt_email',
         'temp_id',
+        'status',
     ];
 
     public function template()

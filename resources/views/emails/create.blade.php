@@ -10,7 +10,7 @@
     <script>
         tinymce.init({
             selector: 'textarea',
-            height: 500,
+            height: 300,
             setup: function(editor) {
                 editor.on('init change', function() {
                     editor.save();
@@ -51,6 +51,18 @@
             }
         });
     </script>
+
+    <style>
+        .unread-email {
+            font-weight: bold; /* Make unread emails bold */
+        }
+
+        .mailbox-link:hover {
+            background-color: #f0f0f0; /* Change the background color on hover */
+            border-radius: 5px; /* Add border-radius for rounded corners */
+        }
+    </style>
+
 </head>
 <body>
 
@@ -92,23 +104,22 @@
                                             Compose
                                         </a>
                                         <div class="mail-list mt-4">
-                                            <a href="javascript: void(0);" class="active"><i class="mdi mdi-email-outline me-2"></i> Inbox <span class="ms-1 float-end">(18)</span></a>
-                                            <a href="javascript: void(0);"><i class="mdi mdi-star-outline me-2"></i>Starred</a>
-                                            <a href="javascript: void(0);"><i class="mdi mdi-diamond-stone me-2"></i>Important</a>
-                                            <a href="javascript: void(0);"><i class="mdi mdi-file-outline me-2"></i>Draft</a>
-                                            <a href="javascript: void(0);"><i class="mdi mdi-email-check-outline me-2"></i>Sent Mail</a>
-                                            <a href="javascript: void(0);"><i class="mdi mdi-trash-can-outline me-2"></i>Trash</a>
-                                        </div>
-            
-            
-                                        <h6 class="mt-4">Labels</h6>
-            
-                                        <div class="mail-list mt-1">
-                                            <a href="javascript: void(0);"><span class="mdi mdi-arrow-right-drop-circle text-info float-end"></span>Theme Support</a>
-                                            <a href="javascript: void(0);"><span class="mdi mdi-arrow-right-drop-circle text-warning float-end"></span>Freelance</a>
-                                            <a href="javascript: void(0);"><span class="mdi mdi-arrow-right-drop-circle text-primary float-end"></span>Social</a>
-                                            <a href="javascript: void(0);"><span class="mdi mdi-arrow-right-drop-circle text-danger float-end"></span>Friends</a>
-                                            <a href="javascript: void(0);"><span class="mdi mdi-arrow-right-drop-circle text-success float-end"></span>Family</a>
+                                            <a href="{{ route('emails.inbox') }}" class="mailbox-link">
+                                                <i class="mdi mdi-email-outline me-2"></i> Inbox 
+                                                <span class="ms-1 float-end">({{ $InboxCount }})</span>
+                                            </a>
+                                            <a href="{{ route('emails.sent-mail') }}" class="mailbox-link">
+                                                <i class="mdi mdi-email-check-outline me-2"></i>Sent Mail 
+                                                <span class="ms-1 float-end">({{ $SentMailCount }})</span>
+                                            </a>
+                                            <a href="{{ route('emails.draft') }}" class="mailbox-link">
+                                                <i class="mdi mdi-file-outline me-2"></i>Draft 
+                                                <span class="ms-1 float-end">({{ $DraftCount }})</span>
+                                            </a>
+                                            <a href="{{ route('emails.trash') }}" class="mailbox-link">
+                                                <i class="mdi mdi-trash-can-outline me-2"></i>Trash 
+                                                <span class="ms-1 float-end">({{ $TrashCount }})</span>
+                                            </a>
                                         </div>
                                     </div>
                                     <!-- End Left sidebar -->

@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Template;
-use App\Models\Category;
-use App\Models\Comment;
+use DB;
+use Log;
 use App\Models\Like;
 use App\Models\User;
+use App\Models\Comment;
+use App\Models\Category;
+use App\Models\Template;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreTemplateRequest;
 use App\Http\Requests\UpdateTemplateRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
-use DB;
 
 class TemplateController extends Controller
 {
@@ -34,8 +37,17 @@ class TemplateController extends Controller
      */
     public function index()
     {
-        $templates = Template::all();
+        $templates = Template::paginate(5);
+    
         return view('templates.index', compact('templates'));
+    }
+    public function fetch_data(Request $request)
+    {
+        if($request->ajax())
+        {
+            $templates = Template::latest('created_at')->paginate(5);
+            return view('templates.pagination_data',compact('templates'))->render();
+        }
     }
     
     public function create()
