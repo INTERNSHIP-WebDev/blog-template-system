@@ -57,6 +57,7 @@
                                             @include('templates.pagination_data')
                                         </div>
                                     </div>
+                                    
                                 </div><!--end card-->
                             </div><!--end col-->
 

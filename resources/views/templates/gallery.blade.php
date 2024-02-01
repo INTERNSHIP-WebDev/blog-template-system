@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blogs | Gallery</title>
 
-    <style>
-   
-
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 </head>
 
 <body>
@@ -50,72 +47,35 @@
                                             <div class="btn list_view" onclick="toggleView('listView')">
                                                 <ion-icon name="list-outline"></ion-icon>
                                             </div>
+                                            <i class="bi bi-sort-down" onclick="sortImages()"></i>
                                         </div>
 
                                         <!-- Grid view -->
                                         <div class="card-body" id="gridView">
-                                            <div class="row" id="imagesRow">
-                                                @foreach($templates as $template)
-                                                <div class="col-md-4 mb-4">
-                                                    <div class="card">
-                                                        <div class="text-center">
-                                                            @if ($template->banner)
-                                                            <img src="{{ asset('images/banners/' . $template->banner) }}" alt="{{ $template->banner }}" class="img-thumbnail" width="150" height="150">
-                                                            @else
-                                                            No photo
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                @endforeach
+                                            <div id="anjelfromheaven">
+                                                @include('templates.gallery_banner_pagination')
                                             </div>
                                         </div>
 
                                         <!-- List view -->
                                         <div class="card-body" id="listView" style="display: none;">
-                                            <ul class="list-group" id="imagesList">
-                                                @foreach($templates as $template)
-                                                <li class="list-group-item">
-                                                    <div class="d-flex justify-content-between align-items-top">
-                                                        <div class="text-center">
-                                                            @if ($template->banner)
-                                                            <img src="{{ asset('images/banners/' . $template->banner) }}" alt="{{ $template->banner }}" class="img-thumbnail" width="50" height="50">
-                                                            @else
-                                                            No photo
-                                                            @endif
-                                                        </div>
-                                                        <p class="card-text text-center" style="font-size: 12px;">{{ $template->banner }}</p>
-                                                    </div>
-                                                </li>
-                                                @endforeach
-                                            </ul>
+                                            <div id="gal-ban-list">
+                                                @include('templates.pagination.gallery_banner_list_pagination')
+                                            </div>
                                         </div>
                                     </div>
+                                    
                                 </div>
-                                <nav aria-label="...">
-                                    <ul class="pagination" id="pagination">
-                                        <li class="page-item disabled">
-                                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                                        </li>
-                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item active" aria-current="page">
-                                            <a class="page-link" href="#">2</a>
-                                        </li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#">Next</a>
-                                        </li>
-                                    </ul>
-                                </nav>
+                    
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- End Banner Images Section -->
+               
+                    <!-- End Banner Images Section -->
 
-                <!-- Logo Images Section -->
-                <div class="row">
-                    <div class="col-lg-6">
+                    <!-- Logo Images Section -->
+
+                    <div class="col-lg-6 ">
                         <div class="card">
                             <div class="card-body border-bottom">
                                 <div class="align-items-top">
@@ -128,67 +88,24 @@
                                             <div class="btn list_view" onclick="toggleView1('listView1')">
                                                 <ion-icon name="list-outline"></ion-icon>
                                             </div>
+                                            <i class="bi bi-sort-down"></i>
                                         </div>
 
                                         <!-- Grid view -->
                                         <div class="card-body" id="gridView1">
-                                            <div class="row" id="imagesRow">
-                                                @foreach($templates as $template)
-                                                <div class="col-md-4 mb-4">
-                                                    <div class="card">
-                                                        <div class="text-center">
-                                                            @if ($template->logo)
-                                                            <img src="{{ asset('images/logos/' . $template->logo) }}" alt="{{ $template->logo }}" class="img-thumbnail" width="150" height="150">
-                                                            @else
-                                                            No photo
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                @endforeach
+                                            <div id="juiceseal">
+                                                @include('templates.gallery_logo_pagination')
                                             </div>
                                         </div>
 
                                         <!-- List view -->
                                         <div class="card-body" id="listView1" style="display: none;">
-                                            <ul class="list-group" id="imagesList">
-                                                @foreach($templates as $template)
-                                                <li class="list-group-item">
-                                                    <div class="d-flex justify-content-between align-items-top">
-                                                        <div class="text-center">
-                                                            @if ($template->logo)
-                                                            <img src="{{ asset('images/logos/' . $template->logo) }}" alt="{{ $template->logo }}" class="img-thumbnail" width="50" height="50">
-                                                            @else
-                                                            No photo
-                                                            @endif
-                                                        </div>
-                                                        <p class="card-text text-center" style="font-size: 12px;">{{ $template->logo }}</p>
-                                                    </div>
-                                                </li>
-                                                @endforeach
-                                            </ul>
+                                            <div id="gal-logo-list">
+                                                @include('templates.pagination.gallery_logo_list_pagination')
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <nav aria-label="...">
-                                    <ul class="pagination">
-                                        <li class="page-item disabled">
-                                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                                        </li>
-                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item active" aria-current="page">
-                                            <a class="page-link" href="#">2</a>
-                                        </li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#">Next</a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <!-- End Logo Images Section -->
 
             </div><!-- end container-fluid -->
@@ -206,37 +123,139 @@
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
-    <!-- Banner script -->
-    <script>
-        function toggleView(viewId) {
-            var gridView = document.getElementById("gridView");
-            var listView = document.getElementById("listView");
-
-            if (viewId === "gridView") {
-                gridView.style.display = "block";
-                listView.style.display = "none";
-            } else if (viewId === "listView") {
-                gridView.style.display = "none";
-                listView.style.display = "block";
-            }
+  <!-- Banner script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Retrieve the last saved view from local storage
+        var savedView = localStorage.getItem("bannerView");
+        if (savedView) {
+            toggleView(savedView);
         }
-    </script>
+    });
 
-    <!-- Logo script -->
-    <script>
-        function toggleView1(viewId1) {
-            var gridView1 = document.getElementById("gridView1");
-            var listView1 = document.getElementById("listView1");
+    function toggleView(viewId) {
+        var gridView = document.getElementById("gridView");
+        var listView = document.getElementById("listView");
 
-            if (viewId1 === "gridView1") {
-                gridView1.style.display = "block";
-                listView1.style.display = "none";
-            } else if (viewId1 === "listView1") {
-                gridView1.style.display = "none";
-                listView1.style.display = "block";
-            }
+        if (viewId === "gridView") {
+            gridView.style.display = "block";
+            listView.style.display = "none";
+        } else if (viewId === "listView") {
+            gridView.style.display = "none";
+            listView.style.display = "block";
         }
-    </script>
+
+        // Save the current view to local storage
+        localStorage.setItem("bannerView", viewId);
+    }
+</script>
+
+<!-- Logo script -->
+<script>
+    $(document).ready(function(){
+        $(document).on('click', '#juiceseal .pagination a', function(event){
+            event.preventDefault();
+            var page = $(this).attr('href').split('page=')[1];
+            fetch_gallery_logo_data(page);
+        });
+
+        function fetch_gallery_logo_data(page)
+        {
+            $.ajax({
+                url:"/pagination/fetch_gallery_logo_data?page="+page,
+                success:function(data)
+                {
+                    $('#juiceseal').html(data);
+                }
+            })
+        }
+    });
+    $(document).ready(function(){
+        $(document).on('click', '#gal-logo-list .pagination a', function(event){
+            event.preventDefault();
+            var page = $(this).attr('href').split('page=')[1];
+            fetch_gallery_logo_list_data(page);
+        });
+
+        function fetch_gallery_logo_list_data(page)
+        {
+            $.ajax({
+                url:"/pagination/fetch_gallery_logo_list_data?page="+page,
+                success:function(data)
+                {
+                    $('#gal-logo-list').html(data);
+                }
+            })
+        }
+    });
+    $(document).ready(function(){
+        $(document).on('click', '#gal-ban-list .pagination a', function(event){
+            event.preventDefault();
+            var page = $(this).attr('href').split('page=')[1];
+            fetch_gallery_banner_list_data(page);
+        });
+
+        function fetch_gallery_banner_list_data(page)
+        {
+            $.ajax({
+                url:"/pagination/fetch_gallery_banner_list_data?page="+page,
+                success:function(data)
+                {
+                    $('#gal-ban-list').html(data);
+                }
+            })
+        }
+    });
+</script>
+<script>
+    $(document).ready(function(){
+        $(document).on('click', '#anjelfromheaven .pagination a', function(event){
+            event.preventDefault();
+            var page = $(this).attr('href').split('page=')[1];
+            fetch_gallery_banner_data(page);
+        });
+
+        function fetch_gallery_banner_data(page)
+        {
+            $.ajax({
+                url:"/pagination/fetch_gallery_banner_data?page="+page,
+                success:function(data)
+                {
+                    $('#anjelfromheaven').html(data);
+                }
+            })
+        }
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Retrieve the last saved view from local storage
+        var savedView1 = localStorage.getItem("logoView");
+        if (savedView1) {
+            toggleView1(savedView1);
+        }
+    });
+
+    function toggleView1(viewId1) {
+        var gridView1 = document.getElementById("gridView1");
+        var listView1 = document.getElementById("listView1");
+
+        if (viewId1 === "gridView1") {
+            gridView1.style.display = "block";
+            listView1.style.display = "none";
+        } else if (viewId1 === "listView1") {
+            gridView1.style.display = "none";
+            listView1.style.display = "block";
+        }
+
+        // Save the current view to local storage
+        localStorage.setItem("logoView", viewId1);
+    }
+
+   
+</script>
+
+   
 
 <!-- JavaScript Script -->
 <script>

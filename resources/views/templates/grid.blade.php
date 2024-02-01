@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blogs | Grid</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 </head>
 <body>
 
@@ -92,95 +94,14 @@
 
                                                             <hr class="mb-4">
 
-                                                            <div class="row">
-                                                            @foreach($templates as $template)
-                                                                <div class="col-sm-4">
-                                                                    <div class="card p-1 border shadow-none" style="max-width: 100%;">
-                                                                        <div class="p-3">
-                                                                            <h5><a href="{{ route('templates.show', $template->id) }}" class="text-dark">{{ $template->header }}</a></h5>
-                                                                            <p class="text-muted mb-0">{{ $template->created_at->format('d M, Y') }}</p>
-                                                                        </div>
-                                                                        
-                                                                        <div class="position-relative">
-                                                                            @if ($template->banner)
-                                                                                <img src="{{ asset('images/banners/' . $template->banner) }}" alt="{{ $template->banner }}" class="img-thumbnail" width="100%" height="50">
-                                                                            @else
-                                                                                No photo
-                                                                            @endif
-                                                                        </div>
-
-
-                                                                        <div class="p-3">
-                                                                        <div class="list-inline">
-                                                                            <div class="list-inline-item me-3">
-                                                                                <a href="javascript:void(0);" class="text-muted">
-                                                                                    <i class="bx bx-purchase-tag-alt align-middle text-muted me-1"></i>
-                                                                                    @if($template->category)
-                                                                                        {{ $template->category->text }}
-                                                                                    @else
-                                                                                        General Blog
-                                                                                    @endif
-                                                                                </a>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div class="list-inline">
-                                                                            <div class="list-inline-item me-3">
-                                                                                <a href="javascript:void(0);" class="text-muted">
-                                                                                    <i class="bx bx-comment-dots align-middle text-muted me-1"></i> 
-                                                                                    {{ $template->comments->count() }} Comments
-                                                                                </a>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <hr>
-
-                                                                        <p class="teaser">
-                                                                            {!! $template->description ? \Illuminate\Support\Str::limit(strip_tags($template->description), 150, $end='...') : "Blog has no content." !!}
-                                                                        </p>
-
-
-                                                                        <div>
-                                                                            <a href="{{ route('templates.show', $template->id) }}" class="text-primary">Read more <i class="mdi mdi-arrow-right"></i></a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                                </div>
-
-                                                                @endforeach
+                                                            
+                                                            <div id="clintgarcia">
+                                                                @include('templates.grid_pagination')
                                                             </div>
+                                                            
 
                                                             
-        
 
-                                                            <hr class="my-4">
-
-                                                            <div class="text-center">
-                                                                <ul class="pagination justify-content-center pagination-rounded">
-                                                                    <li class="page-item disabled">
-                                                                        <a href="javascript: void(0);" class="page-link"><i class="mdi mdi-chevron-left"></i></a>
-                                                                    </li>
-                                                                    <li class="page-item">
-                                                                        <a href="javascript: void(0);" class="page-link">1</a>
-                                                                    </li>
-                                                                    <li class="page-item active">
-                                                                        <a href="javascript: void(0);" class="page-link">2</a>
-                                                                    </li>
-                                                                    <li class="page-item">
-                                                                        <a href="javascript: void(0);" class="page-link">3</a>
-                                                                    </li>
-                                                                    <li class="page-item">
-                                                                        <a href="javascript: void(0);" class="page-link">...</a>
-                                                                    </li>
-                                                                    <li class="page-item">
-                                                                        <a href="javascript: void(0);" class="page-link">10</a>
-                                                                    </li>
-                                                                    <li class="page-item">
-                                                                        <a href="javascript: void(0);" class="page-link"><i class="mdi mdi-chevron-right"></i></a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -291,7 +212,7 @@
                                                     <li>
                                                         <a href="javascript:void(0);" class="text-muted py-2 d-block">
                                                             <i class="mdi mdi-chevron-right me-1"></i>
-                                                            {{ $category->text }}
+                                                            {!! $category->text ? \Illuminate\Support\Str::limit(strip_tags($category->text), 19, $end='...') : "Blog has no header" !!}
                                                             <span class="badge badge-soft-success badge-pill ms-1 float-end font-size-12">{{ $category->templates_count }}</span>
                                                         </a>
                                                     </li>
@@ -323,5 +244,25 @@
         <div class="rightbar-overlay"></div>
         
         @endsection
+        <script>
+            $(document).ready(function(){
+                $(document).on('click', '.pagination a', function(event){
+                    event.preventDefault();
+                    var page = $(this).attr('href').split('page=')[1];
+                    fetch_grid_data(page);
+                });
+
+                function fetch_grid_data(page)
+                {
+                    $.ajax({
+                        url:"/pagination/fetch_grid_data?page="+page,
+                        success:function(data)
+                        {
+                            $('#clintgarcia').html(data);
+                        }
+                    })
+                }
+            });
+        </script>
     </body>
 </html>

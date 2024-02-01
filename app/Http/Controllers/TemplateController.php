@@ -37,8 +37,7 @@ class TemplateController extends Controller
      */
     public function index()
     {
-        $templates = Template::paginate(5);
-    
+        $templates = Template::latest('created_at')->paginate(5);
         return view('templates.index', compact('templates'));
     }
     public function fetch_data(Request $request)
@@ -250,16 +249,51 @@ class TemplateController extends Controller
 
     public function gallery()
     {
-        $templates = Template::all();
-        return view('templates.gallery', compact('templates'));
+    $templates = Template::paginate(9);
+    return view('templates.gallery', compact('templates'));
     }
+
+    // GALLERY AJAX
+        public function fetch_gallery_banner_data(Request $request)
+        {
+            if($request->ajax())
+            {
+                $templates = Template::paginate(9);
+                return view('templates.gallery_banner_pagination',compact('templates'))->render();
+            }
+        }
+        public function fetch_gallery_logo_data(Request $request)
+        {
+            if($request->ajax())
+            {
+                $templates = Template::paginate(9);
+                return view('templates.gallery_logo_pagination',compact('templates'))->render();
+            }
+        }
+        public function fetch_gallery_logo_list_data(Request $request)
+        {
+            if($request->ajax())
+            {
+                $templates = Template::paginate(9);
+                return view('templates.pagination.gallery_logo_list_pagination',compact('templates'))->render();
+            }
+        }
+        public function fetch_gallery_banner_list_data(Request $request)
+        {
+            if($request->ajax())
+            {
+                $templates = Template::paginate(9);
+                return view('templates.pagination.gallery_banner_list_pagination',compact('templates'))->render();
+            }
+        }
+    // END OF GALLERY AJAX
 
     public function grid()
     {
-        $templates = Template::all();
+        $templates = Template::paginate(6);
         
         // Fetch all categories
-        $categories = Category::all();
+        $categories = Category::paginate(6);
 
         // Fetch all categories with template count
         $categories = Category::withCount('templates')->get();
@@ -268,13 +302,27 @@ class TemplateController extends Controller
         $comments = Comment::whereIn('temp_id', $templates->pluck('id'))->get();
         return view('templates.grid', compact('templates', 'comments', 'categories'));
     }
+    public function fetch_grid_data(Request $request)
+    {
+        if($request->ajax())
+        {
+            $templates = Template::paginate(6);
+            $categories = Category::paginate(6);
+            $categories = Category::withCount('templates')->get();
+            $comments = Comment::whereIn('temp_id', $templates->pluck('id'))->get();
+            return view('templates.grid_pagination',compact('templates', 'comments', 'categories'))->render();
+        }
+    }
 
+   
+ 
+   
     public function list()
     {
-        $templates = Template::all();
-        
+        $templates = Template::latest('created_at')->paginate(3);
+
         // Fetch all categories
-        $categories = Category::all();
+        $categories = Category::latest('created_at')->paginate(3);
 
         // Fetch all categories with template count
         $categories = Category::withCount('templates')->get();
@@ -282,6 +330,18 @@ class TemplateController extends Controller
         // Fetch comments for all templates
         $comments = Comment::whereIn('temp_id', $templates->pluck('id'))->get();
         return view('templates.list', compact('templates', 'comments', 'categories'));
+    }
+
+    public function fetch_list_data(Request $request)
+    {
+        if($request->ajax())
+        {
+            $templates = Template::latest('created_at')->paginate(3);
+            $categories = Category::latest('created_at')->paginate(3);
+            $categories = Category::withCount('templates')->get();
+            $comments = Comment::whereIn('temp_id', $templates->pluck('id'))->get();
+            return view('templates.list_pagination',compact('templates', 'comments', 'categories'))->render();
+        }
     }
     
     public function toggleLike(Request $request, $id)

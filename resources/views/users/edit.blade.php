@@ -1,17 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users | Edit</title>
+
+</head>
+<body>
+
 @extends('layouts.app')
 
 @section('content')
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <div class="float-start">
-                    Edit User
+    <!-- Page Content -->
+    <div class="main-content">
+        <div class="page-content">
+            <div class="container-fluid">
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                            <h4 class="mb-sm-0 font-size-18">Edit User</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a href="{{ route('users.index') }}">Users</a></li>
+                                    <li class="breadcrumb-item active">Edit User</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="float-end">
-                    <a href="{{ route('users.index') }}" class="btn btn-primary btn-sm">&larr; Back</a>
-                </div>
-            </div>
+                <!-- end page title -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
             <div class="card-body">
                 <form action="{{ route('users.update', $user->id) }}" method="post">
                     @csrf
@@ -88,7 +109,14 @@
                     
                 </form>
             </div>
-        </div>
+            </div>
+                    </div>
+                </div>
+            </div> <!-- container-fluid -->
+        </div><!-- End Page-content -->
     </div>
-</div>    
+    <!-- end main content-->
 @endsection
+
+</body>
+</html>

@@ -79,24 +79,24 @@
                         <!-- Right Sidebar -->
                         <div class="email-rightbar mb-3">
                             <div class="card">
-                            <div class="btn-toolbar p-3" role="toolbar">
-                                <div class="btn-group me-2 mb-2 mb-sm-0">
-                                    <input type="checkbox" id="select-all" class="checkbox-select-all" title="Select All" />
-                                    <label for="select-all" class="toggle"></label>
+                                <div class="btn-toolbar p-3" role="toolbar">
+                                    <div class="btn-group me-2 mb-2 mb-sm-0">
+                                        <input type="checkbox" id="select-all" class="checkbox-select-all" title="Select All" />
+                                        <label for="select-all" class="toggle"></label>
+                                    </div>
+                                    <div class="btn-group me-2 mb-2 mb-sm-0">
+                                        <button type="button" class="btn btn-primary waves-light waves-effect refresh" title="Refresh"><i class="fas fa-sync-alt"></i></button>
+                                    </div>
+                                    <div class="btn-group me-2 mb-2 mb-sm-0">
+                                        <button type="button" class="btn btn-primary waves-light waves-effect delete-selected" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Delete Selected"><i class="far fa-trash-alt"></i></button>
+                                    </div>
+                                    <div class="btn-group me-2 mb-2 mb-sm-0">
+                                        <button type="button" class="btn btn-primary waves-light waves-effect mark-as-read" title="Mark as Read"><i class="fas fa-envelope-open-text"></i></button>
+                                    </div>
+                                    <div class="btn-group me-2 mb-2 mb-sm-0">
+                                        <button type="button" class="btn btn-primary waves-light waves-effect mark-as-unread" title="Mark as Unread"><i class="fa fa-envelope"></i></button>
+                                    </div>
                                 </div>
-                                <div class="btn-group me-2 mb-2 mb-sm-0">
-                                    <button type="button" class="btn btn-primary waves-light waves-effect refresh" title="Refresh"><i class="fas fa-sync-alt"></i></button>
-                                </div>
-                                <div class="btn-group me-2 mb-2 mb-sm-0">
-                                    <button type="button" class="btn btn-primary waves-light waves-effect delete-selected" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Delete Selected"><i class="far fa-trash-alt"></i></button>
-                                </div>
-                                <div class="btn-group me-2 mb-2 mb-sm-0">
-                                    <button type="button" class="btn btn-primary waves-light waves-effect mark-as-read" title="Mark as Read"><i class="fas fa-envelope-open-text"></i></button>
-                                </div>
-                                <div class="btn-group me-2 mb-2 mb-sm-0">
-                                    <button type="button" class="btn btn-primary waves-light waves-effect mark-as-unread" title="Mark as Unread"><i class="fa fa-envelope"></i></button>
-                                </div>
-                            </div>
 
                                 <!-- Email list -->
                                 <ul class="message-list">

@@ -35,7 +35,7 @@ class MailController extends Controller
 
     public function sent()
     {
-        $concerns = Concern::all();
+        $concerns = Concern::latest('created_at')->paginate(7);
         $total_concerns = $concerns->count();
 
         $InboxCount = Concern::where('rcpt_email', auth()->user()->email)->count();
@@ -45,6 +45,21 @@ class MailController extends Controller
 
         return view('emails.sent-mail', compact('concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
     }
+
+    public function fetch_sent_data(Request $request)
+    {
+        if ($request->ajax()) {
+            $concerns = Concern::latest('created_at')->paginate(7);
+            $total_concerns = $concerns->count();
+
+            $InboxCount = Concern::where('rcpt_email', auth()->user()->email)->count();
+            $SentMailCount = Concern::where('send_email', auth()->user()->email)->count();
+            $DraftCount = Concern::where('status', 2)->where('send_email', auth()->user()->email)->count();
+            $TrashCount = Concern::where('status', 3)->where('send_email', auth()->user()->email)->count();
+            return view('emails.sent-mail', compact('concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'))->render();
+        }
+    }
+
 
     public function draft()
     {
@@ -80,7 +95,7 @@ class MailController extends Controller
     public function create(Request $request)
     {
         // Fetch concerns for use in the create view
-        $concerns = Concern::all(); 
+        $concerns = Concern::all();
 
         $InboxCount = Concern::where('rcpt_email', auth()->user()->email)->count();
         $SentMailCount = Concern::where('send_email', auth()->user()->email)->count();
@@ -128,7 +143,7 @@ class MailController extends Controller
             // Send the email with dynamic subject and body
             $mailData = [
                 'title' => $concern->subject,
-                'body' => $concern->message,   
+                'body' => $concern->message,
             ];
 
             Mail::to($concern->rcpt_email)->send(new DemoMail($mailData));
@@ -158,11 +173,11 @@ class MailController extends Controller
         $SentMailCount = Concern::where('send_email', auth()->user()->email)->count();
         $DraftCount = Concern::where('status', 2)->where('send_email', auth()->user()->email)->count();
         $TrashCount = Concern::where('status', 3)->where('send_email', auth()->user()->email)->count();
-        
+
         // Return the view to show the email
         return view('emails.show', compact('email', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
     }
-    
+
 
     /**
      * Remove the specified resource from storage.
@@ -170,7 +185,7 @@ class MailController extends Controller
     public function destroyInbox(Request $request, $id)
     {
         $selectedIds = $request->input('ids', []);
-        
+
         if (!empty($selectedIds)) {
             Concern::whereIn('id', $selectedIds)->delete();
 
@@ -242,5 +257,4 @@ class MailController extends Controller
 
         return redirect()->route('emails.draft')->with('success', 'Draft saved successfully!');
     }
-
 }

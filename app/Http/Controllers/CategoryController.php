@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use RealRashid\SweetAlert\Facades\Alert;
 
+
 class CategoryController extends Controller
 {
     /**
@@ -26,15 +27,18 @@ class CategoryController extends Controller
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::latest('created_at')->paginate(5);
         return view('categories.index', compact('categories'));
+    }
+
+    public function fetch_data_category(Request $request)
+    {
+        if ($request->ajax()) {
+            $categories = Category::latest('created_at')->paginate(5);
+            return view('categories.pagination_category', compact('categories'))->render();
+        }
     }
 
     /**
@@ -140,14 +144,14 @@ class CategoryController extends Controller
         $titles = Title::all();
         $heroTemplates = Template::latest('created_at')->take(4)->get();
         $latestTemplate = Template::latest()->first();
-        
+
         // Check if $latestTemplate is null
         if ($latestTemplate) {
             $templates = Template::whereNotIn('id', [$latestTemplate->id])->latest('created_at')->paginate(9);
         } else {
             $templates = Template::latest('created_at')->paginate(9);
         }
-    
+
         $fTemplate = Template::latest('created_at')->paginate(4);
         $users = User::all();
         $subtitles = Subtitle::all();
@@ -155,5 +159,4 @@ class CategoryController extends Controller
         $categories = Category::all();
         return view('category', compact('categories', 'heroTemplates', 'descriptions', 'subtitles', 'titles', 'fTemplate', 'latestTemplate', 'templates', 'users'));
     }
-
 }

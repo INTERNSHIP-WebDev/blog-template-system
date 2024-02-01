@@ -75,10 +75,8 @@ class HomeController extends Controller
 
     public function all_activity()
     {
-        // Retrieve the latest template creation
-        $latestTemplate = Template::latest('created_at')->first();
-        $activityTemplate = Template::paginate(5);
-        return view('templates.more-activity', compact('activityTemplate', 'latestTemplate'));
+        $activityTemplate = Template::latest('created_at')->paginate(5);
+        return view('templates.more-activity', compact('activityTemplate'));
     }
 
     public function fetch_data_more(Request $request)

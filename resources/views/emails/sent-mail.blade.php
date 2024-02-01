@@ -15,6 +15,8 @@
             border-radius: 5px; /* Add border-radius for rounded corners */
         }
     </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     
 </head>
 <body>
@@ -78,59 +80,32 @@
                         <!-- Right Sidebar -->
                         <div class="email-rightbar mb-3">
                             <div class="card">
-                            <div class="btn-toolbar p-3" role="toolbar">
-                                <div class="btn-group me-2 mb-2 mb-sm-0">
-                                    <input type="checkbox" id="select-all" class="checkbox-select-all" title="Select All" />
-                                    <label for="select-all" class="toggle"></label>
-                                </div>
-                                <div class="btn-group me-2 mb-2 mb-sm-0">
-                                    <button type="button" class="btn btn-primary waves-light waves-effect refresh" title="Refresh"><i class="fas fa-sync-alt"></i></button>
-                                </div>
-                                <div class="btn-group me-2 mb-2 mb-sm-0">
-                                    <button type="button" class="btn btn-primary waves-light waves-effect delete-selected" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Delete Selected"><i class="far fa-trash-alt"></i></button>
-                                </div>
-                                <div class="btn-group me-2 mb-2 mb-sm-0">
-                                    <button type="button" class="btn btn-primary waves-light waves-effect mark-as-read" title="Mark as Read"><i class="fas fa-envelope-open-text"></i></button>
-                                </div>
-                                <div class="btn-group me-2 mb-2 mb-sm-0">
-                                    <button type="button" class="btn btn-primary waves-light waves-effect mark-as-unread" title="Mark as Unread"><i class="fa fa-envelope"></i></button>
-                                </div>
-                            </div>
-
-                                <!-- Email list -->
-                                <ul class="message-list">
-                                @foreach($concerns as $concern)
-                                        @if($concern->send_email === auth()->user()->email)
-                                            <li>
-                                                <div class="col-mail col-mail-1">
-                                                    <div class="checkbox-wrapper-mail">
-                                                        <input type="checkbox" id="chk{{ $concern->id }}" class="checkbox-bulk" data-id="{{ $concern->id }}">
-                                                        <label for="chk{{ $concern->id }}" class="toggle"></label>
-                                                    </div>
-                                                    <a href="javascript: void(0);" class="title">To: {{ $concern->rcpt_email }}</a><span class="star-toggle far fa-star"></span>
-                                                </div>
-                                                <div class="col-mail col-mail-2">
-                                                    <a href="{{ route('emails.show', $concern->id) }}" class="subject">{{ $concern->subject }} - <span class="teaser">{{ $concern->message }}</span></a>
-                                                    <div class="date">{{ $concern->created_at->format('M d') }}</div>
-                                                </div>
-                                            </li>
-                                        @endif
-                                    @endforeach
-                                </ul>
-
-                            </div><!-- card -->
-
-                            <div class="row">
-                                <div class="col-7">
-                                    Showing 1 - {{ count($concerns) }} of {{ $InboxCount }}
-                                </div>
-                                <div class="col-5">
-                                    <div class="btn-group float-end">
-                                        <button type="button" class="btn btn-sm btn-success waves-effect"><i class="fa fa-chevron-left"></i></button>
-                                        <button type="button" class="btn btn-sm btn-success waves-effect"><i class="fa fa-chevron-right"></i></button>
+                                <div class="btn-toolbar p-3" role="toolbar">
+                                    <div class="btn-group me-2 mb-2 mb-sm-0">
+                                        <input type="checkbox" id="select-all" class="checkbox-select-all" title="Select All" />
+                                        <label for="select-all" class="toggle"></label>
+                                    </div>
+                                    <div class="btn-group me-2 mb-2 mb-sm-0">
+                                        <button type="button" class="btn btn-primary waves-light waves-effect refresh" title="Refresh"><i class="fas fa-sync-alt"></i></button>
+                                    </div>
+                                    <div class="btn-group me-2 mb-2 mb-sm-0">
+                                        <button type="button" class="btn btn-primary waves-light waves-effect delete-selected" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Delete Selected"><i class="far fa-trash-alt"></i></button>
+                                    </div>
+                                    <div class="btn-group me-2 mb-2 mb-sm-0">
+                                        <button type="button" class="btn btn-primary waves-light waves-effect mark-as-read" title="Mark as Read"><i class="fas fa-envelope-open-text"></i></button>
+                                    </div>
+                                    <div class="btn-group me-2 mb-2 mb-sm-0">
+                                        <button type="button" class="btn btn-primary waves-light waves-effect mark-as-unread" title="Mark as Unread"><i class="fa fa-envelope"></i></button>
                                     </div>
                                 </div>
+
+    
+                                <div id="sent">
+                                    @include('emails.pagination_sent_mail')
+                                </div>
+
                             </div>
+                            <!-- card -->
 
                         </div> <!-- end email-rightbar -->
 
@@ -165,6 +140,8 @@
         </div>
     </div>
     <!-- End Bulk Delete Modal -->
+
+
 
 <script>
     // Function to handle select all checkbox
@@ -264,6 +241,26 @@
 </script>
 
 @endsection
+<script>
+        $(document).ready(function(){
+            $(document).on('click', '.pagination a', function(event){
+                event.preventDefault();
+                var page = $(this).attr('href').split('page=')[1];
+                fetch_sent_data(page);
+            });
 
-        </body>
-    </html>
+            function fetch_sent_data(page)
+            {
+                $.ajax({
+                    url:"/pagination/fetch_sent_data?page="+page,
+                    success:function(data)
+                    {
+                        $('#sent').html(data);
+                    }
+        })
+    }
+});
+</script>
+
+    </body>
+</html>

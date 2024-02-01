@@ -30,6 +30,15 @@ class RoleController extends Controller
         ]);
     }
 
+    public function fetch_data_role(Request $request)
+    {
+        if($request->ajax())
+        {
+            $roles = Role::latest('created_at')->paginate(5);
+            return view('roles.pagination_role',compact('roles'))->render();
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      */

@@ -11,9 +11,9 @@ $socials = [
 ?>
 
 <style>
-	.rounded-circle {
-    width: 70px;
-    height: 70px; 
+.rounded-circle {
+    width: 50px;
+    height: 50px; 
     border-radius: 50%;
     object-fit: cover; 
 }
@@ -43,6 +43,78 @@ $socials = [
     }
 }
 
+.post_body {
+    max-width: 100%;
+    overflow-x: hidden;
+	background: rgba(255, 255, 255, 0.9);
+	border-radius: 10px;
+	padding: 20px;
+	-webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.9); 
+	box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.9);
+	animation: fadeInOne 1s ease-in-out;
+    }
+
+.post_tags {
+	margin-top: 15px;
+}
+
+.post_tag {
+	display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    background: #3498db; 
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.post_share {
+	margin-top: 15px;
+}
+
+.post_share span {
+	font-weight: bold;
+	margin-right: 10px;
+}
+
+.post_share_list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.post_share_item {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.post_share_item a {
+    color: #3498db;
+    text-decoration: none;
+    font-size: 20px;
+    transition: color 0.3s ease-in-out;
+}
+
+.post_share_item a:hover {
+    color: #2980b9; 
+}
+
+@keyframes fadeInOne {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+hr {
+    border-top: 2px solid #2980b9;
+    margin-top: 20px; 
+    margin-bottom: 20px;
+ }
 </style>
 
 @extends("blog.layouts.layout", ['socials' => $socials, 'template_id' => $template->id])
@@ -111,7 +183,7 @@ $socials = [
 
 						<!-- Post Body -->
 
-						<div class="post_body"  style="max-width: 100%; overflow-x: hidden;">
+						<div class="post_body" style="max-width: 100%; overflow-x: hidden;">
 							<p> {!! $template->description !!}</p>
 							
 							<!-- Post Tags and Share-->
@@ -139,6 +211,10 @@ $socials = [
 				</div>
 
 			</div>
+
+			<br>
+			<br>
+			<hr>
 
 			<div class="row">
 				<div class="col">

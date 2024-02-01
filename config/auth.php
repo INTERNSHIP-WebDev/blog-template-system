@@ -17,6 +17,7 @@ return [
         'guard' => 'web',
         'passwords' => 'users',
     ],
+    
 
     /*
     |--------------------------------------------------------------------------
@@ -39,6 +40,11 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+        ],
+
+        'guests' => [
+            'driver' => 'session',
+            'provider' => 'guests',
         ],
     ],
 
@@ -65,10 +71,10 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'guests' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Guest::class,
+        ],
     ],
 
     /*
@@ -97,7 +103,15 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+    
+        'guests' => [
+            'provider' => 'guests',
+            'table' => 'password_reset_tokens', 
+            'expire' => 60,
+            'throttle' => 60,
+        ],
     ],
+    
 
     /*
     |--------------------------------------------------------------------------
@@ -113,3 +127,4 @@ return [
     'password_timeout' => 10800,
 
 ];
+

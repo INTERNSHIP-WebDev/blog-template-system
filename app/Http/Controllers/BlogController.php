@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Template;
 use App\Models\Comment;
+use App\Models\Concern;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -76,8 +78,12 @@ class BlogController extends Controller
     public function blog_contacts($id) {
         try {
             $template = Template::findOrFail($id);
+            $user = User::findOrFail($template->user_id);
+            $templates = Template::all(); 
+            $concerns = Concern::all(); 
+    
             $contacts = true;
-            return view('blog.sample.contact', compact('template', 'contacts'));
+            return view('blog.sample.contact', compact('template', 'templates', 'contacts', 'concerns', 'user'));
         } catch (ModelNotFoundException $e) {
             return redirect()->route('blog.sample.sample')->with('error', 'Template not found.');
         }

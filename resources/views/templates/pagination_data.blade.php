@@ -14,7 +14,7 @@
         <tbody>
             @forelse ($templates ?? [] as $template)
             <tr>
-                <td>{{ $loop->iteration }}</td>
+                <td>{{ ($templates->currentPage() - 1) * $templates->perPage() + $loop->iteration }}</td>
                 <td>{{ $template->user->name }}</td>
                 <td>
                     @php
@@ -63,5 +63,5 @@
             @endforelse
         </tbody>
     </table>
-    <div style="width: 100%; display: flex; justify-content: center;">{!! $templates->links() !!}</div>
+    {!! $templates->links() !!}
 </div>

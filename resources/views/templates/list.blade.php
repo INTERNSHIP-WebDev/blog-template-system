@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blogs | List</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 </head>
 <body>
 
@@ -94,57 +96,8 @@
                                                     
                                                             <div class="card">
                                                                 <div class="card-body">
-                                                                    <div class="row">
-                                                                    @foreach($templates as $template)
-                                                                        <!-- Left column: Banner, Categories, Comments -->
-                                                                        <div class="col-md-4">
-                                                                            <!-- Banner -->
-                                                                            <div class="position-relative mb-3">
-                                                                                @if ($template->banner)
-                                                                                    <img src="{{ asset('images/banners/' . $template->banner) }}" alt="{{ $template->banner }}" class="img-thumbnail" width="100%" height="50">
-                                                                                @else
-                                                                                    No photo
-                                                                                @endif
-                                                                            </div>
-                                                                <br>
-
-                                                                        </div>
-                                                                        <!-- Right column: Header, Description, Read more -->
-                                                                        <div class="col-md-8">
-                                                                            <h5><a href="{{ route('templates.show', $template->id) }}" class="text-dark">{{ $template->header }}</a></h5>
-                                                                            <p class="text-muted">{{ $template->created_at->format('d M, Y') }}</p>
-                                                                            <p>{!! $template->description ? \Illuminate\Support\Str::limit(strip_tags($template->description), 170, $end='...') : "Blog has no content." !!}</p>
-
-                                                                            <div>
-                                                                            <ul class="list-inline">
-                                                                                <li class="list-inline-item me-3">
-                                                                                    <a href="javascript: void(0);" class="text-muted">
-                                                                                        <i class="bx bx-purchase-tag-alt align-middle text-muted me-1"></i>
-                                                                                        @if($template->category)
-                                                                                            {{ $template->category->text }}
-                                                                                        @else
-                                                                                            General Blog
-                                                                                        @endif
-                                                                                    </a>
-                                                                                </li>
-
-                                                                                <li class="list-inline-item me-3">
-                                                                                    <a href="javascript: void(0);" class="text-muted">
-                                                                                        <i class="bx bx-comment-dots align-middle text-muted me-1"></i>
-                                                                                        {{ $template->comments->count() }} Comments
-                                                                                    </a>
-                                                                                </li>
-
-                                                                                <li class="list-inline-item me-3">
-                                                                                    <a href="{{ route('templates.show', $template->id) }}">Read more <i class="mdi mdi-arrow-right"></i></a>
-                                                                                </li>
-                                                                            </ul>
-                                                                            </div>
-
-                                                                        
-                                                                        </div>
-                                                                        <hr class="mb-4">
-                                                                        @endforeach
+                                                                    <div id="nissijeap">
+                                                                        @include('templates.list_pagination')
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -190,34 +143,6 @@
                                                                 <hr>
                                                                 @endforeach
                                                             </div> -->
-
-                                                            <hr class="my-5">
-
-                                                            <div class="text-center">
-                                                                <ul class="pagination justify-content-center pagination-rounded">
-                                                                    <li class="page-item disabled">
-                                                                        <a href="javascript: void(0);" class="page-link"><i class="mdi mdi-chevron-left"></i></a>
-                                                                    </li>
-                                                                    <li class="page-item">
-                                                                        <a href="javascript: void(0);" class="page-link">1</a>
-                                                                    </li>
-                                                                    <li class="page-item active">
-                                                                        <a href="javascript: void(0);" class="page-link">2</a>
-                                                                    </li>
-                                                                    <li class="page-item">
-                                                                        <a href="javascript: void(0);" class="page-link">3</a>
-                                                                    </li>
-                                                                    <li class="page-item">
-                                                                        <a href="javascript: void(0);" class="page-link">...</a>
-                                                                    </li>
-                                                                    <li class="page-item">
-                                                                        <a href="javascript: void(0);" class="page-link">10</a>
-                                                                    </li>
-                                                                    <li class="page-item">
-                                                                        <a href="javascript: void(0);" class="page-link"><i class="mdi mdi-chevron-right"></i></a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -362,5 +287,25 @@
         <div class="rightbar-overlay"></div>
 
         @endsection
+        <script>
+            $(document).ready(function(){
+                $(document).on('click', '.pagination a', function(event){
+                    event.preventDefault();
+                    var page = $(this).attr('href').split('page=')[1];
+                    fetch_list_data(page);
+                });
+
+                function fetch_list_data(page)
+                {
+                    $.ajax({
+                        url:"/pagination/fetch_list_data?page="+page,
+                        success:function(data)
+                        {
+                            $('#nissijeap').html(data);
+                        }
+                    })
+                }
+            });
+        </script>
     </body>
 </html>
