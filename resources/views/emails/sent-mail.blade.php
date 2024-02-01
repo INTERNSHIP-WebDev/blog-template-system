@@ -242,24 +242,27 @@
 
 @endsection
 <script>
-        $(document).ready(function(){
-            $(document).on('click', '.pagination a', function(event){
-                event.preventDefault();
-                var page = $(this).attr('href').split('page=')[1];
-                fetch_sent_data(page);
-            });
+    $(document).ready(function(){
+        $(document).on('click', '.pagination a', function(event)
+        {
+            event.preventDefault();
+            var page = $(this).attr('href').split('page=')[1];
+            fetch_sent_data(page);
+        });
 
-            function fetch_sent_data(page)
-            {
-                $.ajax({
-                    url:"/pagination/fetch_sent_data?page="+page,
-                    success:function(data)
-                    {
-                        $('#sent').html(data);
-                    }
-        })
-    }
-});
+        function fetch_sent_data(page)
+        {
+            $.ajax({
+                url:"/pagination/fetch_sent_data?page="+page,
+                success:function(data)
+                {
+                    $('#sent').html(data);
+                }
+            });
+        }    
+    });
+    
+
 </script>
 
     </body>
