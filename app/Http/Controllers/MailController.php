@@ -56,7 +56,7 @@ class MailController extends Controller
             $SentMailCount = Concern::where('send_email', auth()->user()->email)->count();
             $DraftCount = Concern::where('status', 2)->where('send_email', auth()->user()->email)->count();
             $TrashCount = Concern::where('status', 3)->where('send_email', auth()->user()->email)->count();
-            return view('emails.sent-mail', compact('concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'))->render();
+            return view('emails.pagination_sent_mail', compact('concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'))->render();
         }
     }
 
