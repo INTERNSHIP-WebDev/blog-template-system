@@ -20,9 +20,12 @@ $socials = [
 
 .home_content {
     position: relative;
-	padding: 50px;
+	padding: 10px 0px;
     border: 2px solid transparent; 
     animation: borderAnimation 1s ease-in-out forwards;
+	background-color: rgba(255, 255, 255, 0.1); 
+	backdrop-filter: blur(10px);
+	border-radius: 10px;
 }
 
 @keyframes borderAnimation {
@@ -30,7 +33,6 @@ $socials = [
         border-color: #fff;
     }
 }
-
 
 .post_title {
     opacity: 0;
@@ -52,7 +54,28 @@ $socials = [
 	-webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.9); 
 	box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.9);
 	animation: fadeInOne 1s ease-in-out;
-    }
+	position: relative;
+}
+
+.post_body::before,
+.post_body::after {
+	content: "";
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	background-color: #0a0a0a;
+	border-radius: 50%;
+	top: 7px;
+	left: 50%;
+}
+
+.post_body::before {
+	transform: translateX(60%);
+}
+
+.post_body::after {
+	transform: translateX(-60%);
+}
 
 .post_tags {
 	margin-top: 15px;
@@ -229,8 +252,8 @@ hr {
 									@endphp
 									<img class="card-img-top" src="{{ $imageUrl }}" alt="{{ $post->header }}">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="post.html">{{ $post->header }}</a></div>
-										<small class="post_meta"><a href="#">{{ $post->author }}</a><span>{{ $post->created }}</span></small>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $post->id) }}">{{ $post->header }}</a></div>
+										<small class="post_meta"><a href="{{ url('post/' . $post->id) }}">{{ $post->author }}</a><span>{{ $post->created }}</span></small>
 									</div>
 								</div>
 							@endforeach

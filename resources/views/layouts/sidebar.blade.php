@@ -34,6 +34,13 @@
                 </a>
             </li>
 
+            <li>
+                <a href="{{ url('/') }}" class="waves-effect">
+                    <i class="bx bx-home-circle"></i>
+                    <span key="t-dashboards">Guest Page</span>
+                </a>
+            </li>
+
             <li class="menu-title" key="t-apps">Permissions</li>
 
             <li>
@@ -98,14 +105,14 @@
                     <li><a href="{{ route('emails.create') }}" key="t-inbox">Compose</a></li>
                     <li><a href="{{ route('emails.inbox') }}" key="t-inbox">Inbox</a></li>
                     <li><a href="{{ route('emails.sent-mail') }}" key="t-inbox">Sent</a></li>
-                    <li><a href="{{ route('emails.draft') }}" key="t-inbox">Draft</a></li>
-                    <li><a href="{{ route('emails.trash') }}" key="t-inbox">Trash</a></li>
+                    <!-- <li><a href="{{ route('emails.draft') }}" key="t-inbox">Draft</a></li>
+                    <li><a href="{{ route('emails.trash') }}" key="t-inbox">Trash</a></li> -->
                     
                 </ul>
             </li>
 
             <li>
-                <a href="comments.html" class="waves-effect">
+                <a href="{{ route('chatify') }}" class="waves-effect">
                     <i class="bx bx-chat"></i>
                     <span key="t-comment">Chat</span>
                 </a>

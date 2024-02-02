@@ -13,7 +13,7 @@
 		</div>
 	</div>
 	<div class="logo menu_mm"><a href="{{ url('/') }}">
-			Blog | Travel</a></div>
+			<a> Blog | Travel </a></div>
 	<div class="search">
 		<form action="#">
 			<input type="search" class="header_search_input menu_mm" required="required" placeholder="Type to Search...">
@@ -63,7 +63,7 @@
 									</div>
 									<div class="home_slider_item_title">
 										<a href="{{ url('post/' . $latestTemplate->id) }}">
-										{!! $latestTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($latestTemplate->header), 100, $end='...') : "Blog has no header" !!}
+											{!! $latestTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($latestTemplate->header), 100, $end='...') : "Blog has no header" !!}
 										</a>
 									</div>
 									<div class="home_slider_item_link">
@@ -436,6 +436,7 @@
 					<div class="blog_section">
 						<div class="section_panel d-flex flex-row align-items-center justify-content-start">
 							<div class="section_title">What's New</div>
+
 							<div class="section_tags ml-auto">
 								<ul>
 									<li class="active"><a href="{{ url('/') }}">all</a></li>
@@ -457,10 +458,10 @@
 											<li>No categories available</li>
 											@endforelse
 										</ul>
-
 									</li>
 								</ul>
 							</div>
+
 						</div>
 
 						<div class="section_content">
@@ -476,7 +477,7 @@
 										<div class="overlay"></div>
 									</div>
 									<div class="card-body">
-										<div class="card-title"><a href="{{ url('post/' . $latestTemplate->id) }}">{{ $latestTemplate->id }}{!! $latestTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($latestTemplate->header), 20, $end='...') : "Blog has no header" !!}</a></div>
+										<div class="card-title"><a href="{{ url('post/' . $latestTemplate->id) }}">{{ $latestTemplate->id }}{!! $latestTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($latestTemplate->header), 90, $end='...') : "Blog has no header" !!}</a></div>
 										@if($latestTemplate->user)
 										<small class="post_meta"><a href="#">{{ $latestTemplate->user->name }}</a><span>{{ $latestTemplate->created_at->format('M d, Y \a\t h:i A') }}</span></small>
 										@else
@@ -497,14 +498,14 @@
 
 								@if($secondToLastTemplate)
 								<div class="card grid-item card_large_with_image">
-									<img class="card-img-top" src="{{ asset('images/banners/' . $secondToLastTemplate->banner) }}" alt="{{ $secondToLastTemplate->header }}" style="width: 100%; object-fit: cover;">
+									<img class="card-img-top" src="{{ asset('images/banners/' . $secondToLastTemplate->banner) }}" alt="{{ $secondToLastTemplate->header }}" width="50" height="50" style="object-fit: cover">
 									<div class="card-body">
-										<div class="card-title"><a href="{{ url('post/' . $secondToLastTemplate->id) }}">{{ $secondToLastTemplate->id }}{!! $secondToLastTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($secondToLastTemplate->header), 20, $end='...') : "Blog has no header" !!}</a></div>
+										<div class="card-title"><a href="{{ url('post/' . $secondToLastTemplate->id) }}">{{ $secondToLastTemplate->id }}{!! $secondToLastTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($secondToLastTemplate->header), 90, $end='...') : "Blog has no header" !!}</a></div>
 										<p class="card-text">
 											{{
 											Illuminate\Support\Str::limit(
 												preg_replace('/<[^>]*>/', '', $secondToLastTemplate->description),
-												$limit = 100,
+												$limit = 140,
 												$end = '...'
 											)
 											}}
@@ -532,7 +533,7 @@
 								<div class="card card_small_with_image grid-item">
 									<img class="card-img-top" src="{{ asset('images/banners/' . $thirdToLastTemplate->banner) }}" alt="" style="width: 100%; object-fit: cover;">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="{{ url('post/' . $thirdToLastTemplate->id) }}">{{ $thirdToLastTemplate->id }}{{ $thirdToLastTemplate->header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $thirdToLastTemplate->id) }}">{{ $thirdToLastTemplate->id }}{!! $thirdToLastTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($thirdToLastTemplate->header), 40, $end='...') : "Blog has no header" !!}</a></div>
 										@if($thirdToLastTemplate->user)
 										@php
 										$userNameWords = explode(' ', $thirdToLastTemplate->user->name);
@@ -559,7 +560,7 @@
 								<div class="card card_default card_default_with_background grid-item">
 									<div class="card_background" style="background-image:url('{{ asset('images/banners/' . $fourthToLastTemplate->banner) }}'); background-size: cover;"></div>
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="{{ url('post/' . $fourthToLastTemplate->id) }}">{{ $fourthToLastTemplate->id }}{{ $fourthToLastTemplate->header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $fourthToLastTemplate->id) }}">{{ $fourthToLastTemplate->id }}{!! $fourthToLastTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($fourthToLastTemplate->header), 45, $end='...') : "Blog has no header" !!}</a></div>
 									</div>
 								</div>
 								@else
@@ -575,7 +576,7 @@
 								@if($fifthToLastTemplate)
 								<div class="card card_default card_default_no_image grid-item">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="{{ url('post/' . $fifthToLastTemplate->id) }}">{{ $fifthToLastTemplate->id }}{{ $fifthToLastTemplate->header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $fifthToLastTemplate->id) }}">{{ $fifthToLastTemplate->id }}{!! $fifthToLastTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($fifthToLastTemplate->header), 45, $end='...') : "Blog has no header" !!}</a></div>
 									</div>
 								</div>
 								@else
@@ -591,7 +592,7 @@
 								@if($sixthToLastTemplate)
 								<div class="card card_default card_default_no_image grid-item">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="{{ url('post/' . $sixthToLastTemplate->id) }}">{{ $sixthToLastTemplate->id }}{{ $sixthToLastTemplate->header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $sixthToLastTemplate->id) }}">{{ $sixthToLastTemplate->id }}{!! $sixthToLastTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($sixthToLastTemplate->header), 45, $end='...') : "Blog has no header" !!}</a></div>
 									</div>
 								</div>
 								@else
@@ -601,14 +602,14 @@
 
 								<!-- Default Card With Background -->
 								@php
-								$seventhToLastTemplate = $latestTemplates->reverse()->skip(5)->first();
+								$seventhToLastTemplate = $latestTemplates->reverse()->skip(6)->first();
 								@endphp
 
 								@if($seventhToLastTemplate)
 								<div class="card card_default card_default_with_background grid-item">
-									<div class="card_background" style="background-image:url('{{ asset('images/banners/' . $seventhToLastTemplate->banner) }}'); background-size: 100% 100%"></div>
+									<div class="card_background" style="background-image:url('{{ asset('images/banners/' . $seventhToLastTemplate->banner) }}'); background-size: cover;"></div>
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="{{ url('post/' . $seventhToLastTemplate->id) }}">{{ $seventhToLastTemplate->id }}{{ $seventhToLastTemplate->header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $seventhToLastTemplate->id) }}">{{ $seventhToLastTemplate->id }}{!! $seventhToLastTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($seventhToLastTemplate->header), 51, $end='...') : "Blog has no header" !!}</a></div>
 									</div>
 								</div>
 								@else
@@ -640,7 +641,7 @@
 								<div class="card card_small_with_image grid-item">
 									<img class="card-img-top" src="{{ asset('images/banners/' . $latestBlog->banner) }}" alt="" width="330" height="195" style="object-fit: cover;">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="{{ url('post/' . $latestBlog->id) }}">1 | {{ $latestBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $latestBlog->id) }}">1 | {!! $latestBlog->header ? \Illuminate\Support\Str::limit(strip_tags($latestBlog->header), 60, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -677,7 +678,7 @@
 								@if($secondBlog)
 								<div class="card card_default card_small_no_image grid-item">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="{{ url('post/' . $secondBlog->id) }}">2 | {{ $secondBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $secondBlog->id) }}">2 | {!! $secondBlog->header ? \Illuminate\Support\Str::limit(strip_tags($secondBlog->header), 60, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -715,7 +716,7 @@
 								<div class="card card_small_with_image grid-item">
 									<img class="card-img-top" src="{{ asset('images/banners/' . $thirdBlog->banner) }}" alt="" width="330" height="195" style="object-fit: cover;">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="{{ url('post/' . $thirdBlog->id) }}">3 | {{ $thirdBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $thirdBlog->id) }}">3 | {!! $thirdBlog->header ? \Illuminate\Support\Str::limit(strip_tags($thirdBlog->header), 60, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -754,7 +755,7 @@
 								<div class="card card_small_with_image grid-item">
 									<img class="card-img-top" src="{{ asset('images/banners/' . $fourthBlog->banner) }}" width="330" height="88" style="object-fit: cover;">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="{{ url('post/' . $fourthBlog->id) }}">4 | {{ $fourthBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $fourthBlog->id) }}">4 | {!! $fourthBlog->header ? \Illuminate\Support\Str::limit(strip_tags($fourthBlog->header), 60, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -792,7 +793,7 @@
 								<div class="card card_default card_small_with_background grid-item">
 									<div class="card_background" style="background-image:url('{{ asset('images/banners/' . $fifthBlog->banner) }}')"></div>
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="{{ url('post/' . $fifthBlog->id) }}">5 | {{ $fifthBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $fifthBlog->id) }}">5 | {!! $fifthBlog->header ? \Illuminate\Support\Str::limit(strip_tags($fifthBlog->header), 60, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -830,7 +831,7 @@
 								<div class="card card_default card_small_with_background grid-item">
 									<div class="card_background" style="background-image:url('{{ asset('images/banners/' . $sixthBlog->banner) }}')"></div>
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="{{ url('post/' . $sixthBlog->id) }}">6 | {{ $sixthBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $sixthBlog->id) }}">6 | {!! $sixthBlog->header ? \Illuminate\Support\Str::limit(strip_tags($sixthBlog->header), 60, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -868,7 +869,7 @@
 								<div class="card card_small_with_image grid-item">
 									<img class="card-img-top" src="{{ asset('images/banners/' . $seventhBlog->banner) }}" alt="" width="330" height="150" style="object-fit: cover;">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="{{ url('post/' . $seventhBlog->id) }}">7 | {{ $seventhBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $seventhBlog->id) }}">7 | {!! $seventhBlog->header ? \Illuminate\Support\Str::limit(strip_tags($seventhBlog->header), 60, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -905,7 +906,7 @@
 								@if($eightBlog)
 								<div class="card card_default card_small_no_image grid-item">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="{{ url('post/' . $eightBlog->id) }}">8 | {{ $eightBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $eightBlog->id) }}">8 | {!! $eightBlog->header ? \Illuminate\Support\Str::limit(strip_tags($eightBlog->header), 60, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -942,7 +943,7 @@
 								@if($ninthBlog)
 								<div class="card card_default card_small_no_image grid-item">
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="{{ url('post/' . $ninthBlog->id) }}">9 | {{ $ninthBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $ninthBlog->id) }}">9 | {!! $ninthBlog->header ? \Illuminate\Support\Str::limit(strip_tags($ninthBlog->header), 60, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -980,7 +981,7 @@
 								<div class="card card_default card_default_with_background grid-item">
 									<div class="card_background" style="background-image:url('{{ asset('images/banners/' . $tenthBlog->banner) }}')" width="330" height="50" style="object-fit: cover;"></div>
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="{{ url('post/' . $tenthBlog->id) }}">10 | {{ $tenthBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $tenthBlog->id) }}">10 | {!! $tenthBlog->header ? \Illuminate\Support\Str::limit(strip_tags($tenthBlog->header), 45, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -1008,7 +1009,7 @@
 								<div class="card card_default card_default_with_background grid-item">
 									<div class="card_background" style="background-image:url('{{ asset('images/banners/' . $eleventhBlog->banner) }}')" width="330" height="50" style="object-fit: cover;"></div>
 									<div class="card-body">
-										<div class="card-title card-title-small"><a href="{{ url('post/' . $eleventhBlog->id) }}">11 | {{ $eleventhBlog -> header }}</a></div>
+										<div class="card-title card-title-small"><a href="{{ url('post/' . $eleventhBlog->id) }}">11 | {!! $eleventhBlog->header ? \Illuminate\Support\Str::limit(strip_tags($eleventhBlog->header), 45, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
 											<a href="javascript: void(0);" class="badge bg-light font-size-12">
@@ -1088,7 +1089,7 @@
 														</div>
 													</div>
 													<div class="side_post_content">
-														<div class="side_post_title">{{ $sidebarPost->id }}{{ implode(' ', array_slice(str_word_count($sidebarPost->header, 1), 0, 5)) }}</div>
+														<div class="side_post_title">{{ $sidebarPost->id }}{!! $sidebarPost->header ? \Illuminate\Support\Str::limit(strip_tags($sidebarPost->header), 22, $end='...') : "Blog has no header" !!}</div>
 														@if($sidebarPost && $sidebarPost->user)
 														@php
 														$userNameWords = explode(' ', $sidebarPost->user->name);
@@ -1122,7 +1123,7 @@
 														</div>
 													</div>
 													<div class="side_post_content">
-														<div class="side_post_title">{{ $sidebarPost->id }}{{ implode(' ', array_slice(str_word_count($sidebarPost->header, 1), 0, 5)) }}</div>
+														<div class="side_post_title">{{ $sidebarPost->id }}{!! $sidebarPost->header ? \Illuminate\Support\Str::limit(strip_tags($sidebarPost->header), 22, $end='...') : "Blog has no header" !!}</div>
 														<small class="post_meta">
 															@if($sidebarPost && $sidebarPost->user)
 															@php
@@ -1159,7 +1160,7 @@
 															</div>
 														</div>
 														<div class="side_post_content">
-															<div class="side_post_title">{{ $sidebarPost->id }}{{ implode(' ', array_slice(str_word_count($sidebarPost->header, 1), 0, 5)) }}</div>
+															<div class="side_post_title">{{ $sidebarPost->id }}{!! $sidebarPost->header ? \Illuminate\Support\Str::limit(strip_tags($sidebarPost->header), 22, $end='...') : "Blog has no header" !!}</div>
 															<small class="post_meta"> @if($sidebarPost && $sidebarPost->user)
 																@php
 																$userNameWords = explode(' ', $sidebarPost->user->name);
@@ -1198,7 +1199,7 @@
 							<div class="advertising_background" style="background-image: url('{{ asset('images/banners/' . $latestTemplate->banner) }}');"></div>
 							<div class="advertising_content d-flex flex-column align-items-start justify-content-end">
 								<div class="advertising_perc">-15%</div>
-								<div class="advertising_link"><a href="{{ url('post/' . $latestTemplate->id) }}">{{ $latestTemplate->header }}</a></div>
+								<div class="advertising_link"><a href="{{ url('post/' . $latestTemplate->id) }}">{!! $latestTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($latestTemplate->header), 30, $end='...') : "Blog has no header" !!}</a></div>
 							</div>
 						</div>
 					</div>
@@ -1207,6 +1208,52 @@
 					<p>No template available</p>
 					@endif
 
+				</div>
+			</div>
+			<div class="col-lg-9">
+				<div class="main_content">
+
+					<!-- Category -->
+
+					<div class="category">
+						<div class="section_panel d-flex flex-row align-items-center justify-content-start">
+							<div class="section_title">All Blogs</div>
+							<div class="section_tags ml-auto">
+								<ul>
+									<li class="active"><a href="{{ url('/') }}">all</a></li>
+									@forelse($categories->sortByDesc('created_at')->take(3) as $category)
+									<li><a href="{{ url('category/' . $category->id) }}">{!! $category->text ? \Illuminate\Support\Str::limit(strip_tags($category->text), 20, $end='...') : "Blog has no header" !!}</a></li>
+									@empty
+									<li>No categories available</li>
+									@endforelse
+								</ul>
+							</div>
+
+							<div class="section_panel_more">
+								<ul>
+									<li>more
+										<ul>
+											@forelse($categories->sortByDesc('created_at')->slice(3) as $category)
+											<li><a href="{{ url('category/' . $category->id) }}">{{ $category->text }}</a></li>
+											@empty
+											<li>No categories available</li>
+											@endforelse
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div id="more_pagination">
+							@include('landing.more_pagination')
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<!-- WALAY PULOS NA DIV PERO NAA SIYA PULOS GAMAY AYAW HILABTI -->
+			<div class="col-lg-3">
+				<div class="sidebar">
+					<div class="sidebar_background"></div>
 				</div>
 			</div>
 

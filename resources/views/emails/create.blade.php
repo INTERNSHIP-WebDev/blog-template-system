@@ -112,14 +112,14 @@
                                                 <i class="mdi mdi-email-check-outline me-2"></i>Sent Mail 
                                                 <span class="ms-1 float-end">({{ $SentMailCount }})</span>
                                             </a>
-                                            <a href="{{ route('emails.draft') }}" class="mailbox-link">
+                                            <!-- <a href="{{ route('emails.draft') }}" class="mailbox-link">
                                                 <i class="mdi mdi-file-outline me-2"></i>Draft 
                                                 <span class="ms-1 float-end">({{ $DraftCount }})</span>
                                             </a>
                                             <a href="{{ route('emails.trash') }}" class="mailbox-link">
                                                 <i class="mdi mdi-trash-can-outline me-2"></i>Trash 
                                                 <span class="ms-1 float-end">({{ $TrashCount }})</span>
-                                            </a>
+                                            </a> -->
                                         </div>
                                     </div>
                                     <!-- End Left sidebar -->

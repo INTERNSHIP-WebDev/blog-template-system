@@ -26,18 +26,19 @@
          
          <!--links----->
          <link rel="stylesheet" type="text/css" href="landing_assets/styles/bootstrap4/bootstrap.min.css">
-<link href="landing_assets/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" type="text/css" href="landing_assets/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
-<link rel="stylesheet" type="text/css" href="landing_assets/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
-<link rel="stylesheet" type="text/css" href="landing_assets/plugins/OwlCarousel2-2.2.1/animate.css">
-<link rel="stylesheet" type="text/css" href="landing_assets/plugins/jquery.mb.YTPlayer-3.1.12/jquery.mb.YTPlayer.css">
-<link rel="stylesheet" type="text/css" href="landing_assets/styles/post_nosidebar.css">
-<link rel="stylesheet" type="text/css" href="landing_assets/styles/post_nosidebar_responsive.css">
+        <link href="landing_assets/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="landing_assets/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
+        <link rel="stylesheet" type="text/css" href="landing_assets/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
+        <link rel="stylesheet" type="text/css" href="landing_assets/plugins/OwlCarousel2-2.2.1/animate.css">
+        <link rel="stylesheet" type="text/css" href="landing_assets/plugins/jquery.mb.YTPlayer-3.1.12/jquery.mb.YTPlayer.css">
+        <link rel="stylesheet" type="text/css" href="landing_assets/styles/post_nosidebar.css">
+        <link rel="stylesheet" type="text/css" href="landing_assets/styles/post_nosidebar_responsive.css">
      
         <!-- Template Main CSS Files -->
         <link href="{{ asset('backend/assets/css/variables.css') }}" rel="stylesheet">
         <link href="{{ asset('backend/assets/css/main.css') }}" rel="stylesheet">
        
+
 
     </head>
     <body>
@@ -50,13 +51,13 @@
 			<div class="row">
 				<div class="col">
 					<div class="header_content d-flex flex-row align-items-center justify-content-start">
-						<div class="logo"><a href="#">Blog</a></div>
+						<div class="logo"><a href="#">Blog | Travel</a></div>
 						<nav class="main_nav">
 							<ul>
-								<li class="active"><a href="/">Home</a></li>
-							
-								<li><a href="/concern">Contact</a></li>
-                <li><a href="/about">About</a></li>
+								<li><a href="/">Home</a></li>
+                <li class="active"><a href="/about">About</a></li>
+                <li><a href="/concern">Contact</a></li>
+                <li><a href="/login">Login</a></li>
 							</ul>
 						</nav>
 						<div class="search_container ml-auto">

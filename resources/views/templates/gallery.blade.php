@@ -40,6 +40,21 @@
                                 <div class="align-items-top">
                                     <h5 class="mb-0 card-title flex-grow-1">Banner Images</h5>
                                     <div class="container">
+                                        <!-- SORT FORM 1 -->
+                                        <div id="sortBannerForm" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; padding: 20px; border: 1px solid #ccc; z-index: 1000;">
+                                            <h4>Sort Options</h4>
+                                            <button id="closeSortForm" onclick="hideSortForm()">Close</button>
+                                            <form id="sortForm">
+                                                <label>
+                                                    <input type="radio" name="sortOption" value="latest"> Latest
+                                                </label>
+                                                <label>
+                                                    <input type="radio" name="sortOption" value="oldest"> Oldest
+                                                </label>
+                                                <button type="submit">Apply</button>
+                                            </form>
+                                        </div>
+                                        <!-- END OF SORT FORM 1 -->
                                         <div class="btn-controls" style="position: absolute; top: 0; right: 0; margin: 10px;">
                                             <div class="btn grid_view" onclick="toggleView('gridView')">
                                                 <ion-icon name="grid-outline"></ion-icon>
@@ -47,7 +62,16 @@
                                             <div class="btn list_view" onclick="toggleView('listView')">
                                                 <ion-icon name="list-outline"></ion-icon>
                                             </div>
-                                            <i class="bi bi-sort-down" onclick="sortImages()"></i>
+                                            <div class="btn list_view" onclick="sort-banner">
+                                                <ion-icon name="filter"></ion-icon>
+                                            </div>
+                                            <!---sortby
+                                            <form class="form-inline">
+                                                <select class="form-control" onchange="sort_by(this.value)">
+                                                    <option value="latest">Latest</option>
+                                                    <option value="latest">Oldest</option>
+                                                </select>
+                                            </form>-->
                                         </div>
 
                                         <!-- Grid view -->
@@ -81,6 +105,21 @@
                                 <div class="align-items-top">
                                     <h5 class="mb-0 card-title flex-grow-1">Logo Images</h5>
                                     <div class="container">
+                                        <!-- SORT FORM 2 -->
+                                        <div id="sortBannerForm2" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; padding: 20px; border: 1px solid #ccc; z-index: 1000;">
+                                            <h4>Sort Options</h4>
+                                            <button id="closeSortForm2" onclick="hideSortForm2()">Close</button>
+                                            <form id="sortForm2">
+                                                <label>
+                                                    <input type="radio" name="sortOption2" value="latest"> Latest
+                                                </label>
+                                                <label>
+                                                    <input type="radio" name="sortOption2" value="oldest"> Oldest
+                                                </label>
+                                                <button type="submit">Apply</button>
+                                            </form>
+                                        </div>
+                                        <!-- END OF SORT FORM 2 -->
                                         <div class="btn-controls" style="position: absolute; top: 0; right: 0; margin: 10px;">
                                             <div class="btn grid_view" onclick="toggleView1('gridView1')">
                                                 <ion-icon name="grid-outline"></ion-icon>
@@ -88,7 +127,9 @@
                                             <div class="btn list_view" onclick="toggleView1('listView1')">
                                                 <ion-icon name="list-outline"></ion-icon>
                                             </div>
-                                            <i class="bi bi-sort-down"></i>
+                                            <div class="btn list_view" onclick="sort-banner2">
+                                                <ion-icon name="filter"></ion-icon>
+                                            </div>
                                         </div>
 
                                         <!-- Grid view -->
@@ -257,9 +298,90 @@
 
    
 
-<!-- JavaScript Script -->
+<!-- banner sorting Script -->
 <script>
+    var query = {};
+
+    function sort_by(value) {
+        Object.assign(query, { 'sort_by': value });
+        var ajaxUrl = "{{ route('templates.gallery') }}" + '?' + $.param(query);
+        fetchGalleryData(ajaxUrl);
+    }
+
+    function toggleSortForm() {
+        $("#sortBannerForm").toggle();
+        // Close the other sorting form
+        $("#sortBannerForm2").hide();
+    }
+
+    $(document).ready(function () {
+        $(".btn.list_view[onclick='sort-banner']").click(function () {
+            toggleSortForm();
+        });
+
+        $("#sortForm").submit(function (e) {
+            e.preventDefault();
+            var sortOption = $("input[name='sortOption']:checked").val();
+            console.log("Selected sort option:", sortOption);
+            toggleSortForm();
+        });
+
+        $("#closeSortForm").click(function () {
+            toggleSortForm();
+        });
+    });
 </script>
+
+<!-- logo sorting Script -->
+<script>
+    var query2 = {};
+
+    function sort_by2(value) {
+    Object.assign(query2, { 'sort_by': value });
+    var ajaxUrl = "{{ route('templates.gallery') }}" + '?' + $.param(query2);
+    fetchGalleryData(ajaxUrl); // Call a function to fetch gallery data with AJAX
+}
+
+function fetchGalleryData(ajaxUrl) {
+    $.ajax({
+        url: ajaxUrl,
+        type: 'get',
+        success: function (data) {
+            // Update the gallery content with the fetched data
+            $('#galleryContainer').html(data);
+        },
+        error: function (error) {
+            console.error('Error fetching gallery data:', error);
+        }
+    });
+}
+
+    function toggleSortForm2() {
+        $("#sortBannerForm2").toggle();
+        // Close the other sorting form
+        $("#sortBannerForm").hide();
+    }
+
+    $(document).ready(function () {
+        $(".btn.list_view[onclick='sort-banner2']").click(function () {
+            toggleSortForm2();
+        });
+
+        $("#sortForm2").submit(function (e) {
+            e.preventDefault();
+            var sortOption2 = $("input[name='sortOption2']:checked").val();
+            console.log("Selected sort option:", sortOption2);
+            toggleSortForm2();
+        });
+
+        $("#closeSortForm2").click(function () {
+            toggleSortForm2();
+        });
+    });
+</script>
+
+
+
 
 
 </body>

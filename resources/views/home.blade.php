@@ -606,13 +606,10 @@
                                                 <td><img src="{{ asset('images/banners/' . $template->banner) }}" alt="Template Banner" class="avatar-md h-auto d-block rounded" width="100%" height="50"></td>
                                                 <td>
                                                     <h5 class="font-size-13 text-truncate mb-1"><a href="javascript: void(0);" class="text-dark">
-                                                            @php
-                                                            $words = str_word_count($template->header, 1);
-                                                            $limitedWords = implode(' ', array_slice($words, 0, 5));
-                                                            @endphp
-
-                                                            {{ count($words) > 5 ? $limitedWords . '...' : $limitedWords }}
-                                                        </a></h5>
+                                                        <a>    
+                                                        {!! $template->header ? \Illuminate\Support\Str::limit(strip_tags($template->header), 20, $end='...') : "Blog has no header" !!}
+                                                        </a>
+                                                    </h5>
                                                     <p class="text-muted mb-0">{{ $template->created_at->format('d M, Y') }}</p>
                                                 </td>
                                                 <td><i class="bi bi-eye align-middle me-1"></i>{{ $template->views }}</td>

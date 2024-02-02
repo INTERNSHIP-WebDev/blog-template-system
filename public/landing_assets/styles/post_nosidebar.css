@@ -627,7 +627,7 @@ section
 	-ms-transform: translate(-50%, -50%);
 	-o-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
-	max-width: 575px;
+	max-width: 775px;
 	text-align: center;
 }
 .post_category
@@ -689,7 +689,7 @@ section
 {
 	width: 40px;
 	height: 40px;
-	border: solid 5px #FFFFFF;
+	border: solid 1px #FFFFFF;
 	border-radius: 50%;
 	overflow: hidden;
 }

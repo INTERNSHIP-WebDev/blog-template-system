@@ -256,17 +256,18 @@ class TemplateController extends Controller
     // GALLERY AJAX
         public function fetch_gallery_banner_data(Request $request)
         {
-            if($request->ajax())
-            {
-                $templates = Template::paginate(9);
-                return view('templates.gallery_banner_pagination',compact('templates'))->render();
+            if ($request->ajax()) {
+                $sortOption = $request->input('sort_by');
+                $templates = Template::orderBy($sortOption, 'asc')->paginate(9);
+                return view('templates.gallery_banner_pagination', compact('templates'))->render();
             }
         }
         public function fetch_gallery_logo_data(Request $request)
         {
             if($request->ajax())
             {
-                $templates = Template::paginate(9);
+                $sortOption = $request->input('sort_by');
+                $templates = Template::orderBy($sortOption, 'asc')->paginate(9);
                 return view('templates.gallery_logo_pagination',compact('templates'))->render();
             }
         }
@@ -274,7 +275,8 @@ class TemplateController extends Controller
         {
             if($request->ajax())
             {
-                $templates = Template::paginate(9);
+                $sortOption = $request->input('sort_by');
+                $templates = Template::orderBy($sortOption, 'asc')->paginate(9);
                 return view('templates.pagination.gallery_logo_list_pagination',compact('templates'))->render();
             }
         }
@@ -282,11 +284,15 @@ class TemplateController extends Controller
         {
             if($request->ajax())
             {
-                $templates = Template::paginate(9);
+                $sortOption = $request->input('sort_by');
+                $templates = Template::orderBy($sortOption, 'asc')->paginate(9);
                 return view('templates.pagination.gallery_banner_list_pagination',compact('templates'))->render();
             }
         }
     // END OF GALLERY AJAX
+
+   
+
 
     public function grid()
     {

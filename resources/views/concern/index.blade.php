@@ -98,13 +98,13 @@
         <div class="row">
           <div class="col">
             <div class="header_content d-flex flex-row align-items-center justify-content-start">
-              <div class="logo"><a href="#">Blog</a></div>
+              <div class="logo"><a href="#">Blog | Travel</a></div>
               <nav class="main_nav">
                 <ul>
-                  <li class="active"><a href="index.html">Home</a></li>
-                  <li><a href="/">This Post</a></li>
-                  <li><a href="/concern">Contact</a></li>
+                  <li><a href="/">Home</a></li>
                   <li><a href="/about">About</a></li>
+                  <li class="active"><a href="/concern">Contact</a></li>
+                  <li><a href="/login">Login</a></li>
                 </ul>
               </nav>
               <div class="search_container ml-auto">

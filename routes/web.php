@@ -59,18 +59,21 @@ Route::get('/', function () {
     $categories = Category::all();
     $templates = Template::all();
 
-    return view('landing/landing', compact('templates', 'sidebarPosts', 'categories', 'heroTemplates', 'descriptions', 'subtitles', 'titles', 'fTemplate', 'latestTemplates', 'users'));
+    $more = Template::paginate(9);
+
+    return view('landing/landing', compact('templates', 'sidebarPosts', 'categories', 'heroTemplates', 'descriptions', 'subtitles', 'titles', 'fTemplate', 'latestTemplates', 'users', 'more'));
 });
 
 # NON AUTHENTICATED PAGES
-Route::get('/category', [CategoryController::class, 'category_page'])->name('category');
 # GUEST EMAIL
 Route::get('/concern', [App\Http\Controllers\ConcernController::class, 'show'])->name('concern.index');
 Route::post('concerns', [App\Http\Controllers\ConcernController::class, 'store'])->name('concern.store');
 
 # MORE
 Route::get('/all_blogs', [LandingController::class, 'more'])->name('more'); #all blog
+Route::get('pagination/more_data', [LandingController::class, 'more_data'])->name('landing.more_pagination'); #all blog
 Route::get('/all_activities', [HomeController::class, 'all_activity'])->name('templates.all_activities'); #all activity
+Route::get('/category/{id}', [LandingController::class, 'category'])->name('category'); 
 
 # ABOUT
 Route::get('/about', [AboutController::class, 'show'])->name('about');

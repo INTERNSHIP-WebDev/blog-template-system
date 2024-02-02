@@ -45,6 +45,24 @@
 			loadMoreData(page);
 		});
 	});
+	$(document).ready(function(){
+		$(document).on('click', '.pagination a', function(event){
+			event.preventDefault();
+			var page = $(this).attr('href').split('page=')[1];
+			more_data(page);
+		});
+
+		function more_data(page)
+		{
+			$.ajax({
+				url:"/pagination/more_data?page="+page,
+				success:function(data)
+				{
+					$('#more_pagination').html(data);
+				}
+			})
+		}
+	});
 </script>
 </body>
 </html>
