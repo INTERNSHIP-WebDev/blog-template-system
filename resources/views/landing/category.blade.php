@@ -4,7 +4,48 @@
 @section("content")
 
 
+<style>
+	.home {
+		position: relative;
+		height: 500px;
+		overflow: hidden;
+	}
 
+	.home_slider_background {
+		width: 100%;
+		height: 100%;
+		background-size: cover;
+		position: relative;
+	}
+
+	.snowflakes {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
+		z-index: 1;
+		animation: snowfall 10s linear 0s infinite;
+	}
+
+	.snowflake {
+		position: absolute;
+		background-color: #fff;
+		border-radius: 50%;
+	}
+
+	@keyframes snowfall {
+		0% {
+			transform: translateY(100%);
+		}
+
+		100% {
+			transform: translateY(-100%);
+		}
+	}
+
+</style>
 <!-- Home -->
 
 <!-- <div class="home">
@@ -14,7 +55,9 @@
 	<div class="home_slider_container">
 		<div class="owl-carousel owl-theme home_slider">
 			<div class="owl-item">
-				<div class="home_slider_background" style="background-image: url('{{ asset('landing_assets/images/post_7.jpg') }}'); background-size: cover; height: 500px; "></div>
+				<div class="home_slider_background" style="background-image: url(' {{ asset('landing_assets/images/post_7.jpg') }} ');">
+					<div class="snowflakes" id="snow-container"></div>
+				</div>
 				<div class="home_slider_content_container">
 					<div class="container">
 						<div class="row">
@@ -27,6 +70,32 @@
 		</div>
 	</div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const snowContainer = document.getElementById("snow-container");
+
+    function createSnowflake() {
+      const snowflake = document.createElement("div");
+      snowflake.className = "snowflake";
+      snowflake.style.width = `${Math.random() * 4 + 1}px`; 
+      snowflake.style.height = snowflake.style.width;
+      snowflake.style.top = `${Math.random() * 100}vh`;
+      snowflake.style.left = `${Math.random() * 100}vw`;
+      snowContainer.appendChild(snowflake);
+    }
+
+    function createSnowfall() {
+      for (let i = 0; i < 150; i++) {
+
+        createSnowflake();
+      }
+    }
+
+    createSnowfall();
+  });
+</script>
+
 
 <!-- Page Content -->
 
@@ -43,17 +112,33 @@
 
 					<div class="category">
 						<div class="section_panel d-flex flex-row align-items-center justify-content-start">
-							<div class="section_title">Don't Miss</div>
+							<div class="section_title">{{ \Illuminate\Support\Str::limit(strip_tags($selectedCategory->text), 12, $end='...') }}</div>
 
 							<div class="section_tags ml-auto">
+
 								<ul>
-									<li class="active"><a href="{{ url('/') }}">all</a></li>
-									@forelse($categories->sortByDesc('created_at')->take(3) as $category)
-									<li><a href="{{ url('category/' . $category->id) }}">{!! $category->text ? \Illuminate\Support\Str::limit(strip_tags($category->text), 20, $end='...') : "Blog has no header" !!}</a></li>
+									<li><a href="{{ url('/') }}">all</a></li>
+									@if($selectedCategory)
+									<li class="active"><a href="{{ url('category/' . $selectedCategory->id) }}">{{ $selectedCategory->text }}</a></li>
+									@php
+									$remainingCategories = $categories->reject(function ($category) use ($selectedCategory) {
+									return $category->id === $selectedCategory->id;
+									})->sortByDesc('created_at')->take(2);
+									@endphp
+									@forelse($remainingCategories as $category)
+									<li><a href="{{ url('category/' . $category->id) }}">{{ \Illuminate\Support\Str::limit(strip_tags($category->text), 15, $end='...') }}</a></li>
 									@empty
 									<li>No categories available</li>
 									@endforelse
+									@else
+									@forelse($categories->sortByDesc('created_at')->take(3) as $category)
+									<li><a href="{{ url('category/' . $category->id) }}">{{ \Illuminate\Support\Str::limit(strip_tags($category->text), 15, $end='...') }}</a></li>
+									@empty
+									<li>No categories available</li>
+									@endforelse
+									@endif
 								</ul>
+
 							</div>
 
 							<div class="section_panel_more">
@@ -71,8 +156,8 @@
 							</div>
 						</div>
 						<div class="section_content">
-							<div id="more_pagination">
-								@include('landing.more_pagination')
+							<div id="more_category">
+								@include('landing.more_category')
 							</div>
 						</div>
 					</div>

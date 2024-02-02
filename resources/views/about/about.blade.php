@@ -57,7 +57,9 @@
 								<li><a href="/">Home</a></li>
                 <li class="active"><a href="/about">About</a></li>
                 <li><a href="/concern">Contact</a></li>
+                @guest
                 <li><a href="/login">Login</a></li>
+                @endguest
 							</ul>
 						</nav>
 						<div class="search_container ml-auto">

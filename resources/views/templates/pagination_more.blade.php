@@ -9,12 +9,13 @@
                 <th scope="col">Action</th>
             </tr>
         </thead>
+
         <tbody>
             @forelse ($activityTemplate ?? [] as $template)
             @if ($template->user_id === auth()->id())
             <tr>
                 <td>{{ $template->created_at->format('M d, Y \a\t h:i A') }}</td>
-                <td>
+                <td>a
                     @php
                     $words = str_word_count($template->header, 1);
                     $limitedWords = implode(' ', array_slice($words, 0, 10));

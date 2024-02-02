@@ -36,8 +36,8 @@
 
             <li>
                 <a href="{{ url('/') }}" class="waves-effect">
-                    <i class="bx bx-home-circle"></i>
-                    <span key="t-dashboards">Guest Page</span>
+                    <i class="bx bx-world"></i>
+                    <span key="t-guests">Explore Blogs</span>
                 </a>
             </li>
 

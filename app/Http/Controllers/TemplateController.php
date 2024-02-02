@@ -42,16 +42,15 @@ class TemplateController extends Controller
     }
     public function fetch_data(Request $request)
     {
-        if($request->ajax())
-        {
+        if ($request->ajax()) {
             $templates = Template::latest('created_at')->paginate(5);
-            return view('templates.pagination_data',compact('templates'))->render();
+            return view('templates.pagination_data', compact('templates'))->render();
         }
     }
-    
+
     public function create()
     {
-        $categories = Category::all(); 
+        $categories = Category::all();
         return view('templates.create', compact('categories'));
     }
 
@@ -129,8 +128,8 @@ class TemplateController extends Controller
 
             // Increment the view count
             $template->increment('views');
-            
-             // Fetch comments related to this template
+
+            // Fetch comments related to this template
             $comments = Comment::where('temp_id', $id)->get();
 
             // Calculate total likes for the template
@@ -140,7 +139,7 @@ class TemplateController extends Controller
         } catch (ModelNotFoundException $e) {
             return redirect()->route('templates.index')->with('error', 'Template not found.');
         }
-    }   
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -149,9 +148,9 @@ class TemplateController extends Controller
     {
         try {
             $template = Template::findOrFail($id);
-            $categories = Category::all(); 
+            $categories = Category::all();
             $comments = Comment::where('temp_id', $template->id)->get();
-            
+
             return view('templates.edit', compact('template', 'categories', 'comments'));
         } catch (ModelNotFoundException $e) {
             return redirect()->route('templates.index')->with('error', 'Template not found.');
@@ -170,8 +169,8 @@ class TemplateController extends Controller
                 'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:25000',
                 'description' => 'nullable|string|max:250000',
                 'views' => 'nullable|integer',
-                'comments.*.name' => 'required|string|max:255', 
-                'comments.*.message' => 'required|string|max:7000', 
+                'comments.*.name' => 'required|string|max:255',
+                'comments.*.message' => 'required|string|max:7000',
                 'comments.*.id' => 'nullable|exists:descriptions,id',
             ]);
 
@@ -239,65 +238,58 @@ class TemplateController extends Controller
      */
     public function destroy($id)
     {
-        
-            $template = Template::findOrFail($id);
-            $template->delete();
 
-            return redirect()->route('templates.index')
-                ->withSuccess('Template is deleted successfully.');
+        $template = Template::findOrFail($id);
+        $template->delete();
+
+        return redirect()->route('templates.index')
+            ->withSuccess('Template is deleted successfully.');
     }
 
     public function gallery()
     {
-    $templates = Template::paginate(9);
-    return view('templates.gallery', compact('templates'));
+        $templates = Template::latest('created_at')->paginate(9);
+        return view('templates.gallery', compact('templates'));
     }
 
     // GALLERY AJAX
-        public function fetch_gallery_banner_data(Request $request)
-        {
-            if ($request->ajax()) {
-                $sortOption = $request->input('sort_by');
-                $templates = Template::orderBy($sortOption, 'asc')->paginate(9);
-                return view('templates.gallery_banner_pagination', compact('templates'))->render();
-            }
+    public function fetch_gallery_banner_data(Request $request)
+    {
+        if ($request->ajax()) {
+            $templates = Template::latest('created_at')->paginate(9);
+            return view('templates.gallery_banner_pagination', compact('templates'))->render();
         }
-        public function fetch_gallery_logo_data(Request $request)
-        {
-            if($request->ajax())
-            {
-                $sortOption = $request->input('sort_by');
-                $templates = Template::orderBy($sortOption, 'asc')->paginate(9);
-                return view('templates.gallery_logo_pagination',compact('templates'))->render();
-            }
+    }
+    public function fetch_gallery_logo_data(Request $request)
+    {
+        if ($request->ajax()) {
+            $templates = Template::latest('created_at')->paginate(9);
+            return view('templates.gallery_logo_pagination', compact('templates'))->render();
         }
-        public function fetch_gallery_logo_list_data(Request $request)
-        {
-            if($request->ajax())
-            {
-                $sortOption = $request->input('sort_by');
-                $templates = Template::orderBy($sortOption, 'asc')->paginate(9);
-                return view('templates.pagination.gallery_logo_list_pagination',compact('templates'))->render();
-            }
+    }
+    public function fetch_gallery_logo_list_data(Request $request)
+    {
+        if ($request->ajax()) {
+            $templates = Template::latest('created_at')->paginate(9);
+            return view('templates.pagination.gallery_logo_list_pagination', compact('templates'))->render();
         }
-        public function fetch_gallery_banner_list_data(Request $request)
-        {
-            if($request->ajax())
-            {
-                $sortOption = $request->input('sort_by');
-                $templates = Template::orderBy($sortOption, 'asc')->paginate(9);
-                return view('templates.pagination.gallery_banner_list_pagination',compact('templates'))->render();
-            }
+    }
+    public function fetch_gallery_banner_list_data(Request $request)
+    {
+        if ($request->ajax()) {
+            $templates = Template::latest('created_at')->paginate(9);
+            return view('templates.pagination.gallery_banner_list_pagination', compact('templates'))->render();
         }
+    }
     // END OF GALLERY AJAX
 
-   
+
 
 
     public function grid()
     {
         $templates = Template::paginate(6);
-        
+
         // Fetch all categories
         $categories = Category::paginate(6);
 
@@ -310,19 +302,18 @@ class TemplateController extends Controller
     }
     public function fetch_grid_data(Request $request)
     {
-        if($request->ajax())
-        {
+        if ($request->ajax()) {
             $templates = Template::paginate(6);
             $categories = Category::paginate(6);
             $categories = Category::withCount('templates')->get();
             $comments = Comment::whereIn('temp_id', $templates->pluck('id'))->get();
-            return view('templates.grid_pagination',compact('templates', 'comments', 'categories'))->render();
+            return view('templates.grid_pagination', compact('templates', 'comments', 'categories'))->render();
         }
     }
 
-   
- 
-   
+
+
+
     public function list()
     {
         $templates = Template::latest('created_at')->paginate(3);
@@ -340,16 +331,15 @@ class TemplateController extends Controller
 
     public function fetch_list_data(Request $request)
     {
-        if($request->ajax())
-        {
+        if ($request->ajax()) {
             $templates = Template::latest('created_at')->paginate(3);
             $categories = Category::latest('created_at')->paginate(3);
             $categories = Category::withCount('templates')->get();
             $comments = Comment::whereIn('temp_id', $templates->pluck('id'))->get();
-            return view('templates.list_pagination',compact('templates', 'comments', 'categories'))->render();
+            return view('templates.list_pagination', compact('templates', 'comments', 'categories'))->render();
         }
     }
-    
+
     public function toggleLike(Request $request, $id)
     {
         $template = Template::findOrFail($id);
@@ -374,7 +364,4 @@ class TemplateController extends Controller
             'totalLikes' => $totalLikes,
         ]);
     }
-
-
 }
-    

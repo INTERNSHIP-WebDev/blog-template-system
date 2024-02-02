@@ -11,6 +11,27 @@
 <script src="{{ asset('landing_assets/js/custom.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/rellax/1.12.1/rellax.min.js"></script>
 <script>
+  $(document).ready(function() {
+    // Initially hide the lessless_button
+    $("#lessless_button").hide();
+	$("#moremore").hide();
+
+    // When moremore_button is clicked
+    $("#moremore_button").click(function() {
+      $(this).hide();
+	  $("#moremore").show();
+      $("#lessless_button").show();
+    });
+
+    // When lessless_button is clicked
+    $("#lessless_button").click(function() {
+      $(this).hide();
+	  $("#moremore").hide();
+      $("#moremore_button").show();
+    });
+  });
+</script>
+<script>
 	$(document).ready(function() {
 		let page = 1; // Initial page number
 
@@ -49,13 +70,13 @@
 		$(document).on('click', '.pagination a', function(event){
 			event.preventDefault();
 			var page = $(this).attr('href').split('page=')[1];
-			more_data(page);
+			more_data_tempo(page);
 		});
 
-		function more_data(page)
+		function more_data_tempo(page)
 		{
 			$.ajax({
-				url:"/pagination/more_data?page="+page,
+				url:"/pagination/more_data_tempo?page="+page,
 				success:function(data)
 				{
 					$('#more_pagination').html(data);
@@ -64,5 +85,6 @@
 		}
 	});
 </script>
+
 </body>
 </html>

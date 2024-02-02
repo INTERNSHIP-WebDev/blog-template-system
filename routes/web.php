@@ -59,8 +59,7 @@ Route::get('/', function () {
     $categories = Category::all();
     $templates = Template::all();
 
-    $more = Template::paginate(9);
-
+    $more = Template::paginate(6);
     return view('landing/landing', compact('templates', 'sidebarPosts', 'categories', 'heroTemplates', 'descriptions', 'subtitles', 'titles', 'fTemplate', 'latestTemplates', 'users', 'more'));
 });
 
@@ -72,6 +71,7 @@ Route::post('concerns', [App\Http\Controllers\ConcernController::class, 'store']
 # MORE
 Route::get('/all_blogs', [LandingController::class, 'more'])->name('more'); #all blog
 Route::get('pagination/more_data', [LandingController::class, 'more_data'])->name('landing.more_pagination'); #all blog
+Route::get('pagination/more_data_tempo', [LandingController::class, 'more_data_tempo'])->name('landing.more_pagination'); #all blog
 Route::get('/all_activities', [HomeController::class, 'all_activity'])->name('templates.all_activities'); #all activity
 Route::get('/category/{id}', [LandingController::class, 'category'])->name('category'); 
 
@@ -127,6 +127,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('pagination/fetch_data_more', [App\Http\Controllers\HomeController::class, 'fetch_data_more'])->name('templates.fetch_data_more');
     Route::get('pagination/fetch_data_category', [App\Http\Controllers\CategoryController::class, 'fetch_data_category'])->name('categories.fetch_data_category');
     Route::get('pagination/fetch_sent_data', [App\Http\Controllers\MailController::class, 'fetch_sent_data'])->name('emails.fetch_sent_data');
+    Route::get('pagination/fetch_inbox_data', [App\Http\Controllers\MailController::class, 'fetch_inbox_data'])->name('emails.fetch_inbox_data');
 
     Route::get('categories', [App\Http\Controllers\CategoryController::class, 'index'])->name('categories.index');
     Route::get('categories/create', [App\Http\Controllers\CategoryController::class, 'create'])->name('categories.create');
@@ -164,4 +165,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/guests/{guest}/edit', [GuestController::class, 'edit'])->name('guests.edit');
     Route::delete('/guests/{guest}', [GuestController::class, 'destroy'])->name('guests.destroy');
     Route::resource('guests', GuestController::class);
+
+    Route::get('/users/{id}', 'UserController@show')->name('users.show');
+    Route::get('pagination/show_pagination', [App\Http\Controllers\UserController::class, 'show_pagination'])->name('users.show_paginate');
+
 });

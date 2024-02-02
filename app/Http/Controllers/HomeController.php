@@ -8,7 +8,7 @@ use App\Models\Concern;
 use App\Models\Comment;
 use App\Models\Like;
 use Illuminate\Support\Facades\Auth;
-
+use DB;
 
 class HomeController extends Controller
 {
@@ -69,8 +69,21 @@ class HomeController extends Controller
         $latestTemplate = Template::latest('created_at')->first();
         $activityTemplate = Template::latest('created_at')->get();
 
+        // Get the total number of views for templates created by each user
+        $userViews = Template::select('user_id', DB::raw('SUM(views) as total_views'))
+        ->groupBy('user_id')
+        ->get();
+
+        // You can also get the total views for the current user separately
+        $currentUserViews = $userViews->where('user_id', $user->id)->first()->total_views ?? 0;
+
+        // Get the total number of comments made by the authenticated user
+        $totalUserLikes = Like::whereIn('temp_id', function ($query) use ($user) {
+            $query->select('id')->from('templates')->where('user_id', $user->id);
+        })->count();
+
         // Pass the variables to the view
-        return view('home', compact('activityTemplate', 'latestTemplate', 'templates', 'mostViewedTemplates', 'comments', 'concerns', 'user', 'totalPosts', 'totalConcerns', 'totalComments', 'totalLikes', 'totalUserPosts', 'totalUserComments', 'totalUserViews'));
+        return view('home', compact('totalUserLikes', 'activityTemplate', 'userViews', 'currentUserViews', 'latestTemplate', 'templates', 'mostViewedTemplates', 'comments', 'concerns', 'user', 'totalPosts', 'totalConcerns', 'totalComments', 'totalLikes', 'totalUserPosts', 'totalUserComments', 'totalUserViews'));
     }
 
     public function all_activity()

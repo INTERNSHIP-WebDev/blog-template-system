@@ -32,13 +32,9 @@
 					<div class="col">
 						<div class="header_content d-flex flex-row align-items-center justify-content-start">
 							<div class="logo">
-							<a href="{{ url('/') }}">
-    {{ isset($selectedCategory) ? $selectedCategory->text : 'Blog' }}
-</a>
-@if($selectedCategory)
-    | {{ $selectedCategory->t }}
-@endif
-
+								<a href="{{ url('/') }}">
+									BLOG | {{ isset($selectedCategory) ? (str_word_count($selectedCategory->text) > 1 ? implode(' ', array_slice(explode(' ', $selectedCategory->text), 0, 1)) . '...' : $selectedCategory->text) : 'ALL' }}
+								</a>
 							</div>
 							<nav class="main_nav">
 								<ul>
@@ -49,14 +45,14 @@
 									<li><a href="{{ route('about') }}">About</a></li>
 									<li><a href="{{ route('concern.index') }}">Contact</a></li>
 									@if (Route::has('login'))
-										@auth
-										<li><a href="{{ route('home') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">You are Logged in as {{ Auth::user()->name }}</a></li>
-										@else
-										<li><a href="{{ route('login') }}" class=""> &nbsp; Log in </a></li>
-										@if (Route::has('register'))
-										<li><a href="{{ route('login') }}" class=""> &nbsp; Register </a></li>
-										@endif
-										@endauth
+									@auth
+									<li><a href="{{ route('home') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">You are Logged in as {{ Auth::user()->name }}</a></li>
+									@else
+									<li><a href="{{ route('login') }}" class=""> &nbsp; Log in </a></li>
+									@if (Route::has('register'))
+									<li><a href="{{ route('login') }}" class=""> &nbsp; Register </a></li>
+									@endif
+									@endauth
 									@endif
 								</ul>
 							</nav>

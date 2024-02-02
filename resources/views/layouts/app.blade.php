@@ -77,6 +77,7 @@
 
     <!-- App js -->
     <script src="<?php echo url('theme')?>/dist/assets/js/app.js"></script>
+    <script src="<?php echo url('theme')?>/dist/assets/js/pages/profile.init.js"></script>
 
 </body>
 </html>

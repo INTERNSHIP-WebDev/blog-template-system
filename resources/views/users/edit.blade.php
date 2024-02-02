@@ -34,9 +34,19 @@
                     <div class="col-lg-12">
                         <div class="card">
             <div class="card-body">
-                <form action="{{ route('users.update', $user->id) }}" method="post">
+                    <form action="{{ route('users.update', $user->id) }}" method="post" enctype="multipart/form-data">
                     @csrf
                     @method("PUT")
+
+                    <div class="mb-3 row">
+                        <label for="photo" class="col-md-4 col-form-label text-md-end text-start">Banner</label>
+                        <div class="col-md-6">
+                            <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
+                            @if ($user->photo)
+                                <img src="{{ asset('images/photos/' . $user->photo) }}" alt="Current Photo" class="img-thumbnail" width="100" height="100">
+                            @endif
+                        </div>
+                    </div>
 
                     <div class="mb-3 row">
                         <label for="name" class="col-md-4 col-form-label text-md-end text-start">Name</label>

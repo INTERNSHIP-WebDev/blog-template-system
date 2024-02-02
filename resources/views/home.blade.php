@@ -14,6 +14,11 @@
             background-color: #f7f7f7;
             cursor: pointer;
         }
+
+        .card-header:hover {
+            background-color: #f7f7f7; /* Change the background color on hover */
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -163,6 +168,7 @@
                                 <hr class="mb-4">
 
                                 <!-- <canvas id="weekly-postings-chart" style="max-height: 300px;"></canvas> -->
+                                <div id="revenue-chart" class="apex-charts" dir="ltr"></div>
 
                                 <!-- <div class="apex-charts" data-colors='["--bs-primary", "--bs-warning"]' id="area-chart" dir="ltr"></div> -->
                             </div>
@@ -175,8 +181,14 @@
                             <div class="card-body">
                                 <div class="d-flex">
                                     <div class="flex-shrink-0 me-3">
-                                        <img src="{{ asset('/images/logos/logo_1706680612.png') }}" alt="" class="avatar-sm rounded-circle img-thumbnail">
+                                        @if(auth()->user()->photo)
+                                            <img class="avatar-sm rounded-circle img-thumbnail" src="{{ asset('images/photos/' . auth()->user()->photo) }}"
+                                                alt="Profile Photo">
+                                        @else
+                                            <img class="avatar-sm rounded-circle img-thumbnail" src="{{ asset('/images/avatars/avatar-1.png') }}" alt="Profile Photo">
+                                        @endif
                                     </div>
+
                                     <div class="flex-grow-1">
                                         <div class="d-flex">
                                             <div class="flex-grow-1">
@@ -202,19 +214,15 @@
                                         <hr>
 
                                         <div class="row">
-                                            <div class="col-4">
+                                            <div class="col-12">
                                                 <div>
-                                                    <p class="text-muted text-truncate mb-2">Total Posts</p>
-                                                    <h5 class="mb-0">{{ $totalUserPosts }}</h5>
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <div>
-                                                    <p class="text-muted text-truncate mb-2">Comments</p>
-                                                    <h5 class="mb-0">{{ $totalUserComments }}</h5>
+                                                <p class="text-muted mb-4" style="text-align: justify;">
+                                                    Hello, welcome my friend. This is known for providing insightful and engaging contents. Join this journey of exploration and discovery through the world of words.
+                                                </p>
                                                 </div>
                                             </div>
                                         </div>
+                                        
                                     </div>
 
 
@@ -225,6 +233,43 @@
 
                         <div class="card">
                             <div class="card-body">
+                                <div class="d-flex flex-wrap align-items-start">
+                                    <h5 class="card-title mb-3 me-2">Views</h5>
+
+                                    <div class="dropdown ms-auto">
+                                        <a class="text-muted font-size-16" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                                            <i class="mdi mdi-dots-horizontal"></i>
+                                        </a>
+
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Separated link</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @php
+                                $totalLikes = 0;
+                                foreach ($templates as $template) {
+                                $totalLikes += $template->likes()->count();
+                                }
+                                @endphp
+
+                                <div class="d-flex flex-wrap">
+                                    <div>
+                                        <p class="text-muted mb-1">Total Views</p>
+                                        <h4 class="mb-3">{{ $currentUserViews }}</h4>
+                                    </div>
+                                    <div class="ms-auto align-self-end">
+                                        <i class="bi bi-eye display-4 text-light"></i>
+                                    </div>
+                                </div>
+
+                                <br><hr>
+
                                 <div class="d-flex flex-wrap align-items-start">
                                     <h5 class="card-title mb-3 me-2">Likes</h5>
 
@@ -253,12 +298,51 @@
                                 <div class="d-flex flex-wrap">
                                     <div>
                                         <p class="text-muted mb-1">Total Likes</p>
-                                        <h4 class="mb-3">{{ $totalLikes }}</h4>
+                                        <h4 class="mb-3">{{ $totalUserLikes }}</h4>
                                     </div>
                                     <div class="ms-auto align-self-end">
                                         <i class="bx bx-like display-4 text-light"></i>
                                     </div>
                                 </div>
+
+                                <br><hr>
+
+                                <div class="d-flex flex-wrap align-items-start">
+                                    <h5 class="card-title mb-3 me-2">Comments</h5>
+
+                                    <div class="dropdown ms-auto">
+                                        <a class="text-muted font-size-16" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                                            <i class="mdi mdi-dots-horizontal"></i>
+                                        </a>
+
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Separated link</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @php
+                                $totalLikes = 0;
+                                foreach ($templates as $template) {
+                                $totalLikes += $template->likes()->count();
+                                }
+                                @endphp
+
+                                <div class="d-flex flex-wrap">
+                                    <div>
+                                        <p class="text-muted mb-1">Total Comments</p>
+                                        <h4 class="mb-3">{{ $totalUserComments }}</h4>
+                                    </div>
+                                    <div class="ms-auto align-self-end">
+                                        <i class="bx bx-comment-dots display-4 text-light"></i>
+                                    </div>
+                                </div>
+
+
 
                             </div>
                         </div>
@@ -271,7 +355,7 @@
                 <div class="row">
                     <div class="col-xl-4 col-lg-6">
                         <div class="card">
-                            <div class="card-header bg-transparent border-bottom">
+                            <div class="card-header bg-transparent border-bottom" style="cursor: pointer;">
                                 <div class="d-flex flex-wrap align-items-start">
                                     <div class="me-2">
                                         <h5 class="card-title mt-1 mb-0">Mails</h5>
@@ -282,11 +366,10 @@
                                                 Recent
                                             </a>
                                         </li>
-
                                     </ul>
                                 </div>
-
                             </div>
+
 
                             <div class="card-body">
 
@@ -297,16 +380,29 @@
                                         @if($concern->rcpt_email === auth()->user()->email)
                                         <div class="tab-pane active" id="post-recent" role="tabpanel">
                                             <ul class="list-group list-group-flush">
-                                                <li class="list-group-item py-3">
+                                            <li class="list-group-item py-3 comment-item">
+                                            <a href="{{ route('emails.show', $concern->id) }}" class="text-decoration-none">
                                                     <div class="d-flex">
-                                                        <div class="me-3">
-                                                            <img src="{{ asset('images/banners/' . $concern->banner) }}" alt="Concern Banner" class="avatar-md h-auto d-block rounded" width="100%" height="50">
-                                                        </div>
-                                                        <div class="align-self-center overflow-hidden me-auto">
-                                                            <div>
-                                                                <h5 class="font-size-14 text-truncate"><a href="javascript: void(0);" class="text-dark">{{ $concern->header }}</a></h5>
-                                                                <p class="text-muted mb-0">{{ $concern->created_at->format('d M, Y') }}</p>
-                                                            </div>
+                                                        <div class="flex-grow-1">
+                                                        @auth
+                                                            @php
+                                                                $authUserEmail = auth()->user()->email;
+                                                            @endphp
+
+                                                            @if ($concern->rcpt_email === $authUserEmail)
+                                                                <h5 class="font-size-14 mb-1">
+                                                                    <span style="color: black; margin-left: 5px; margin-right: 5px;">You received a mail from</span>
+                                                                    @php
+                                                                        $words = str_word_count($concern->send_name, 1);
+                                                                        $limitedWords = implode(' ', array_slice($words, 0, 5));
+                                                                    @endphp
+                                                                    {{ count($words) > 5 ? $limitedWords . '...' : $limitedWords }}
+                                                                    <span style="color: black; margin-left: 5px; margin-right: 5px;">with subject "{{ $concern->subject }}".</span>
+                                                                </h5>
+                                                            @endif
+                                                        @endauth
+
+                                                            <small class="text-muted">{{ $concern->created_at->diffForHumans() }}</small>
                                                         </div>
                                                         <div class="dropdown ms-2">
                                                             <a class="text-muted font-size-14" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -545,12 +641,7 @@
                                                         </span>
                                                         Posted
                                                         <span class="fw-semibold">
-                                                            "@php
-                                                            $words = str_word_count($latestTemplate->header, 1);
-                                                            $limitedWords = implode(' ', array_slice($words, 0, 5));
-                                                            @endphp
-
-                                                            {{ count($words) > 5 ? $limitedWords . '...' : $limitedWords }}"
+                                                            {!! $template->header ? \Illuminate\Support\Str::limit(strip_tags($template->header), 20, $end='...') : "Blog has no header" !!}
                                                         </span>
                                                         blog... <a href="{{ url('post/' . $template->id) }}">View</a>
                                                     </div>
@@ -606,14 +697,14 @@
                                                 <td><img src="{{ asset('images/banners/' . $template->banner) }}" alt="Template Banner" class="avatar-md h-auto d-block rounded" width="100%" height="50"></td>
                                                 <td>
                                                     <h5 class="font-size-13 text-truncate mb-1"><a href="javascript: void(0);" class="text-dark">
-                                                        <a>    
-                                                        {!! $template->header ? \Illuminate\Support\Str::limit(strip_tags($template->header), 20, $end='...') : "Blog has no header" !!}
-                                                        </a>
+                                                            <a>
+                                                                {!! $template->header ? \Illuminate\Support\Str::limit(strip_tags($template->header), 20, $end='...') : "Blog has no header" !!}
+                                                            </a>
                                                     </h5>
                                                     <p class="text-muted mb-0">{{ $template->created_at->format('d M, Y') }}</p>
                                                 </td>
                                                 <td><i class="bi bi-eye align-middle me-1"></i>{{ $template->views }}</td>
-                                                <td><i class="bx bx-like align-middle me-1"></i>{{ $template->likeCount }}</td> <!-- Updated likes count -->
+                                                <td><i class="bx bx-like align-middle me-1"></i>{{ $template->likeCount }}</td> 
                                                 <td><i class="bx bx-comment-dots align-middle me-1"></i>{{ $template->comments->count() }}</td>
                                                 <td>
                                                     <div>

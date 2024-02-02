@@ -16,6 +16,7 @@
         }
     </style>
     
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 </head>
 <body>
 
@@ -98,33 +99,14 @@
                                     </div>
                                 </div>
 
-                                <!-- Email list -->
-                                <ul class="message-list">
-                                @foreach($concerns as $concern)
-                                    @php
-                                        $emailClass = $concern->status ? '' : 'unread-email';
-                                    @endphp
-                                        @if($concern->rcpt_email === auth()->user()->email)
-                                            <li class="{{ $emailClass }}">
-                                                <div class="col-mail col-mail-1">
-                                                    <div class="checkbox-wrapper-mail">
-                                                        <input type="checkbox" id="chk{{ $concern->id }}" class="checkbox-bulk" data-id="{{ $concern->id }}">
-                                                        <label for="chk{{ $concern->id }}" class="toggle"></label>
-                                                    </div>
-                                                    <a href="javascript: void(0);" class="title">{{ $concern->send_name }}</a><span class="star-toggle far fa-star"></span>
-                                                </div>
-                                                <div class="col-mail col-mail-2">
-                                                    <a href="{{ route('emails.show', $concern->id) }}" class="subject">{{ $concern->subject }} - <span class="teaser">{{ $concern->message }}</span></a>
-                                                    <div class="date">{{ $concern->created_at->format('M d') }}</div>
-                                                </div>
-                                            </li>
-                                        @endif
-                                    @endforeach
-                                </ul>
+                                
+                                <div id="inbox">
+                                    @include('emails.inbox_pagination')
+                                </div>
 
                             </div><!-- card -->
 
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-7">
                                     Showing 1 - {{ count($concerns) }} of {{ $InboxCount }}
                                 </div>
@@ -134,7 +116,7 @@
                                         <button type="button" class="btn btn-sm btn-success waves-effect"><i class="fa fa-chevron-right"></i></button>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
 
                         </div> <!-- end email-rightbar -->
 
@@ -268,6 +250,27 @@
 </script>
 
 @endsection
+<script>
+    $(document).ready(function(){
+        $(document).on('click', '.pagination a', function(event)
+        {
+            event.preventDefault();
+            var page = $(this).attr('href').split('page=')[1];
+            fetch_inbox_data(page);
+        });
 
-        </body>
-    </html>
+        function fetch_inbox_data(page)
+        {
+            $.ajax({
+                url:"/pagination/fetch_inbox_data?page="+page,
+                success:function(data)
+                {
+                    $('#inbox').html(data);
+                }
+            });
+        }    
+    });
+</script>
+
+    </body>
+</html>

@@ -17,19 +17,19 @@
                     <div class="navbar-brand-box">
                         <a href="/home" class="logo logo-dark">
                             <span class="logo-sm">
-                                <img src="<?php echo url('theme')?>/dist/assets/images/logo.svg" alt="" height="22">
+                                <img src="<?php echo url('theme')?>/dist/assets/images/logo.svg" alt="" height="53">
                             </span>
                             <span class="logo-lg">
-                                <img src="<?php echo url('theme')?>/dist/assets/images/logo-dark.png" alt="" height="17">
+                                <img src="<?php echo url('theme')?>/dist/assets/images/pixzel-light.png" alt="" height="50">
                             </span>
                         </a>
 
                         <a href="/home" class="logo logo-light">
                             <span class="logo-sm">
-                                <img src="<?php echo url('theme')?>/dist/assets/images/logo-light.svg" alt="" height="22">
+                                <img src="<?php echo url('theme')?>/dist/assets/images/logo-light.svg" alt="" height="53">
                             </span>
                             <span class="logo-lg">
-                                <img src="<?php echo url('theme')?>/dist/assets/images/logo-light.png" alt="" height="19">
+                                <img src="<?php echo url('theme')?>/dist/assets/images/pixzel-light.png" alt="" height="50">
                             </span>
                         </a>
                     </div>
@@ -130,13 +130,18 @@
                     </div>
 
                     <div class="dropdown d-inline-block">
-                        <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
-                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img class="rounded-circle header-profile-user" src="{{ asset('/images/logos/logo_1706680612.png') }}"
+                    <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        @if(auth()->user()->photo)
+                            <img class="rounded-circle header-profile-user" src="{{ asset('images/photos/' . auth()->user()->photo) }}"
                                 alt="Header Avatar">
-                            <span class="d-none d-xl-inline-block ms-1" key="t-henry">{{ auth()->user()->name }}</span>
-                            <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
-                        </button>
+                        @else
+                            <img class="rounded-circle header-profile-user" src="{{ asset('/images/avatars/avatar-1.png') }}" alt="Header Avatar">
+                        @endif
+                        <span class="d-none d-xl-inline-block ms-1" key="t-henry">{{ auth()->user()->name }}</span>
+                        <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+                    </button>
+
                         <div class="dropdown-menu dropdown-menu-end">
                             <!-- item-->
                             <a class="dropdown-item" href="#"><i class="bx bx-user font-size-16 align-middle me-1"></i> <span key="t-profile">Profile</span></a>

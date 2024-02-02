@@ -11,7 +11,6 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     $(document).ready(function() {
-        // Handle Load More button click
         $('.see_fewer').hide();
         $('#load_more').on('click', function() {
             $('.remaining-comments').show();

@@ -89,6 +89,14 @@
     </script>
 
 <body>
+
+@guest
+    @php
+        // Redirect to /login
+        header("Location: " . url('/login'));
+        exit();
+    @endphp
+@endguest
   <div class="super_container">
 
     <!-- Header -->
@@ -104,7 +112,9 @@
                   <li><a href="/">Home</a></li>
                   <li><a href="/about">About</a></li>
                   <li class="active"><a href="/concern">Contact</a></li>
+                  @guest
                   <li><a href="/login">Login</a></li>
+                  @endguest
                 </ul>
               </nav>
               <div class="search_container ml-auto">

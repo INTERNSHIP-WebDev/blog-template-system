@@ -8,6 +8,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\File;
 
 
 class User extends Authenticatable
@@ -21,6 +23,7 @@ class User extends Authenticatable
      */
 
     protected $fillable = [
+        'photo',
         'name',
         'email',
         'password',
@@ -69,4 +72,5 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Template::class, 'likes', 'user_id', 'temp_id')->withTimestamps();
     }
+
 }

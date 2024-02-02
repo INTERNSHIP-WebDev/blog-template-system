@@ -63,7 +63,7 @@
 									</div>
 									<div class="home_slider_item_title">
 										<a href="{{ url('post/' . $latestTemplate->id) }}">
-											{!! $latestTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($latestTemplate->header), 100, $end='...') : "Blog has no header" !!}
+											{!! $latestTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($latestTemplate->header), 69, $end='...') : "Blog has no header" !!}
 										</a>
 									</div>
 									<div class="home_slider_item_link">
@@ -96,7 +96,7 @@
 							@if($secondToLastTemplate)
 							<div class="col-lg-3 col-md-6 similar_post_col">
 								<div class="similar_post trans_200">
-									<a href="{{ url('post/' . $secondToLastTemplate->id) }}">{!! $secondToLastTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($secondToLastTemplate->header), 45, $end='...') : "Blog has no header" !!}</a>
+									<a href="{{ url('post/' . $secondToLastTemplate->id) }}">{!! $secondToLastTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($secondToLastTemplate->header), 69, $end='...') : "Blog has no header" !!}</a>
 								</div>
 							</div>
 							@else
@@ -112,7 +112,7 @@
 							@if($thirdToLastTemplate)
 							<div class="col-lg-3 col-md-6 similar_post_col">
 								<div class="similar_post trans_200">
-									<a href="{{ url('post/' . $thirdToLastTemplate->id) }}">{!! $thirdToLastTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($thirdToLastTemplate->header), 45, $end='...') : "Blog has no header" !!}</a>
+									<a href="{{ url('post/' . $thirdToLastTemplate->id) }}">{!! $thirdToLastTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($thirdToLastTemplate->header), 69, $end='...') : "Blog has no header" !!}</a>
 								</div>
 							</div>
 							@else
@@ -139,14 +139,14 @@
 						</div>
 					</div>
 
-					<div class="home_slider_next_container">
+					<div class="home_slider_next_container" style="border-radius: 20px;">
 						@php
 						$fifthToLastTemplate = $latestTemplates->reverse()->skip(1)->first();
 						@endphp
 
 						@if($fifthToLastTemplate)
-						<div class="home_slider_next" style="background-image: url('{{ asset('images/banners/' . $fifthToLastTemplate->banner) }}'); background-position: center;">
-							<div class="home_slider_next_background trans_400"></div>
+						<div class="home_slider_next" style="background-image: url('{{ asset('images/banners/' . $fifthToLastTemplate->banner) }}'); background-position: center; border-radius: 20px;">
+							<div class="home_slider_next_background trans_400" style="border-radius: 20px;"></div>
 							<div class="home_slider_next_content trans_400">
 								<div class="home_slider_next_title">next</div>
 								<div class="home_slider_next_link">{!! $fifthToLastTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($fifthToLastTemplate->header), 45, $end='...') : "Blog has no header" !!}</div>
@@ -263,8 +263,8 @@
 						@endphp
 
 						@if($fifthToLastTemplate)
-						<div class="home_slider_next" style="background-image: url('{{ asset('images/banners/' . $fifthToLastTemplate->banner) }}'); background-position: center;">
-							<div class="home_slider_next_background trans_400"></div>
+						<div class="home_slider_next" style="background-image: url('{{ asset('images/banners/' . $fifthToLastTemplate->banner) }}'); background-position: center; border-radius: 20px;">
+							<div class="home_slider_next_background trans_400" style="border-radius: 20px;"></div>
 							<div class="home_slider_next_content trans_400">
 								<div class="home_slider_next_title">next</div>
 								<div class="home_slider_next_link">{!! $fifthToLastTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($fifthToLastTemplate->header), 45, $end='...') : "Blog has no header" !!}</div>
@@ -381,8 +381,8 @@
 						@endphp
 
 						@if($fifthToLastTemplate)
-						<div class="home_slider_next" style="background-image: url('{{ asset('images/banners/' . $fifthToLastTemplate->banner) }}'); background-position: center;">
-							<div class="home_slider_next_background trans_400"></div>
+						<div class="home_slider_next" style="background-image: url('{{ asset('images/banners/' . $fifthToLastTemplate->banner) }}'); background-position: center; border-radius: 20px;">
+							<div class="home_slider_next_background trans_400" style="border-radius: 20px;"></div>
 							<div class="home_slider_next_content trans_400">
 								<div class="home_slider_next_title">next</div>
 								<div class="home_slider_next_link">{!! $fifthToLastTemplate->header ? \Illuminate\Support\Str::limit(strip_tags($fifthToLastTemplate->header), 45, $end='...') : "Blog has no header" !!}</div>
@@ -644,7 +644,7 @@
 										<div class="card-title card-title-small"><a href="{{ url('post/' . $latestBlog->id) }}">1 | {!! $latestBlog->header ? \Illuminate\Support\Str::limit(strip_tags($latestBlog->header), 60, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
-											<a href="javascript: void(0);" class="badge bg-light font-size-12">
+											<a href="{{ url('category/' . $latestBlog->category->id) }}" class="badge bg-light font-size-12">
 												<i class="bx bx-purchase-tag-alt align-middle text-muted me-1"></i>
 												@if($latestBlog->category)
 												{{ $latestBlog->category->text }}
@@ -655,7 +655,7 @@
 										</div>
 
 										@if($latestBlog->user)
-										@php
+										@php			
 										$userNameWords = explode(' ', $latestBlog->user->name);
 										$firstTwoWords = implode(' ', array_slice($userNameWords, 0, 2));
 										@endphp
@@ -681,7 +681,7 @@
 										<div class="card-title card-title-small"><a href="{{ url('post/' . $secondBlog->id) }}">2 | {!! $secondBlog->header ? \Illuminate\Support\Str::limit(strip_tags($secondBlog->header), 60, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
-											<a href="javascript: void(0);" class="badge bg-light font-size-12">
+											<a href="{{ url('category/' . $secondBlog->category->id) }}" class="badge bg-light font-size-12">
 												<i class="bx bx-purchase-tag-alt align-middle text-muted me-1"></i>
 												@if($secondBlog->category)
 												{{ $secondBlog->category->text }}
@@ -719,7 +719,7 @@
 										<div class="card-title card-title-small"><a href="{{ url('post/' . $thirdBlog->id) }}">3 | {!! $thirdBlog->header ? \Illuminate\Support\Str::limit(strip_tags($thirdBlog->header), 60, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
-											<a href="javascript: void(0);" class="badge bg-light font-size-12">
+											<a href="{{ url('category/' . $thirdBlog->category->id) }}" class="badge bg-light font-size-12">
 												<i class="bx bx-purchase-tag-alt align-middle text-muted me-1"></i>
 												@if($thirdBlog->category)
 												{{ $thirdBlog->category->text }}
@@ -758,7 +758,7 @@
 										<div class="card-title card-title-small"><a href="{{ url('post/' . $fourthBlog->id) }}">4 | {!! $fourthBlog->header ? \Illuminate\Support\Str::limit(strip_tags($fourthBlog->header), 60, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
-											<a href="javascript: void(0);" class="badge bg-light font-size-12">
+											<a href="{{ url('category/' . $fourthBlog->category->id) }}" class="badge bg-light font-size-12">
 												<i class="bx bx-purchase-tag-alt align-middle text-muted me-1"></i>
 												@if($fourthBlog->category)
 												{{ $fourthBlog->category->text }}
@@ -796,7 +796,7 @@
 										<div class="card-title card-title-small"><a href="{{ url('post/' . $fifthBlog->id) }}">5 | {!! $fifthBlog->header ? \Illuminate\Support\Str::limit(strip_tags($fifthBlog->header), 60, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
-											<a href="javascript: void(0);" class="badge bg-light font-size-12">
+											<a href="{{ url('category/' . $fifthBlog->category->id) }}" class="badge bg-light font-size-12">
 												<i class="bx bx-purchase-tag-alt align-middle text-muted me-1"></i>
 												@if($fifthBlog->category)
 												{{ $fifthBlog->category->text }}
@@ -834,7 +834,7 @@
 										<div class="card-title card-title-small"><a href="{{ url('post/' . $sixthBlog->id) }}">6 | {!! $sixthBlog->header ? \Illuminate\Support\Str::limit(strip_tags($sixthBlog->header), 60, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
-											<a href="javascript: void(0);" class="badge bg-light font-size-12">
+											<a href="{{ url('category/' . $sixthBlog->category->id) }}" class="badge bg-light font-size-12">
 												<i class="bx bx-purchase-tag-alt align-middle text-muted me-1"></i>
 												@if($sixthBlog->category)
 												{{ $sixthBlog->category->text }}
@@ -872,7 +872,7 @@
 										<div class="card-title card-title-small"><a href="{{ url('post/' . $seventhBlog->id) }}">7 | {!! $seventhBlog->header ? \Illuminate\Support\Str::limit(strip_tags($seventhBlog->header), 60, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
-											<a href="javascript: void(0);" class="badge bg-light font-size-12">
+											<a href="{{ url('category/' . $seventhBlog->category->id) }}" class="badge bg-light font-size-12">
 												<i class="bx bx-purchase-tag-alt align-middle text-muted me-1"></i>
 												@if($seventhBlog->category)
 												{{ $seventhBlog->category->text }}
@@ -909,7 +909,7 @@
 										<div class="card-title card-title-small"><a href="{{ url('post/' . $eightBlog->id) }}">8 | {!! $eightBlog->header ? \Illuminate\Support\Str::limit(strip_tags($eightBlog->header), 60, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
-											<a href="javascript: void(0);" class="badge bg-light font-size-12">
+											<a href="{{ url('category/' . $eightBlog->category->id) }}" class="badge bg-light font-size-12">
 												<i class="bx bx-purchase-tag-alt align-middle text-muted me-1"></i>
 												@if($eightBlog->category)
 												{{ $eightBlog->category->text }}
@@ -946,7 +946,7 @@
 										<div class="card-title card-title-small"><a href="{{ url('post/' . $ninthBlog->id) }}">9 | {!! $ninthBlog->header ? \Illuminate\Support\Str::limit(strip_tags($ninthBlog->header), 60, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
-											<a href="javascript: void(0);" class="badge bg-light font-size-12">
+											<a href="{{ url('category/' . $ninthBlog->category->id) }}" class="badge bg-light font-size-12">
 												<i class="bx bx-purchase-tag-alt align-middle text-muted me-1"></i>
 												@if($ninthBlog->category)
 												{{ $ninthBlog->category->text }}
@@ -984,7 +984,7 @@
 										<div class="card-title card-title-small"><a href="{{ url('post/' . $tenthBlog->id) }}">10 | {!! $tenthBlog->header ? \Illuminate\Support\Str::limit(strip_tags($tenthBlog->header), 45, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
-											<a href="javascript: void(0);" class="badge bg-light font-size-12">
+											<a href="{{ url('category/' . $tenthBlog->category->id) }}" class="badge bg-light font-size-12">
 												<i class="bx bx-purchase-tag-alt align-middle text-muted me-1"></i>
 												@if($tenthBlog->category)
 												{{ $tenthBlog->category->text }}
@@ -1012,7 +1012,7 @@
 										<div class="card-title card-title-small"><a href="{{ url('post/' . $eleventhBlog->id) }}">11 | {!! $eleventhBlog->header ? \Illuminate\Support\Str::limit(strip_tags($eleventhBlog->header), 45, $end='...') : "Blog has no header" !!}</a></div>
 
 										<div class="mb-4">Tags:
-											<a href="javascript: void(0);" class="badge bg-light font-size-12">
+											<a href="{{ url('category/' . $eleventhBlog->category->id) }}" class="badge bg-light font-size-12">
 												<i class="bx bx-purchase-tag-alt align-middle text-muted me-1"></i>
 												@if($eleventhBlog->category)
 												{{ $eleventhBlog->category->text }}
@@ -1034,7 +1034,7 @@
 
 				</div>
 				<div class="load_more">
-					<div href="{{ route('more') }}" class="load_more_button text-center trans_200"><a href="{{ route('more') }}">View All Blogs</a></div>
+					<div class="load_more_button text-center trans_200" id="moremore_button">View All Blogs</a></div>
 				</div>
 
 			</div>
@@ -1210,53 +1210,66 @@
 
 				</div>
 			</div>
-			<div class="col-lg-9">
-				<div class="main_content">
+			<div id="moremore" class="col-9">
+				<div class="container">
+					<div class="col-12">
+						<hr class="mb-4"/>
+						<div class="main_content">
 
-					<!-- Category -->
+							<!-- Category -->
 
-					<div class="category">
-						<div class="section_panel d-flex flex-row align-items-center justify-content-start">
-							<div class="section_title">All Blogs</div>
-							<div class="section_tags ml-auto">
-								<ul>
-									<li class="active"><a href="{{ url('/') }}">all</a></li>
-									@forelse($categories->sortByDesc('created_at')->take(3) as $category)
-									<li><a href="{{ url('category/' . $category->id) }}">{!! $category->text ? \Illuminate\Support\Str::limit(strip_tags($category->text), 20, $end='...') : "Blog has no header" !!}</a></li>
-									@empty
-									<li>No categories available</li>
-									@endforelse
-								</ul>
-							</div>
-
-							<div class="section_panel_more">
-								<ul>
-									<li>more
+							<div class="category">
+								<div class="section_panel d-flex flex-row align-items-center justify-content-start">
+									<div class="section_title">All Blogs</div>
+									<div class="section_tags ml-auto">
 										<ul>
-											@forelse($categories->sortByDesc('created_at')->slice(3) as $category)
-											<li><a href="{{ url('category/' . $category->id) }}">{{ $category->text }}</a></li>
+											<li class="active"><a href="{{ url('/') }}">all</a></li>
+											@forelse($categories->sortByDesc('created_at')->take(3) as $category)
+											<li><a href="{{ url('category/' . $category->id) }}">{!! $category->text ? \Illuminate\Support\Str::limit(strip_tags($category->text), 20, $end='...') : "Blog has no header" !!}</a></li>
 											@empty
 											<li>No categories available</li>
 											@endforelse
 										</ul>
-									</li>
-								</ul>
+									</div>
+
+									<div class="section_panel_more">
+										<ul>
+											<li>more
+												<ul>
+													@forelse($categories->sortByDesc('created_at')->slice(3) as $category)
+													<li><a href="{{ url('category/' . $category->id) }}">{{ $category->text }}</a></li>
+													@empty
+													<li>No categories available</li>
+													@endforelse
+												</ul>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							
+							<div class="section_content">
+								<div class="m-5">
+									<div class="container">
+										<div id="more_pagination">
+											@include('landing.more_pagination')
+										</div>
+									</div>
+									<div class="see_less">
+										<div class="load_more_button text-center trans_200" id="lessless_button">Hide</a></div>
+									</div>
+								</div>
 							</div>
 						</div>
-						<div id="more_pagination">
-							@include('landing.more_pagination')
-						</div>
 					</div>
-
 				</div>
 			</div>
-			<!-- WALAY PULOS NA DIV PERO NAA SIYA PULOS GAMAY AYAW HILABTI -->
-			<div class="col-lg-3">
+			<!-- WALAY PULOS NA DIV PERO NAA SIYA PULOS GAMAY -->
+			<div class="col-3">
 				<div class="sidebar">
 					<div class="sidebar_background"></div>
 				</div>
 			</div>
-
 		</div>
 	</div>
 </div>

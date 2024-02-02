@@ -21,10 +21,10 @@ class MailController extends Controller
 
     public function inbox()
     {
-        $concerns = Concern::all();
+        $concerns = Concern::where('rcpt_email', auth()->user()->email)->latest('created_at')->paginate(10);
         $total_concerns = $concerns->count();
 
-        $InboxCount = Concern::where('rcpt_email', auth()->user()->email)->count();
+        $InboxCount = $concerns->count();  // Counting only the concerns for the authenticated user
         $SentMailCount = Concern::where('send_email', auth()->user()->email)->count();
         $DraftCount = Concern::where('status', 2)->where('send_email', auth()->user()->email)->count();
         $TrashCount = Concern::where('status', 3)->where('send_email', auth()->user()->email)->count();
@@ -33,9 +33,25 @@ class MailController extends Controller
     }
 
 
+    public function fetch_inbox_data(Request $request)
+    {
+        if ($request->ajax()) {
+            $concerns = Concern::where('rcpt_email', auth()->user()->email)->latest('created_at')->paginate(10);
+            $total_concerns = $concerns->count();
+    
+            $InboxCount = $concerns->count();  // Counting only the concerns for the authenticated user
+            $SentMailCount = Concern::where('send_email', auth()->user()->email)->count();
+            $DraftCount = Concern::where('status', 2)->where('send_email', auth()->user()->email)->count();
+            $TrashCount = Concern::where('status', 3)->where('send_email', auth()->user()->email)->count();
+
+            return view('emails.inbox_pagination', compact('concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
+        }
+    }
+
+
     public function sent()
     {
-        $concerns = Concern::latest('created_at')->paginate(7);
+        $concerns = Concern::latest('created_at')->paginate(10);
         $total_concerns = $concerns->count();
 
         $InboxCount = Concern::where('rcpt_email', auth()->user()->email)->count();
@@ -49,7 +65,7 @@ class MailController extends Controller
     public function fetch_sent_data(Request $request)
     {
         if ($request->ajax()) {
-            $concerns = Concern::latest('created_at')->paginate(7);
+            $concerns = Concern::latest('created_at')->paginate(10);
             $total_concerns = $concerns->count();
 
             $InboxCount = Concern::where('rcpt_email', auth()->user()->email)->count();

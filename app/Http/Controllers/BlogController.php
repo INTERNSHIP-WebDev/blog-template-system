@@ -19,7 +19,8 @@ class BlogController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function view_blog($id) {
+    public function view_blog($id)
+    {
         try {
 
             $banner_dir = 'images/banners/';
@@ -28,9 +29,9 @@ class BlogController extends Controller
             $formattedtimestamp = $template->created_at->format('F j, Y');
 
             $latest = Template::take(4)->get();
-            
+
             $template->description = htmlspecialchars_decode($template->description);
-            
+
             // Check if the user has already viewed this blog in the current session
             $hasViewed = Cache::has('viewed_blog_' . $id);
             if (!$hasViewed) {
@@ -43,6 +44,7 @@ class BlogController extends Controller
 
             // Increment the view count
             $template->increment('views');
+            
 
             // Fetch comments related to this template
             $comments = Comment::where('temp_id', $id)->get();
@@ -50,15 +52,25 @@ class BlogController extends Controller
             $remainingComments = $comments->skip(3);
             $comment_count = $comments->count();
 
+            // Retrieve the 4 most viewed templates
+            $mostViewedTemplates = Template::orderBy('views', 'desc')->take(4)->get();
+            
+            // Loop through each template to count the likes
+            foreach ($mostViewedTemplates as $templatei) {
+                $templatei->likeCount = $templatei->likes()->count(); // Count the likes for each template
+            }
+            
+
             $templates = Template::all();
 
-            return view('blog.sample.sample', compact('template', 'templates', 'firstFiveComments', 'remainingComments', 'latest', 'banner_dir', 'formattedtimestamp', 'comment_count'));
+            return view('blog.sample.sample', compact('mostViewedTemplates', 'template', 'templates', 'firstFiveComments', 'remainingComments', 'latest', 'banner_dir', 'formattedtimestamp', 'comment_count'));
         } catch (ModelNotFoundException $e) {
             return redirect()->route('templates.index')->with('error', 'Template not found.');
         }
     }
 
-    public function create_comment(Request $request, $id) {
+    public function create_comment(Request $request, $id)
+    {
         $temp_id = $id;
         try {
             $commentName = $request->input('username');
@@ -75,13 +87,14 @@ class BlogController extends Controller
         }
     }
 
-    public function blog_contacts($id) {
+    public function blog_contacts($id)
+    {
         try {
             $template = Template::findOrFail($id);
             $user = User::findOrFail($template->user_id);
-            $templates = Template::all(); 
-            $concerns = Concern::all(); 
-    
+            $templates = Template::all();
+            $concerns = Concern::all();
+
             $contacts = true;
             return view('blog.sample.contact', compact('template', 'templates', 'contacts', 'concerns', 'user'));
         } catch (ModelNotFoundException $e) {
@@ -89,7 +102,8 @@ class BlogController extends Controller
         }
     }
 
-    public function send_specific_concern($id) {
+    public function send_specific_concern($id)
+    {
         $template = Template::findOrFail($id);
         return Redirect::back()->withInput()->with('status', 'Email sent successfully');
     }
