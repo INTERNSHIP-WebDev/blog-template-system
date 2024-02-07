@@ -148,7 +148,7 @@ class TemplateController extends Controller
     {
         try {
             $template = Template::findOrFail($id);
-            $categories = Category::all();
+            $categories = Category::all();  
             $comments = Comment::where('temp_id', $template->id)->get();
 
             return view('templates.edit', compact('template', 'categories', 'comments'));

@@ -151,8 +151,6 @@
                                                                     {{ $totalTempLikes }}
                                                                     {{ $totalTempLikes == 1 ? 'like' : 'likes' }}
                                                                 </span>
-
-
                                                             </div>
                                                         </div>
 

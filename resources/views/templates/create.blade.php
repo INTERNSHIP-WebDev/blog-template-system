@@ -24,15 +24,31 @@
                 { value: 'First.Name', title: 'First Name' },
                 { value: 'Email', title: 'Email' },
             ],
-            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),  
+            media_live_embeds: true,
+            audio_template_callback: function(data) {
+            return '<audio controls>' + '\n<source src="' + data.source1 + '"' + (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' + '</audio>';
+            },
+            media_url_resolver: function (data, resolve/*, reject*/) {
+                if (data.url.indexOf('YOUR_SPECIAL_VIDEO_URL') !== -1) {
+                var embedHtml = '<iframe src="' + data.url +
+                '" width="400" height="400" ></iframe>';
+                resolve({html: embedHtml});
+                } else {
+                resolve({html: ''});
+                }
+            },
+            video_template_callback: function(data) {
+            return '<video width="' + data.width + '" height="' + data.height + '"' + (data.poster ? ' poster="' + data.poster + '"' : '') + ' controls="controls">\n' + '<source src="' + data.source1 + '"' + (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' + (data.source2 ? '<source src="' + data.source2 + '"' + (data.source2mime ? ' type="' + data.source2mime + '"' : '') + ' />\n' : '') + '</video>';
+            },
             image_title: true,
             automatic_uploads: true,
             images_uplaod_url: '/upload',
-            file_picker_types: 'image',
+            file_picker_types: 'image media file', 
             file_picker_callback: function(cb, value, meta) {
                 var input = document.createElement('input');
                 input.setAttribute('type', 'file');
-                input.setAttribute('accept', 'image/*');
+                input.setAttribute('accept', 'image/*,audio/*,video/*');
                 input.onchange = function() {
                     var file = this.files[0];
 
