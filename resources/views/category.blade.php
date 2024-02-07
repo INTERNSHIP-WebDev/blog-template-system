@@ -28,6 +28,9 @@
   <!-- Template Main CSS Files -->
   <link href="<?php echo url('backend') ?>/assets/css/variables.css" rel="stylesheet">
   <link href="<?php echo url('backend') ?>/assets/css/main.css" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 </head>
 
 <body>
@@ -280,6 +283,7 @@
 
   <!-- Template Main JS File -->
   <script src="<?php echo url('backend') ?>/assets/js/main.js"></script>
+
 
 </body>
 

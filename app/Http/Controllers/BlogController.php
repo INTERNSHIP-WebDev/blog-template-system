@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class BlogController extends Controller
 {
@@ -60,10 +61,13 @@ class BlogController extends Controller
                 $templatei->likeCount = $templatei->likes()->count(); // Count the likes for each template
             }
             
-
             $templates = Template::all();
 
-            return view('blog.sample.sample', compact('mostViewedTemplates', 'template', 'templates', 'firstFiveComments', 'remainingComments', 'latest', 'banner_dir', 'formattedtimestamp', 'comment_count'));
+           // Fetch the value of views for a specific template by ID
+            $templateViews = Template::find($template->id)->views;
+
+            // Inside the view_blog method of your BlogController
+            return view('blog.sample.sample', compact('templateViews', 'mostViewedTemplates', 'template', 'templates', 'firstFiveComments', 'remainingComments', 'latest', 'banner_dir', 'formattedtimestamp', 'comment_count'));
         } catch (ModelNotFoundException $e) {
             return redirect()->route('templates.index')->with('error', 'Template not found.');
         }
@@ -81,6 +85,8 @@ class BlogController extends Controller
             $comment->name = $commentName;
             $comment->message = $commentText;
             $comment->save();
+
+            //Alert::alert('Success!', 'Your comment has been posted successfully',);
             return Redirect::back()->withInput()->with(['status', 'Comment posted successfully']);
         } catch (ModelNotFoundException $e) {
             return redirect()->route('templates.index')->with('error', 'Template not found.');

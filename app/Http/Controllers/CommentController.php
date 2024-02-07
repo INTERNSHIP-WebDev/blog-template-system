@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\ChMessage;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
+
 
 class CommentController extends Controller
 {
@@ -43,6 +46,8 @@ class CommentController extends Controller
         $comment->message = $request->message;
         $comment->save();
 
+        Alert::alert('Success!', 'Your comment has been posted successfully');
+
         return redirect()->back()->with('success', 'Comment submitted successfully!');
     }
 
@@ -77,6 +82,8 @@ class CommentController extends Controller
     public function destroy(Comment $comment)
     {
         $comment->delete();
+
+        Alert::alert('Success!', 'Comment is successfully deleted.');
 
         return redirect()->back()->with('success', 'Comment deleted successfully!');
     }

@@ -139,6 +139,7 @@ $socials = [
 		margin-top: 20px;
 		margin-bottom: 20px;
 	}
+
 </style>
 
 @extends("blog.layouts.layout", ['socials' => $socials, 'template_id' => $template->id])
@@ -187,9 +188,9 @@ $socials = [
 		<div class="post_title">{{ $template->header }}</div>
 		<div class="post_author d-flex flex-row align-items-center justify-content-center">
 			<div class="author_image">
-				<div><img src="{{ asset('/images/logos/logo_1706680612.png') }}" alt=""></div>
+				<div><img src="{{ asset('/imaes/logos/logo_1706680612.png') }}" alt=""></div>
 			</div>
-			<div class="post_meta"><a href="#">{{ $template->user->name }}</a><span>{{ $formattedtimestamp }}<!--Sep 29, 2017 at 9:48 am--></span></div>
+			<div class="post_meta"><a href="#">{{ $template->user->name }}</a><span>{{ $formattedtimestamp }}<!--Sep 29, 2017 at 9:48 am--></span><span>{{ $templateViews }} Views<!--Sep 29, 2017 at 9:48 am--></span></div>
 		</div>
 	</div>
 </div>
@@ -209,6 +210,7 @@ $socials = [
 
 					<div class="post_body" style="max-width: 100%; overflow-x: hidden;">
 						<p> {!! $template->description !!}</p>
+
 
 						<!-- Post Tags and Share-->
 						<div class="tags_share d-flex flex-row align-items-center justify-content-start">
@@ -365,4 +367,104 @@ $socials = [
 	</div>
 
 </div>
+
+
+<!-- Popup Modal -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <div class="advertisement-label">Advertisement</div> <!-- New label added here -->
+        <video width="100%" height="auto" controls autoplay id="adVideo">
+            <source src="{{ asset('/images/ads/oreo-ads.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+</div>
+
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 50%;
+        top: 75%;
+        transform: translate(-50%, -50%);
+        width: 600px; 
+    }
+
+    .modal-content {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    .advertisement-label {
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(0, 0, 0, 0.2);
+        padding: 5px 10px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #fff;
+        animation: fadeIn 3s ease-in-out; 
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9998;
+    }
+</style>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get the modal and the video element
+        var modal = document.getElementById("myModal");
+        var video = document.getElementById("adVideo");
+
+        // Function to close the modal and remove overlay
+        function closeModal() {
+            modal.style.display = "none";
+            var overlay = document.querySelector(".modal-overlay");
+            overlay.parentNode.removeChild(overlay);
+            document.body.style.overflow = ""; 
+        }
+
+        // Autoplay video after 5 seconds if views are greater than 100
+        setTimeout(function() {
+			if ({{$templateViews}} > 100) {
+				// Show the modal after 5 seconds
+				var overlay = document.createElement("div");
+				overlay.classList.add("modal-overlay");
+				document.body.appendChild(overlay);
+				modal.style.display = "block";
+				video.play();
+				document.body.style.overflow = "hidden";
+			}
+        }, 5000);
+
+        // Close modal after video finishes playing
+        video.addEventListener("ended", function() {
+            closeModal();
+        });
+    });
+</script>
+
+
 @endsection

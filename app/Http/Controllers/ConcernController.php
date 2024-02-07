@@ -3,17 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Concern;
+use App\Models\Notification;
 use Illuminate\Http\Request;
+use App\Models\ChMessage;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\DemoMail;
 use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 
 
 class ConcernController extends Controller
 {
     public function show()
     {
-        return view('concern.index');
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+
+        return view('concern.index', compact('notifications', 'allNotif'));
     }
 
     public function store(Request $request)
@@ -52,6 +58,7 @@ class ConcernController extends Controller
             Mail::to($concern->send_email)->send(new DemoMail($mailData));
 
             // Redirect to a success page or do whatever is appropriate
+            Alert::alert('Success!', 'Your concern is sent successfully.');
             return redirect()->route('concern.index')->with('success', 'Email sent successfully!');
         } else {
             // Handle the case where the recipient email address is empty

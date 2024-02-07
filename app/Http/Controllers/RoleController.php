@@ -7,7 +7,12 @@ use App\Http\Requests\UpdateRoleRequest;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\View\View;
+use App\Models\ChMessage;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use RealRashid\SweetAlert\Facades\Alert;
+use App\Models\Notification;
+use Illuminate\Http\Request;
 use DB;
 
 class RoleController extends Controller
@@ -25,17 +30,34 @@ class RoleController extends Controller
      */
     public function index(): View
     {
+
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         return view('roles.index', [
-            'roles' => Role::orderBy('id','DESC')->paginate(3)
+            'roles' => Role::orderBy('id','DESC')->paginate(5),
+            'notifications'=>$notifications,
+            'allNotif' => $allNotif,
+            'chats' => $chats,
+            'userNames' => $userNames,
         ]);
     }
 
     public function fetch_data_role(Request $request)
     {
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         if($request->ajax())
         {
             $roles = Role::latest('created_at')->paginate(5);
-            return view('roles.pagination_role',compact('roles'))->render();
+            return view('roles.pagination_role',compact('chats', 'userNames', 'roles', 'notifications', 'allNotif'))->render();
         }
     }
 
@@ -44,8 +66,18 @@ class RoleController extends Controller
      */
     public function create(): View
     {
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         return view('roles.create', [
-            'permissions' => Permission::get()
+            'permissions' => Permission::get(),
+            'notifications'=>$notifications,
+            'allNotif' => $allNotif,
+            'chats' => $chats,
+            'userNames' => $userNames,
         ]);
     }
 
@@ -60,6 +92,8 @@ class RoleController extends Controller
         
         $role->syncPermissions($permissions);
 
+        Alert::alert('Success!', 'Role added successfully.');
+
         return redirect()->route('roles.index')
                 ->withSuccess('New role is added successfully.');
     }
@@ -73,9 +107,20 @@ class RoleController extends Controller
             ->where("role_id",$role->id)
             ->select('name')
             ->get();
+
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         return view('roles.show', [
             'role' => $role,
-            'rolePermissions' => $rolePermissions
+            'rolePermissions' => $rolePermissions,
+            'notifications'=>$notifications,
+            'allNotif' => $allNotif,
+            'chats' => $chats,
+            'userNames' => $userNames,
         ]);
     }
 
@@ -92,10 +137,20 @@ class RoleController extends Controller
             ->pluck('permission_id')
             ->all();
 
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         return view('roles.edit', [
             'role' => $role,
             'permissions' => Permission::get(),
-            'rolePermissions' => $rolePermissions
+            'rolePermissions' => $rolePermissions,
+            'notifications'=>$notifications,
+            'allNotif' => $allNotif,
+            'chats' => $chats,
+            'userNames' => $userNames,
         ]);
     }
 
@@ -112,8 +167,10 @@ class RoleController extends Controller
 
         $role->syncPermissions($permissions);    
         
-        return redirect()->back()
-                ->withSuccess('Role is updated successfully.');
+        Alert::alert('Success!', 'Role updated successfully.');
+
+        return redirect()->route('roles.index');
+                //->withSuccess('Role is updated successfully.');
     }
 
     /**
@@ -128,6 +185,9 @@ class RoleController extends Controller
             abort(403, 'CAN NOT DELETE SELF ASSIGNED ROLE');
         }
         $role->delete();
+
+        Alert::alert('Success!', 'Role deleted successfully.');
+
         return redirect()->route('roles.index')
                 ->withSuccess('Role is deleted successfully.');
     }

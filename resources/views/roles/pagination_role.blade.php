@@ -26,7 +26,7 @@
 
                         @can('delete-role')
                         @if ($role->name!=Auth::user()->hasRole($role->name))
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Do you want to delete this role?');"><i class="bi bi-trash"></i></button>
+                        <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
                         @endif
                         @endcan
                         @endif

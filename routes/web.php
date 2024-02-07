@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\BlogController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\Auth\LoginRegisterController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -11,10 +13,12 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConcernController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GuestController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\HeaderController;
 // use App\Http\Controllers\TitleController;
 // use App\Http\Controllers\SubtitleController;
 // use App\Http\Controllers\DescriptionController;
@@ -22,6 +26,7 @@ use App\Http\Controllers\Auth\RegisterController;
 // use App\Http\Controllers\SocialController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Title;
@@ -43,6 +48,8 @@ use App\Models\Category;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+
 
 // LANDING PAGE
 
@@ -78,7 +85,9 @@ Route::get('/category/{id}', [LandingController::class, 'category'])->name('cate
 # ABOUT
 Route::get('/about', [AboutController::class, 'show'])->name('about');
 
-Auth::routes();
+Auth::routes([
+    'verify' =>true
+]);
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
@@ -91,6 +100,9 @@ Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->na
 Route::post('/register', [RegisterController::class, 'register']);
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
+
+Route::get('/popup', 'BlogController@popup')->name('popup');
+Route::get('/blog/sample/sample', 'BlogController@sample')->name('blog.sample.sample');
 
 Route::resources([
     'roles' => RoleController::class,
@@ -166,7 +178,22 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/guests/{guest}', [GuestController::class, 'destroy'])->name('guests.destroy');
     Route::resource('guests', GuestController::class);
 
-    Route::get('/users/{id}', 'UserController@show')->name('users.show');
+    Route::get('/notifications', [HeaderController::class, 'showNotifications']);
+    Route::get('/chats', [HeaderController::class, 'showChats']);
+    Route::get('/chatify/{from_id}', [HeaderController::class, 'chatify'])->name('chatify');
+    Route::get('/chatify', [HeaderController::class, 'chatify'])->name('chatify');
+    Route::get('/user/profile', [HeaderController::class, 'showUserProfile']);
+
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::put('/notifications/{notification}', [NotificationController::class, 'update'])->name('notifications.update');
+    Route::get('/notification/{notification}/redirect', [NotificationController::class, 'redirect'])->name('notification.redirect');
+    Route::delete('notifications', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+
+    Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
     Route::get('pagination/show_pagination', [App\Http\Controllers\UserController::class, 'show_pagination'])->name('users.show_paginate');
+
+    Route::get('permissions', [PermissionController::class, 'index'])->name('permissions.index');
+    Route::get('permissions/create', [App\Http\Controllers\PermissionController::class, 'create'])->name('permissions.create');
+    Route::get('pagination/fetch_permission_data', [App\Http\Controllers\PermissionController::class, 'fetch_permission_data'])->name('permissions.fetch_permission_data');
 
 });

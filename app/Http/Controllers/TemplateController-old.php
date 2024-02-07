@@ -9,6 +9,7 @@ use App\Models\Description;
 use App\Models\Image;
 use App\Models\Category;
 use App\Models\Comment;
+use App\Models\ChMessage;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreTemplateRequest;
 use App\Http\Requests\UpdateTemplateRequest;

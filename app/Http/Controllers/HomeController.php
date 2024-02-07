@@ -7,6 +7,8 @@ use App\Models\Template;
 use App\Models\Concern;
 use App\Models\Comment;
 use App\Models\Like;
+use App\Models\Notification;
+use App\Models\ChMessage;
 use Illuminate\Support\Facades\Auth;
 use DB;
 
@@ -82,8 +84,13 @@ class HomeController extends Controller
             $query->select('id')->from('templates')->where('user_id', $user->id);
         })->count();
 
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+
+        $chats = ChMessage::latest('created_at')->where('seen', false)->get();
+
         // Pass the variables to the view
-        return view('home', compact('totalUserLikes', 'activityTemplate', 'userViews', 'currentUserViews', 'latestTemplate', 'templates', 'mostViewedTemplates', 'comments', 'concerns', 'user', 'totalPosts', 'totalConcerns', 'totalComments', 'totalLikes', 'totalUserPosts', 'totalUserComments', 'totalUserViews'));
+        return view('home', compact('chats', 'notifications', 'allNotif', 'totalUserLikes', 'activityTemplate', 'userViews', 'currentUserViews', 'latestTemplate', 'templates', 'mostViewedTemplates', 'comments', 'concerns', 'user', 'totalPosts', 'totalConcerns', 'totalComments', 'totalLikes', 'totalUserPosts', 'totalUserComments', 'totalUserViews'));
     }
 
     public function all_activity()

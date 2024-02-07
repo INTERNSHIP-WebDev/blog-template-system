@@ -19,7 +19,7 @@
                     <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Do you want to delete this template?');"><i class="bi bi-trash"></i></button>
+                        
                     </form>
                 </td>
             </tr>

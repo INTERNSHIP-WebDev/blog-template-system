@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Mail\DemoMail;
 use App\Models\Concern;
+use App\Models\Notification;
+use App\Models\User;
+use App\Models\ChMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use RealRashid\SweetAlert\Facades\Alert;
+
 
 class MailController extends Controller
 {
@@ -15,8 +20,11 @@ class MailController extends Controller
      */
     public function index()
     {
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+
         $concerns = Concern::all();
-        return view('emails.index', compact('concerns'));
+        return view('emails.index', compact('concerns','notifications', 'allNotif'));
     }
 
     public function inbox()
@@ -29,12 +37,23 @@ class MailController extends Controller
         $DraftCount = Concern::where('status', 2)->where('send_email', auth()->user()->email)->count();
         $TrashCount = Concern::where('status', 3)->where('send_email', auth()->user()->email)->count();
 
-        return view('emails.inbox', compact('concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
+        return view('emails.inbox', compact('chats', 'userNames','notifications', 'allNotif', 'concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
     }
 
 
     public function fetch_inbox_data(Request $request)
     {
+        
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         if ($request->ajax()) {
             $concerns = Concern::where('rcpt_email', auth()->user()->email)->latest('created_at')->paginate(10);
             $total_concerns = $concerns->count();
@@ -44,7 +63,7 @@ class MailController extends Controller
             $DraftCount = Concern::where('status', 2)->where('send_email', auth()->user()->email)->count();
             $TrashCount = Concern::where('status', 3)->where('send_email', auth()->user()->email)->count();
 
-            return view('emails.inbox_pagination', compact('concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
+            return view('emails.inbox_pagination', compact('chats', 'userNames','notifications', 'allNotif', 'concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
         }
     }
 
@@ -54,16 +73,26 @@ class MailController extends Controller
         $concerns = Concern::latest('created_at')->paginate(10);
         $total_concerns = $concerns->count();
 
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         $InboxCount = Concern::where('rcpt_email', auth()->user()->email)->count();
         $SentMailCount = Concern::where('send_email', auth()->user()->email)->count();
         $DraftCount = Concern::where('status', 2)->where('send_email', auth()->user()->email)->count();
         $TrashCount = Concern::where('status', 3)->where('send_email', auth()->user()->email)->count();
 
-        return view('emails.sent-mail', compact('concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
+        return view('emails.sent-mail', compact('chats', 'userNames','notifications', 'allNotif','concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
     }
 
     public function fetch_sent_data(Request $request)
     {
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         if ($request->ajax()) {
             $concerns = Concern::latest('created_at')->paginate(10);
             $total_concerns = $concerns->count();
@@ -72,13 +101,18 @@ class MailController extends Controller
             $SentMailCount = Concern::where('send_email', auth()->user()->email)->count();
             $DraftCount = Concern::where('status', 2)->where('send_email', auth()->user()->email)->count();
             $TrashCount = Concern::where('status', 3)->where('send_email', auth()->user()->email)->count();
-            return view('emails.pagination_sent_mail', compact('concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'))->render();
+            return view('emails.pagination_sent_mail', compact('chats', 'userNames','notifications', 'allNotif', 'concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'))->render();
         }
     }
 
 
     public function draft()
     {
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         $concerns = Concern::all();
         $total_concerns = $concerns->count();
 
@@ -88,11 +122,16 @@ class MailController extends Controller
         $TrashCount = Concern::where('status', 3)->where('send_email', auth()->user()->email)->count();
 
         $drafts = Concern::where('status', 2)->where('send_email', Auth::user()->email)->get();
-        return view('emails.draft', compact('drafts', 'concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
+        return view('emails.draft', compact('chats', 'userNames','notifications', 'allNotif','drafts', 'concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
     }
 
     public function trash()
     {
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         $concerns = Concern::all();
         $total_concerns = $concerns->count();
 
@@ -102,7 +141,7 @@ class MailController extends Controller
         $TrashCount = Concern::where('status', 3)->where('send_email', auth()->user()->email)->count();
 
         $concerns = Concern::all();
-        return view('emails.trash', compact('concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
+        return view('emails.trash', compact('chats', 'userNames','notifications', 'allNotif', 'concerns', 'total_concerns', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
     }
 
     /**
@@ -110,6 +149,11 @@ class MailController extends Controller
      */
     public function create(Request $request)
     {
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         // Fetch concerns for use in the create view
         $concerns = Concern::all();
 
@@ -124,7 +168,7 @@ class MailController extends Controller
             ->latest()
             ->first();
 
-        return view('emails.create', compact('concerns', 'InboxCount', 'SentMailCount', 'latestDraft', 'DraftCount', 'TrashCount'));
+        return view('emails.create', compact('chats', 'userNames','notifications', 'allNotif','concerns', 'InboxCount', 'SentMailCount', 'latestDraft', 'DraftCount', 'TrashCount'));
     }
 
     /**
@@ -165,6 +209,8 @@ class MailController extends Controller
             Mail::to($concern->rcpt_email)->send(new DemoMail($mailData));
             // Mail::to($concern->send_email)->send(new DemoMail($mailData));
 
+            Alert::alert('Success!', 'Email sent successfully. Grats :)');
+
             // Redirect to a success page or do whatever is appropriate
             return redirect()->route('emails.inbox')->with('success', 'Email sent successfully!');
         } else {
@@ -190,8 +236,13 @@ class MailController extends Controller
         $DraftCount = Concern::where('status', 2)->where('send_email', auth()->user()->email)->count();
         $TrashCount = Concern::where('status', 3)->where('send_email', auth()->user()->email)->count();
 
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         // Return the view to show the email
-        return view('emails.show', compact('email', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
+        return view('emails.show', compact('chats', 'userNames','notifications', 'allNotif', 'email', 'InboxCount', 'SentMailCount', 'DraftCount', 'TrashCount'));
     }
 
 

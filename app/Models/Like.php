@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Notification;
 
 class Like extends Model
 {
@@ -23,4 +24,20 @@ class Like extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    protected $guarded = [];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($like) {
+            Notification::create([
+                'like_id' => $like->id,
+                'message' => 'New like received',
+                'is_read' => false,
+            ]);
+        });
+    }
+
 }

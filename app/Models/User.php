@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,9 +10,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
+use App\Models\Notification;
 
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
@@ -71,6 +72,21 @@ class User extends Authenticatable
     public function likes()
     {
         return $this->belongsToMany(Template::class, 'likes', 'user_id', 'temp_id')->withTimestamps();
+    }
+
+    protected $guarded = [];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($user) {
+            Notification::create([
+                'user_id' => $user->id,
+                'message' => 'New user registered',
+                'is_read' => false,
+            ]);
+        });
     }
 
 }

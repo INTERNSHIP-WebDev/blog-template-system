@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ asset('backend/assets/css/login.css') }}" rel="stylesheet">
-    <link href="{{ asset('public/backend/assets/img/bg1.jpg') }}" >
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <title>Login</title>
-
-<style>
-</style>
 </head>
 <body>
 
@@ -24,9 +21,9 @@
         <ul>
         
           <li>
-            <a href="#" class="logo">
+            <a href="/register" class="logo">
               
-              <h2>Home<span>.</span></h2>
+              <h2>Register<span>.</span></h2>
             </a>
           </li>
       
@@ -89,8 +86,10 @@
                 required
                 />
 
-                  <!-- Replacing envelope with eye icon for password visibility -->
-                  <i class="icon far fa-eye toggle-password" id="togglePassword"></i>
+                 
+                  <i class="icon fa fa-eye toggle-password" id="togglePassword"></i>
+                
+
                   @error('password')
                     <span class="invalid-feedback" role="alert">
                        <strong>{{ $message }}</strong>
@@ -111,8 +110,7 @@
           <div class="right">
             <!-- Image background -->
             <div class="image-wrapper">
-            <img src="{{ asset('backend/assets/img/bg1.jpg') }}" class="img" /> 
-             <!-- <img src="img/bg1.jpg" class="img" />-->
+            <img src="{{ asset('public/assets/img/bg1.jpg') }}" class="img" /> <!-- Make sure this path is correct -->
               <!-- Waves 1-->
               <div class="wave-wrap">
                 <svg
@@ -145,7 +143,6 @@
       
     </main>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
    <script>
     const inputs = document.querySelectorAll(".contact-input");
 const toggleBtn = document.querySelector(".theme-toggle");
@@ -193,6 +190,7 @@ inputs.forEach((ipt) => {
         togglePassword.classList.toggle('fa-eye-slash');
     });
 </script>
+
 
 @endsection
 </body>

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Notification;
 
 class Concern extends Model
 {
@@ -23,6 +24,22 @@ class Concern extends Model
     {
         return $this->belongsTo(Template::class, 'temp_id');
     }
+
+    protected $guarded = [];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($concern) {
+            Notification::create([
+                'mail_id' => $concern->id,
+                'message' => 'New mail received',
+                'is_read' => false,
+            ]);
+        });
+    }
+
 }
 
 

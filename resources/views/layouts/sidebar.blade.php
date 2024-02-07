@@ -44,6 +44,15 @@
             <li class="menu-title" key="t-apps">Permissions</li>
 
             <li>
+            @canany(['create-user', 'edit-user', 'delete-user'])
+                <a href="{{ route('users.index') }}" class="waves-effect">
+                    <i class="bx bx-user"></i>
+                    <span key="t-user">Users</span>
+                </a>
+            @endcanany
+            </li>
+
+            <li>
             @canany(['create-role', 'edit-role', 'delete-role'])
                 <a href="{{ route('roles.index') }}" class="waves-effect">
                     <i class="bx bx-key"></i>
@@ -52,16 +61,11 @@
             @endcanany
             </li>
 
-            <!-- @canany(['create-product', 'edit-product', 'delete-product'])
-                <a class="btn btn-warning" href="{{ route('products.index') }}">
-                    <i class="bi bi-bag"></i> Manage Products</a>
-            @endcanany -->
-
             <li>
-            @canany(['create-user', 'edit-user', 'delete-user'])
-                <a href="{{ route('users.index') }}" class="waves-effect">
-                    <i class="bx bx-user"></i>
-                    <span key="t-user">Users</span>
+            @canany(['create-permission', 'edit-permission', 'delete-permission'])
+                <a href="{{ route('permissions.index') }}" class="waves-effect">
+                    <i class="bx bx-lock"></i>
+                    <span key="t-key">Permissions</span>
                 </a>
             @endcanany
             </li>
@@ -112,7 +116,7 @@
             </li>
 
             <li>
-                <a href="{{ route('chatify') }}" class="waves-effect">
+                <a href="{{ route('chatify', ['from_id' => ' ']) }}" class="waves-effect">
                     <i class="bx bx-chat"></i>
                     <span key="t-comment">Chat</span>
                 </a>

@@ -9,7 +9,9 @@ use App\Models\Description;
 use App\Models\Image;
 use App\Models\Template;
 use App\Models\User;
+use App\Models\ChMessage;
 use App\Models\Category;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -29,15 +31,26 @@ class CategoryController extends Controller
 
     public function index()
     {
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         $categories = Category::latest('created_at')->paginate(5);
-        return view('categories.index', compact('categories'));
+        
+        return view('categories.index', compact('chats', 'userNames','categories', 'notifications', 'allNotif'));
     }
 
     public function fetch_data_category(Request $request)
     {
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         if ($request->ajax()) {
             $categories = Category::latest('created_at')->paginate(5);
-            return view('categories.pagination_category', compact('categories'))->render();
+            return view('categories.pagination_category', compact('chats', 'userNames','categories', 'notifications', 'allNotif'))->render();
         }
     }
 
@@ -48,7 +61,12 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('categories.create');
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
+        return view('categories.create', compact('chats', 'userNames','notifications', 'allNotif'));
     }
 
     /**
@@ -69,10 +87,10 @@ class CategoryController extends Controller
                 'text' => $request->input('text'),
             ]);
 
-            // Alert::success('Success!', 'Added category successfully.');
+            Alert::alert('Success!', 'Category added successfully.', 'success');
 
             // Redirect to the category index page or any other page after creation
-            return redirect()->route('categories.index')->with('success', 'Category added successfully!');
+            return redirect()->route('categories.index'); //->with('success', 'Category added successfully!');
         } catch (\Exception $e) {
             // Alert::error('Error', 'Error Message: ' . $e->getMessage());
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
@@ -81,8 +99,13 @@ class CategoryController extends Controller
 
     public function show($id)
     {
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         $category = Category::findOrFail($id);
-        return view('categories.show', compact('category'));
+        return view('categories.show', compact('chats', 'userNames','category', 'notifications', 'allNotif'));
     }
 
     /**
@@ -93,8 +116,13 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         $category = Category::findOrFail($id);
-        return view('categories.edit', compact('category'));
+        return view('categories.edit', compact('chats', 'userNames','category', 'notifications', 'allNotif'));
     }
 
     /**
@@ -117,26 +145,36 @@ class CategoryController extends Controller
             $category = Category::findOrFail($id);
             $category->update($validatedData);
 
-            // Alert::success('Success!', 'Updated category successfully.');
+            Alert::alert('Success!', 'Category updated successfully.', 'success');
 
             // Redirect to the category index page or any other page after update
-            return redirect()->route('categories.index')->with('success', 'Category updated successfully!');
+            return redirect()->route('categories.index'); //->with('success', 'Category updated successfully!');
         } catch (\Exception $e) {
             // Alert::error('Error', 'Error Message: ' . $e->getMessage());
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
-
+// jucille dapak
     public function destroy($id)
     {
         try {
+
             $category = Category::findOrFail($id);
             $category->delete();
+        
+            $title = 'Delete Category!';
+            $text = "forda sure?";
+            confirmDelete($title, $text);
 
-            return response()->json(['success' => true, 'message' => 'Category deleted successfully.']);
+        
+            Alert::success('Success!', 'Category deleted successfully.');
+
+            //return response()->json(['success' => true, 'message' => 'Category deleted successfully.']);
+            return redirect()->route('categories.index');
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-        }
+            return
+            Alert::error('Error!', 'Category deleted unsuccessfully.');
+        }   
     }
 
     public function category_page()
@@ -157,6 +195,12 @@ class CategoryController extends Controller
         $subtitles = Subtitle::all();
         $descriptions = Description::all();
         $categories = Category::all();
-        return view('category', compact('categories', 'heroTemplates', 'descriptions', 'subtitles', 'titles', 'fTemplate', 'latestTemplate', 'templates', 'users'));
+
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
+        return view('category', compact('chats', 'userNames','notifications', 'allNotif', 'categories', 'heroTemplates', 'descriptions', 'subtitles', 'titles', 'fTemplate', 'latestTemplate', 'templates', 'users'));
     }
 }

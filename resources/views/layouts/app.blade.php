@@ -42,6 +42,8 @@
 
         @include('layouts.settings')
 
+        @include('sweetalert::alert')
+
     </div>
 
     <!-- Right bar overlay-->

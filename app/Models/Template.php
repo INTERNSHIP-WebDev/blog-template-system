@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
+use App\Models\Notification;    
 
 class Template extends Model
 {
@@ -30,10 +31,20 @@ class Template extends Model
         return $this->belongsTo(Category::class); 
     }
 
+    protected $guarded = [];
+
     // Define a "deleting" event to delete related titles
     public static function boot()
     {
         parent::boot();
+
+        static::created(function ($template) {
+            Notification::create([
+                'temp_id' => $template->id,
+                'message' => 'New blog posted by ' . $template->user->name,
+                'is_read' => false,
+            ]);
+        });
 
         static::deleting(function ($template) {
             // When a template is being deleted, also delete its related titles

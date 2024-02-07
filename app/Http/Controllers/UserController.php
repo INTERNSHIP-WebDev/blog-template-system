@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\Comment;
 use App\Models\Concern;
 use App\Models\Template;
+use App\Models\Notification;
+use App\Models\ChMessage;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
@@ -18,6 +20,9 @@ use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
+
+
 
 class UserController extends Controller
 {
@@ -38,8 +43,18 @@ class UserController extends Controller
      */
     public function index(): View
     {
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         return view('users.index', [
-            'users' => User::latest('id')->paginate(3)
+            'users' => User::latest('id')->paginate(3),
+            'notifications' => $notifications,
+            'allNotif' => $allNotif,
+            'chats' => $chats,
+            'userNames' => $userNames,
         ]);
     }
 
@@ -48,8 +63,18 @@ class UserController extends Controller
      */
     public function create(): View
     {
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         return view('users.create', [
-            'roles' => Role::pluck('name')->all()
+            'roles' => Role::pluck('name')->all(),
+            'notifications' => $notifications,
+            'allNotif' => $allNotif,
+            'chats' => $chats,
+            'userNames' => $userNames,
         ]);
     }
 
@@ -73,6 +98,8 @@ class UserController extends Controller
             $user->photo = $photoName;
             $user->save();
         }
+
+        Alert::alert('Success!', 'User added successfully', 'success');
 
         return redirect()->route('users.index')
                 ->withSuccess('New user is added successfully.');
@@ -164,15 +191,27 @@ class UserController extends Controller
         //     'user' => $user
         // ]);
 
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         // Pass the variables to the view
-        return view('users.show', compact('users', 'userViews', 'userTemplates', 'monthlyPostingsData', 'currentUserViews', 'activityTemplate', 'latestTemplate', 'templates', 'mostViewedTemplates', 'comments', 'concerns', 'user', 'totalPosts', 'totalUserLikes', 'totalConcerns', 'totalComments', 'totalLikes', 'totalUserPosts', 'totalUserComments', 'totalUserViews'));
+        return view('users.show', compact('chats', 'userNames', 'notifications', 'allNotif', 'users', 'userViews', 'userTemplates', 'monthlyPostingsData', 'currentUserViews', 'activityTemplate', 'latestTemplate', 'templates', 'mostViewedTemplates', 'comments', 'concerns', 'user', 'totalPosts', 'totalUserLikes', 'totalConcerns', 'totalComments', 'totalLikes', 'totalUserPosts', 'totalUserComments', 'totalUserViews'));
     }
     public function show_pagination(Request $request)
     {
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         if ($request->ajax()) {
             $userId = $request->input('user_id');
             $userTemplates = Template::where('user_id', $userId)->paginate(5);
-            return view('users.show_pagination', compact('userTemplates', 'userId'))->render();
+            return view('users.show_pagination', compact('chats', 'userNames', 'userTemplates', 'userId', 'notifications', 'allNotif'))->render();
         }
     }
     
@@ -189,10 +228,20 @@ class UserController extends Controller
             }
         }
 
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
         return view('users.edit', [
             'user' => $user,
             'roles' => Role::pluck('name')->all(),
-            'userRoles' => $user->roles->pluck('name')->all()
+            'userRoles' => $user->roles->pluck('name')->all(),
+            'notifications' => $notifications,
+            'allNotif' => $allNotif,
+            'chats' => $chats,
+            'userNames' => $userNames,
         ]);
     }
 
@@ -232,7 +281,9 @@ class UserController extends Controller
             $user->update(['photo' => $photoName]);
         }
 
-        return redirect()->route('users.index')->withSuccess('User is updated successfully.');
+        Alert::alert('Success!', 'User is updated successfully', 'success');
+
+        return redirect()->route('users.index'); //->withSuccess('User is updated successfully.');
     }
     /**
      * Remove the specified resource from storage.
@@ -247,7 +298,8 @@ class UserController extends Controller
 
         $user->syncRoles([]);
         $user->delete();
-        return redirect()->route('users.index')
-                ->withSuccess('User is deleted successfully.');
+        Alert::alert('Success!', 'User is deleted successfully', 'success');
+        return redirect()->route('users.index');
+                //->withSuccess('User is deleted successfully.');
     }
 }
