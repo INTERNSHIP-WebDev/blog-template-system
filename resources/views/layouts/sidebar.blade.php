@@ -73,6 +73,7 @@
             <li class="menu-title" key="t-apps">Publications</li>
 
             <li>
+            @canany(['create-blog', 'edit-blog', 'delete-blog'])
                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                     <i class="bx bx-detail"></i>
                     <span key="t-blog">Blogs</span>
@@ -82,25 +83,41 @@
                     <li><a href="{{ route('templates.list') }}" key="t-blog-grid">Blog List</a></li>
                     <li><a href="{{ route('templates.grid') }}" key="t-blog-grid">Blog Grid</a></li>
                 </ul>
+            @endcanany
             </li>
 
             <li>
+            @canany(['create-blog', 'edit-blog', 'delete-blog'])
                 <a href="{{ route('templates.gallery') }}" class="waves-effect">
                     <i class="bx bx-images"></i>
                     <span key="t-gallery">Gallery</span>
                 </a>
+            @endcanany
+            </li>
+            
+            <li>
+            @canany(['create-ad', 'edit-ad', 'delete-ad'])
+                <a href="{{ route('advertisements.index') }}" class="waves-effect">
+                    <i class="bx bx-play-circle"></i>
+                    <span key="t-ad">Advertisements</span>
+                </a>
+            @endcanany
             </li>
 
+
             <li>
+            @canany(['create-category', 'edit-category', 'delete-category'])
                 <a href="{{ route('categories.index') }}" class="waves-effect">
                     <i class="bx bx-customize"></i>
                     <span key="t-category">Categories</span>
                 </a>
+            @endcanany
             </li>
 
-            <li class="menu-title" key="t-apps">Notifications</li>
+            <li class="menu-title" key="t-apps">Transactions</li>
 
             <li>
+            @canany(['create-mail', 'edit-mail', 'delete-mail'])
                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                     <i class="bx bx-envelope"></i>
                     <span key="t-email">Emails</span>
@@ -113,13 +130,25 @@
                     <li><a href="{{ route('emails.trash') }}" key="t-inbox">Trash</a></li> -->
                     
                 </ul>
+            @endcanany
             </li>
 
             <li>
+            @canany(['create-notification', 'edit-notification', 'delete-notification'])
+                <a href="{{ route('notifications.index') }}" class="waves-effect">
+                    <i class="bx bx-bell"></i>
+                    <span key="t-comment">Notifications</span>
+                </a>
+            @endcanany
+            </li>
+
+            <li>
+            @canany(['create-chat', 'edit-chat', 'delete-chat'])
                 <a href="{{ route('chatify', ['from_id' => ' ']) }}" class="waves-effect">
                     <i class="bx bx-chat"></i>
-                    <span key="t-comment">Chat</span>
+                    <span key="t-comment">Chats</span>
                 </a>
+            @endcanany
             </li>
 
             <li class="menu-title" key="t-apps">Others</li>

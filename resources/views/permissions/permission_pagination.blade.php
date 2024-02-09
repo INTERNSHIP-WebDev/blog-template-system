@@ -15,9 +15,11 @@
                 <td>{{ $permission->name }}</td>
                 <td>{{ $permission->created_at}}</td>
                 <td>
-                    <a href="#" class="btn btn-warning btn-sm"><i class="bi bi-eye"></i></a>
-                    <a href="#" class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i></a>
-                    <form action="#" method="POST" style="display:inline;">
+                    <!-- Edit Button -->
+                    <a href="{{ route('permissions.edit', $permission->id) }}" class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i></a>
+
+                    <!-- Delete Form -->
+                    <form action="{{ route('permissions.destroy', $permission->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
@@ -26,7 +28,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="6">No Permissions Found.</td>
+               No Permissions Found.
             </tr>
             @endforelse
         </tbody>

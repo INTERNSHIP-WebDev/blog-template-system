@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notification;
+use App\Models\User;
 use App\Http\Requests\StoreNotificationRequest;
 use App\Http\Requests\UpdateNotificationRequest;
 use Illuminate\Http\Request;
@@ -15,7 +16,10 @@ class NotificationController extends Controller
         $notifications = Notification::where('is_read', false)->get();
         $allNotif = Notification::latest('created_at', 'desc')->get();
 
-        return view('notifications.index', compact('notifications', 'allNotif'));
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
+        return view('notifications.index', compact('chats', 'userNames', 'notifications', 'allNotif'));
     }
 
     public function redirect(Notification $notification)

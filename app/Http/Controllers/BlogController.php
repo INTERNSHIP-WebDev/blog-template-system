@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Template;
 use App\Models\Comment;
+use App\Models\Advertisement;
 use App\Models\Concern;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -66,8 +67,15 @@ class BlogController extends Controller
            // Fetch the value of views for a specific template by ID
             $templateViews = Template::find($template->id)->views;
 
+            $ads = Advertisement::all();
+            $imageFiles = Advertisement::where('file_type', 'Image')->pluck('name');
+            $fileType = $ads->pluck('file_type')->unique();
+            $fileName = $ads->pluck('name')->unique();
+            $adFile = Advertisement::where('file_type', 'Video')->pluck('name');
+            $ad = Advertisement::find($id);
+
             // Inside the view_blog method of your BlogController
-            return view('blog.sample.sample', compact('templateViews', 'mostViewedTemplates', 'template', 'templates', 'firstFiveComments', 'remainingComments', 'latest', 'banner_dir', 'formattedtimestamp', 'comment_count'));
+            return view('blog.sample.sample', compact('fileName', 'ad', 'adFile', 'fileType', 'imageFiles', 'ads', 'templateViews', 'mostViewedTemplates', 'template', 'templates', 'firstFiveComments', 'remainingComments', 'latest', 'banner_dir', 'formattedtimestamp', 'comment_count'));
         } catch (ModelNotFoundException $e) {
             return redirect()->route('templates.index')->with('error', 'Template not found.');
         }

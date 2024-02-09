@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\LoginRegisterController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AdvertisementController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
@@ -195,5 +196,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('permissions', [PermissionController::class, 'index'])->name('permissions.index');
     Route::get('permissions/create', [App\Http\Controllers\PermissionController::class, 'create'])->name('permissions.create');
     Route::get('pagination/fetch_permission_data', [App\Http\Controllers\PermissionController::class, 'fetch_permission_data'])->name('permissions.fetch_permission_data');
+    Route::post('permissions', [App\Http\Controllers\CategoryController::class, 'store'])->name('permissions.store');
+    Route::get('/permissions/{permission}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
+    Route::delete('/permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
+    Route::resource('permissions', PermissionController::class);
+
+    Route::get('advertisements', [App\Http\Controllers\AdvertisementController::class, 'index'])->name('ads.index');
+    Route::get('advertisements/create', [App\Http\Controllers\AdvertisementController::class, 'create'])->name('ads.create');
+    Route::post('advertisements', [App\Http\Controllers\AdvertisementController::class, 'store'])->name('ads.store');
+    Route::get('/advertisements/{advertisement}/edit', [AdvertisementController::class, 'edit'])->name('ads.edit');
+    Route::delete('/advertisements/{advertisement}', [AdvertisementController::class, 'destroy'])->name('ads    .destroy');
+    Route::resource('advertisements', AdvertisementController::class);
 
 });

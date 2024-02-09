@@ -371,21 +371,20 @@ $socials = [
 
 <!-- Popup Modal -->
 <div id="myModal" class="modal">
-	<div class="advertisement-label">Advertisement</div><br><br>
-
-		<div class="modal-body" id="adContent"></div>
-
-	<button class="countdown-label" id="skipButton" style="display: none;"><i class="bx bx-fast-forward"></i> Skip Ad</button>
-	<div class="countdown-label" id="countdownTimer" style="display: none;">Skip Ad in <span id="countdownValue">5</span></div>
-	<div class="countdown-label" id="imgcountdownTimer" style="display: none;">Close Ad in <span id="imgcountdownValue">10</span></div>
+    <div class="modal-content">
+        <div class="advertisement-label">Advertisement</div>
+        <video width="100%" height="auto" controls autoplay id="adVideo">
+            <!-- Video source will be dynamically set -->
+            Your browser does not support the video tag.
+        </video>
+        <button class="countdown-label" id="skipButton" style="display: none;"><i class="bx bx-fast-forward"></i> Skip Ad</button>
+        <div class="countdown-label" id="countdownTimer" style="display: none;">Skip Ad in <span id="countdownValue">5</span></div>
+    </div>
 </div>
-
 
 <style>
     .modal {
         display: none;
-		justify-content: center;
-		align-items: center;
         position: fixed;
         z-index: 9999;
         left: 50%;
@@ -394,6 +393,11 @@ $socials = [
         width: 600px; 
     }
 
+    .modal-content {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
 
     .advertisement-label {
         position: absolute;
@@ -406,22 +410,21 @@ $socials = [
         font-size: 14px;
         font-weight: bold;
         color: #fff;
-        animation: fadeIn 2s ease-in-out; 
-		margin-bottom: 500px;
+        animation: fadeIn 3s ease-in-out; 
     }
 
 	.countdown-label {
         position: absolute;
-        margin-bottom: 20px;
-        left: 50%;
+        bottom: 50px;
+        left: 90%;
+		margin-right: -50px;
         transform: translateX(-50%);
-        background-color: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.1);
         padding: 5px 10px;
         border-radius: 10px;
         font-size: 14px;
         font-weight: bold;
         color: #fff;
-		margin-bottom: 500px;
     }
 
     @keyframes fadeIn {
@@ -441,79 +444,79 @@ $socials = [
         background-color: rgba(0, 0, 0, 0.5);
         z-index: 9998;
     }
-
-    .modal-body img,
-    .modal-body video {
-		width: auto;
-		max-height: 300px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		margin: 0 auto;
-    }
 </style>
 
+<script>
+    // Function to get a random integer between min and max (inclusive)
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
-@if ($templateViews >= 500)
+    // List of video file names in the ads directory
+    var videoFiles = [
+        'bearbrand-ads.mp4',
+        'cocacola-ads.mp4',
+        'oreo-ads.mp4',
+        'lays-ads.mp4',
+        'ritemed-ads.mp4',
+        // Add more video file names as needed
+    ];
+
+    // Select a random video file from the array
+    var randomIndex = getRandomInt(0, videoFiles.length - 1);
+    var randomVideo = videoFiles[randomIndex];
+
+    // Set the source of the video element to the selected random video
+    var videoElement = document.getElementById('adVideo');
+    videoElement.src = "{{ asset('/images/ads/') }}" + "/" + randomVideo;
+</script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        // Get the modal, video element, skip button, and countdown timer
         var modal = document.getElementById("myModal");
-        var adContent = document.getElementById("adContent");
+        var video = document.getElementById("adVideo");
         var skipButton = document.getElementById("skipButton");
         var countdownTimer = document.getElementById("countdownTimer");
         var countdownValue = document.getElementById("countdownValue");
-        var imgcountdownTimer = document.getElementById("imgcountdownTimer");
-        var imgcountdownValue = document.getElementById("imgcountdownValue");
-        var fileNames = [];
         var countdownStarted = false;
-
-        function getRandomInt(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        }
-
-        @foreach ($ads as $ad)
-        fileNames.push('{{ $ad->name }}');
-        @endforeach
-
-		// Shuffle function using Fisher-Yates algorithm
-		function shuffleArray(array) {
-			for (var i = array.length - 1; i > 0; i--) {
-				var j = Math.floor(Math.random() * (i + 1));
-				var temp = array[i];
-				array[i] = array[j];
-				array[j] = temp;
-			}
-			return array;
-		}
-
-		fileNames = shuffleArray(fileNames);
-
-		var randomIndex = getRandomInt(0, fileNames.length - 1);
-		var randomFileName = fileNames[randomIndex];
 
         // Function to close the modal and remove overlay
         function closeModal() {
             modal.style.display = "none";
             var overlay = document.querySelector(".modal-overlay");
-            if (overlay) {
-                overlay.parentNode.removeChild(overlay);
-            }
-            document.body.style.overflow = "";
-            // Check if the content inside the modal is a video element and pause it
-            var videoElement = adContent.querySelector("video");
-            if (videoElement) {
-                videoElement.pause();
-            }
+            overlay.parentNode.removeChild(overlay);
+            document.body.style.overflow = ""; 
+            // Pause the video
+            video.pause();
         }
+
+		// Generate a random delay between 0 and 30 seconds
+        var randomDelay = Math.floor(Math.random() * 30000);
+
+        // Delay showing the modal with the random delay
+        setTimeout(function() {
+			if ({{$templateViews}} > 100) {
+				// Show the modal
+				var overlay = document.createElement("div");
+				overlay.classList.add("modal-overlay");
+				document.body.appendChild(overlay);
+				modal.style.display = "block";
+				video.play();
+				document.body.style.overflow = "hidden";
+			}
+        }, randomDelay);
 
         // Function to start the countdown timer
         function startCountdown() {
             if (!countdownStarted) {
                 countdownStarted = true;
+                // Show countdown timer
                 countdownTimer.style.display = "block";
+
+                // Countdown timer for 5 seconds
                 var count = 5;
-                countdownValue.textContent = count;
-                countdownInterval = setInterval(function() {
+                var countdownInterval = setInterval(function() {
                     count--;
                     countdownValue.textContent = count;
                     countdownTimer.textContent = "Skip Ad in " + count;
@@ -521,87 +524,36 @@ $socials = [
                     if (count <= 0) {
                         clearInterval(countdownInterval);
                         countdownTimer.style.display = "none";
-                        skipButton.style.display = "block";
+                        skipButton.style.display = "block"; 
                     }
                 }, 1000);
             }
         }
 
-        // Function to start the countdown timer for images
-        function imgStartCountdown() {
-            if (!countdownStarted) {
-                countdownStarted = true;
-                imgcountdownTimer.style.display = "block";
-                var count = 10;
-                imgcountdownValue.textContent = count;
-                countdownInterval = setInterval(function() {
-                    count--;
-                    imgcountdownValue.textContent = count;
-                    imgcountdownTimer.textContent = "Close Ad in " + count;
-
-                    if (count <= 0) {
-                        clearInterval(countdownInterval);
-                        imgcountdownTimer.style.display = "none";
-                    }
-                }, 1000);
+        // Event listener to start countdown when video starts playing
+        video.addEventListener("play", function() {
+            // Check if the video duration is less than 30 seconds
+            if (video.duration < 30) {
+                // Disable seeking in the video
+                video.addEventListener("seeking", function() {
+                    video.currentTime = 0;
+                });
+            } else {
+                // Start countdown if the video duration is equal to or greater than 30 seconds
+                startCountdown();
             }
-        }
+        });
 
-        // Add event listener to the skip button
+        // Function to skip the video and close modal when skip button is clicked
         skipButton.addEventListener("click", function() {
             closeModal();
         });
 
-        var fileType = '{{ $ad->file_type }}';
-
-        if (fileType === 'Video') {
-			var videoElement = document.createElement('video');
-				videoElement.setAttribute('controls', true);
-				videoElement.setAttribute('autoplay', true);
-			var sourceElement = document.createElement('source');
-				sourceElement.setAttribute('src', '{{ asset("images/ads/") }}/' + randomFileName);
-				sourceElement.setAttribute('type', 'video/mp4');
-				videoElement.appendChild(sourceElement);
-				adContent.appendChild(videoElement);
-
-			videoElement.addEventListener("play", function() {
-				if (videoElement.duration > 30) {
-					startCountdown();
-				}
-			});
-
-			videoElement.addEventListener("ended", function() {
-				closeModal();
-			});
-
-			if (videoElement.duration < 30) {
-				videoElement.addEventListener("seeking", function() {
-					videoElement.currentTime = 0;
-				});
-			}
-			
-		} else if (fileType === 'Image' || fileType === 'GIF') {
-            var imgElement = document.createElement('img');
-				imgElement.setAttribute('src', '{{ asset("images/ads/") }}/' + randomFileName);
-				imgElement.setAttribute('alt', 'Advertisement File');
-				adContent.appendChild(imgElement);
-				imgStartCountdown();
-
-            setTimeout(function() {
-                closeModal();
-            }, 10000);
-        }
-
-        var randomDelay = Math.floor(Math.random() * 20000);
-        setTimeout(function() {
-            var overlay = document.createElement("div");
-            overlay.classList.add("modal-overlay");
-            document.body.appendChild(overlay);
-            modal.style.display = "block";
-            document.body.style.overflow = "hidden";
-        }, randomDelay);
+        // Close modal after video finishes playing
+        video.addEventListener("ended", function() {
+            closeModal();
+        });
     });
 </script>
-@endif
 
 @endsection
