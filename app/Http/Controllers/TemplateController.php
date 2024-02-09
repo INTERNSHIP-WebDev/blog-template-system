@@ -442,4 +442,24 @@ class TemplateController extends Controller
             'totalLikes' => $totalLikes,
         ]);
     }
+
+    public function like(Request $request, Template $template)
+    {
+        $user = auth()->user();
+
+        if ($user->hasLiked($template)) {
+            $user->unlike($template);
+            $liked = false;
+        } else {
+            $user->like($template);
+            $liked = true;
+        }
+
+        return response()->json([
+            'success' => true,
+            'liked' => $liked,
+            'totalLikes' => $template->likes()->count(),
+        ]);
+    }
+
 }

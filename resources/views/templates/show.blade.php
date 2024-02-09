@@ -297,7 +297,7 @@
                             likeButton.classList.add('liked');
                         } else {
                             likeButton.innerHTML = '<i class="bx bx-like"></i>';
-                            likeButton.classList.remove('liked');
+                            likeButton.classList.remove('like');
                         }
 
                         // Update total likes count

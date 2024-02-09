@@ -127,6 +127,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/templates/{template}/edit', [TemplateController::class, 'edit'])->name('templates.edit');
     Route::delete('/templates/{template}', [TemplateController::class, 'destroy'])->name('templates.destroy');
     Route::post('/templates/{id}/like', [TemplateController::class, 'toggleLike'])->name('templates.toggleLike');
+    Route::post('/templates/{template}/like', [TemplateController::class, 'like'])->name('templates.like');
     Route::resource('templates', TemplateController::class);
 
     #Pagination
@@ -172,11 +173,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/emails/mark-as-read', [MailController::class, 'markAsRead'])->name('emails.markAsRead');
     Route::post('/emails/mark-as-unread', [MailController::class, 'markAsUnread'])->name('emails.markAsUnread');
 
-    Route::get('guests', [App\Http\Controllers\GuestController::class, 'index'])->name('guests.index');
+    Route::get('newsfeed', [App\Http\Controllers\GuestController::class, 'index'])->name('guests.index');
     Route::get('guests/create', [App\Http\Controllers\GuestController::class, 'create'])->name('guests.create');
     Route::post('guests', [App\Http\Controllers\GuestController::class, 'store'])->name('guests.store');
     Route::get('/guests/{guest}/edit', [GuestController::class, 'edit'])->name('guests.edit');
     Route::delete('/guests/{guest}', [GuestController::class, 'destroy'])->name('guests.destroy');
+    Route::post('/templates/{template}/like', [GuestController::class, 'toggleLike'])->name('templates.toggleLike');
     Route::resource('guests', GuestController::class);
 
     Route::get('/notifications', [HeaderController::class, 'showNotifications']);
