@@ -143,4 +143,21 @@ class GuestController extends Controller
             'totalLikes' => $totalLikes,
         ]);
     }
+
+    public function profile()
+    {
+        $user = Auth::user();
+    
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+    
+        // Fetch 10 random templates with eager loading of user, likes, and comments
+        $templates = Template::with(['user', 'likes', 'comments' => function ($query) {
+            $query->latest()->limit(3); // Fetch latest 3 comments for each template
+        }])->inRandomOrder()->limit(15)->get();
+    
+        return view('guests.profile', compact('user', 'chats', 'userNames', 'templates', 'notifications', 'allNotif'));
+    }
 }

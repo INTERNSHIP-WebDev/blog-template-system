@@ -174,6 +174,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/emails/mark-as-unread', [MailController::class, 'markAsUnread'])->name('emails.markAsUnread');
 
     Route::get('newsfeed', [App\Http\Controllers\GuestController::class, 'index'])->name('guests.index');
+    Route::get('guests/profile', [App\Http\Controllers\GuestController::class, 'profile'])->name('guests.profile');
     Route::get('guests/create', [App\Http\Controllers\GuestController::class, 'create'])->name('guests.create');
     Route::post('guests', [App\Http\Controllers\GuestController::class, 'store'])->name('guests.store');
     Route::get('/guests/{guest}/edit', [GuestController::class, 'edit'])->name('guests.edit');
