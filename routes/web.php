@@ -96,6 +96,8 @@ Route::get('/about', [AboutController::class, 'show'])->name('about');
 //email verification
 Auth::routes(['verify' => true]);
 
+
+
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');

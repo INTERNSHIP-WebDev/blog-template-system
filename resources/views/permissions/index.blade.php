@@ -63,7 +63,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             <div class="card-body border-bottom">
                                 <div class="row g-3">
                                     <div class="col-xxl-4 col-lg-6">

@@ -1,3 +1,4 @@
+<div id="pagination-container">
 <table class="table table-bordered align-middle nowrap">
     <thead>
         <tr>
@@ -30,6 +31,7 @@
     </tbody>
 </table>
 {!! $permissions->links() !!}
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 

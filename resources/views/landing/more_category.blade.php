@@ -5,7 +5,7 @@
         @forelse ($categoryTemplates as $template)
             <div class="card card_default card_small_no_image grid-item">
                 <div class="card-body">
-                    <img class="card-img-top" src="{{ asset('images/banners/' . $template->banner) }}" alt="{{ $template->header }}" style="object-fit: cover;" width="300" height="150">
+                    <img class="card-img-top" src="{{ asset('images/banners/' . $template->banner) }}" alt="{{ $template->header }}" width="300" height="150">
                     <div class="card-title card-title-small"><a href="{{ url('post/' . $template->id) }}">{!! $template->header ? \Illuminate\Support\Str::limit(strip_tags($template->header), 30, $end='...') : "Blog has no header" !!}</a></div>
                     <small class="post_meta">
                         <a href="#">
