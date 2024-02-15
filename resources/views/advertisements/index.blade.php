@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advertisements | List</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 </head>
 <body>
 
@@ -50,44 +52,11 @@
                                     </div>
                                    
                                     <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered align-middle nowrap">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">No</th>
-                                                        <th scope="col">File Type</th>
-                                                        <th scope="col">File Name</th>
-                                                        <th scope="col">Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @forelse ($ads ?? [] as $ad)
-                                                        <tr>
-                                                            <td>{{ $loop->iteration }}</td>
-                                                            <td>{{ $ad->file_type }}</td>
-                                                            <td>{{ $ad->name }}</td>
-                                                            <td>
-                                                                <button class="btn btn-warning btn-sm btn-view-ad" 
-                                                                        data-file-type="{{ $ad->file_type }}" 
-                                                                        data-file-name="{{ $ad->name }}">
-                                                                    <i class="bi bi-eye"></i>
-                                                                </button>
-                                                                <form action="{{ route('advertisements.destroy', $ad->id) }}" method="POST" style="display:inline;">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
-                                                                </form>
-                                                            </td>
-                                                        </tr>
-                                                    @empty
-                                                        <tr>
-                                                            <td colspan="4">No advertisement found.</td>
-                                                        </tr>
-                                                    @endforelse
-                                                </tbody>
-
-                                            </table>
+                                        <div id="advertisement_data">
+                                            @include('advertisements.pagination_advertisement')
                                         </div>
+                                    </div>
+                                  
                                     </div>
                                 </div><!--end card-->
                             </div><!--end col-->
@@ -173,7 +142,7 @@
 </script>
 
 <style>
- .modal {
+.modal {
     display: none;
     position: fixed;
     z-index: 9999;
@@ -213,4 +182,25 @@
 
         @endsection
     </body>
+
+    <script>
+            $(document).ready(function(){
+                $(document).on('click', '.pagination a', function(event){
+                    event.preventDefault();
+                    var page = $(this).attr('href').split('page=')[1];
+                    fetch_data_advertisement(page);
+                });
+
+                function fetch_data_advertisement(page)
+                {
+                    $.ajax({
+                        url:"/pagination/fetch_data_advertisement?page="+page,
+                        success:function(data)
+                        {
+                            $('#advertisement_data').html(data);
+                        }
+                    })
+                }
+            });
+        </script>
 </html>

@@ -3,9 +3,9 @@
         <!-- Left column: Banner, Categories, Comments -->
         <div class="col-md-4">
             <!-- Banner -->
-            <div class="position-relative mb-3">
+            <div class="position-relative mb-3 image-container">
                 @if ($template->banner)
-                    <img src="{{ asset('images/banners/' . $template->banner) }}" alt="{{ $template->banner }}" class="img-thumbnail" width="100%" height="50">
+                    <img src="{{ asset('images/banners/' . $template->banner) }}" alt="{{ $template->banner }}" class="img-thumbnail" width="100%">
                 @else
                     No photo
                 @endif

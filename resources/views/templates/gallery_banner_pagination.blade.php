@@ -2,12 +2,14 @@
     @foreach($templates as $template)
         <div class="col-md-4 mb-4">
             <div class="card">
-                <div class="text-center">
-                    @if ($template->banner)
-                    <img src="{{ asset('images/banners/' . $template->banner) }}" alt="{{ $template->banner }}" class="img-thumbnail" width="150" height="150">
-                    @else
-                    No photo
-                    @endif
+                <div class="position-relative">
+                    <div class="image-container">
+                        @if ($template->banner)
+                            <img src="{{ asset('images/banners/' . $template->banner) }}" alt="{{ $template->banner }}" class="img-thumbnail" width="100%" height="100%">
+                        @else
+                            <div class="no-photo">No photo</div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>

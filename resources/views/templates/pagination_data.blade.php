@@ -2,13 +2,13 @@
     <table class="table table-bordered align-middle nowrap">
         <thead>
             <tr>
-                <th scope="col">No</th>
-                <th scope="col">Author</th>
-                <th scope="col">Category</th>
-                <th scope="col">Header</th>
-                <th scope="col">Banner</th>
-                <th scope="col">Logo</th>
-                <th scope="col">Action</th>
+                <th class="text-center" scope="col">No</th>
+                <th class="text-center" scope="col">Author</th>
+                <th class="text-center" scope="col">Category</th>
+                <th class="text-center" scope="col">Header</th>
+                <th class="text-center" scope="col">Banner</th>
+                <th class="text-center" scope="col">Logo</th>
+                <th class="text-center" scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -32,27 +32,31 @@
 
                     {{ count($headerWords) > 5 ? $limitedHeader . '...' : $limitedHeader }}
                 </td>
-                <td>
+                <td class="text-center">
                     @if ($template->banner)
-                    <img src="{{ asset('images/banners/' . $template->banner) }}" alt="Banner Image" class="img-thumbnail" width="50" height="50">
+                    <div class="image-container">
+                        <img src="{{ asset('images/banners/' . $template->banner) }}" alt="Banner Image" class="img-thumbnail">
+                    </div>
                     @else
                     No photo
                     @endif
                 </td>
-                <td>
+                <td class="text-center">
                     @if ($template->logo)
-                    <img src="{{ asset('images/logos/' . $template->logo) }}" alt="Logo Image" class="img-thumbnail" width="50" height="50">
+                    <div class="image-container">
+                        <img src="{{ asset('images/logos/' . $template->logo) }}" alt="Logo Image" class="img-thumbnail">
+                    </div>
                     @else
                     No photo
                     @endif
                 </td>
-                <td>
+                <td class="text-center">
                     <a href="{{ route('templates.show', $template->id) }}" class="btn btn-warning btn-sm"><i class="bi bi-eye"></i></a>
                     <a href="{{ route('templates.edit', $template->id) }}" class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i></a>
                     <form action="{{ route('templates.destroy', $template->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Do you want to delete this template?');"><i class="bi bi-trash"></i></button>
+                        <button type="submit" class="btn btn-danger btn-sm delete-btn"><i class="bi bi-trash"></i></button>
                     </form>
                 </td>
             </tr>
@@ -65,3 +69,35 @@
     </table>
     {!! $templates->links() !!}
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+    // Add event listener to delete buttons
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        
+        // Iterate through each delete button and attach event listener
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                // Display Sweet Alert confirmation dialog
+                Swal.fire({
+                    title: 'Warning!',
+                    text: 'Are you sure you want to delete this template?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it'
+                }).then((result) => {
+                    // If user confirms the deletion
+                    if (result.isConfirmed) {
+                        // Trigger the form submission
+                        event.target.closest('form').submit();
+                    }
+                });
+            });
+        });
+    });
+</script>

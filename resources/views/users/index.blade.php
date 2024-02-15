@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Users | List</title>
 
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+
     <style>
         .user-photo-container {
             width: 50px;
@@ -32,6 +34,7 @@
             color: #fff;
         }
     </style>
+    
 </head>
 
 <body>
@@ -82,77 +85,12 @@
 
 
                             <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered align-middle nowrap">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">User Image</th>
-                                                <th scope="col">Name</th>
-                                                <th scope="col">Email</th>
-                                                <th scope="col">Roles</th>
-                                                <th scope="col">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @forelse ($users as $user)
-                                            <tr>
-                                                <td style="text-align: center;">
-                                                    <div class="user-photo-container">
-                                                        @if ($user->photo)
-                                                        <img src="{{ asset('images/photos/' . $user->photo) }}" alt="Profile Photo" class="rounded-circle user-photo" width="50" height="50">
-                                                        @else
-                                                        <div class="no-photo">No Photo</div>
-                                                        @endif
-                                                    </div>
-                                                </td>
-                                                <td>{{ $user->name }}</td>
-                                                <td>{{ $user->email }}</td>
-                                                <td>
-                                                    @forelse ($user->getRoleNames() as $role)
-                                                    <span class="badge bg-primary">{{ $role }}</span>
-                                                    @empty
-                                                    @endforelse
-                                                </td>
-                                                <td>
-                                                    <form action="{{ route('users.destroy', $user->id) }}" method="post">
-                                                        @csrf
-                                                        @method('DELETE')
-
-                                                        <a href="{{ route('users.show', $user->id) }}" class="btn btn-warning btn-sm"><i class="bi bi-eye"></i></a>
-
-                                                        @if (in_array('Super Admin', $user->getRoleNames()->toArray() ?? []) )
-                                                        @if (Auth::user()->hasRole('Super Admin'))
-                                                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i></a>
-                                                        @endif
-                                                        @else
-                                                        @can('edit-user')
-                                                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i></a>
-                                                        @endcan
-
-                                                        @can('delete-user')
-                                                        @if (Auth::user()->id!=$user->id)
-                                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Do you want to delete this user?');"><i class="bi bi-trash"></i></button>
-                                                        @endif
-                                                        @endcan
-                                                        @endif
-
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                            @empty
-                                            <td colspan="5">
-                                                <span class="text-danger">
-                                                    <strong>No User Found!</strong>
-                                                </span>
-                                            </td>
-                                            @endforelse
-                                        </tbody>
-                                    </table>
-
-                                    {{ $users->links() }}
-
+                                <div id="user_data">
+                                    @include('users.user_pagination')
                                 </div>
                             </div>
+
+
                         </div><!--end card-->
                     </div><!--end col-->
 
@@ -171,6 +109,25 @@
     <!-- Right bar overlay-->
     <div class="rightbar-overlay"></div>
     @endsection
+
+    <script>
+        $(document).ready(function() {
+            $(document).on('click', '.pagination a', function(event) {
+                event.preventDefault();
+                var page = $(this).attr('href').split('page=')[1];
+                fetch_user_data(page);
+            });
+
+            function fetch_user_data(page) {
+                $.ajax({
+                    url: "/pagination/fetch_user_data?page=" + page,
+                    success: function(data) {
+                        $('#user_data').html(data);
+                    }
+                })
+            }
+        });
+    </script>
 
 </body>
 

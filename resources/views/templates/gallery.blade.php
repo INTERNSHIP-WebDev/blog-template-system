@@ -6,6 +6,40 @@
     <title>Blogs | Gallery</title>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <style>
+             .image-container {
+    width: 100%;
+    height: 0; 
+    padding-top: calc(100% * 3 / 4);
+    position: relative;
+    overflow: hidden;
+}
+
+.image-container img {
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    top: 0; 
+    left: 0; 
+    object-fit: cover;
+    }
+
+    .list-image-container {
+    width: 60px; 
+    height: 60px; 
+    position: relative;
+    overflow: hidden; 
+}
+
+.list-image-container img {
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    top: 0; 
+    left: 0; 
+    object-fit: cover;
+}
+    </style>
 </head>
 
 <body>

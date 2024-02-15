@@ -7,6 +7,22 @@
     <title>Blogs | List</title>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <style>
+        .image-container {
+    width: 50px; 
+    height: 50px;
+    overflow: hidden; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%; 
+   object-fit: cover;
+}
+        </style>
 </head>
 <body>
 

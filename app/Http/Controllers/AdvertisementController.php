@@ -9,6 +9,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use RealRashid\SweetAlert\Facades\Alert;
+
 
 
 class AdvertisementController extends Controller
@@ -16,6 +18,10 @@ class AdvertisementController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('permission:create-advertisement|edit-advertisement|delete-advertisement', ['only' => ['index','show']]);
+        $this->middleware('permission:create-advertisement', ['only' => ['create','store']]);
+        $this->middleware('permission:edit-advertisement', ['only' => ['edit','update']]);
+        $this->middleware('permission:delete-advertisement', ['only' => ['destroy']]);
     }
 
     /**
@@ -96,6 +102,8 @@ class AdvertisementController extends Controller
             'name' => $fileName,
         ]);
 
+
+        Alert::success('Success', 'Ad added successfully');
         // Redirect back with a success message
         return redirect()->route('advertisements.index')->with('success', 'Advertisement added successfully!');
     }

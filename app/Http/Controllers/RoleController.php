@@ -186,7 +186,7 @@ class RoleController extends Controller
         }
         $role->delete();
 
-        Alert::alert('Success!', 'Role deleted successfully.');
+        Alert::success('Got it', 'Role deleted successfully.');
 
         return redirect()->route('roles.index')
                 ->withSuccess('Role is deleted successfully.');

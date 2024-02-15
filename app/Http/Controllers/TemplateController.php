@@ -32,8 +32,11 @@ class TemplateController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('permission:create-blog|edit-blog|delete-blog', ['only' => ['index','show']]);
+        $this->middleware('permission:create-blog', ['only' => ['create','store']]);
+        $this->middleware('permission:edit-blog', ['only' => ['edit','update']]);
+        $this->middleware('permission:delete-blog', ['only' => ['destroy']]);
     }
-
     /**
      * Display a listing of the resource.
      */
@@ -48,6 +51,7 @@ class TemplateController extends Controller
         $templates = Template::latest('created_at')->paginate(5);
         return view('templates.index', compact('chats', 'userNames', 'templates','notifications', 'allNotif' ));
     }
+
     public function fetch_data(Request $request)
     {
         $notifications = Notification::where('is_read', false)->get();
@@ -302,6 +306,7 @@ class TemplateController extends Controller
             return view('templates.gallery_banner_pagination', compact('chats', 'userNames','templates', 'notifications', 'allNotif'))->render();
         }
     }
+
     public function fetch_gallery_logo_data(Request $request)
     {
         $notifications = Notification::where('is_read', false)->get();
@@ -314,6 +319,7 @@ class TemplateController extends Controller
             return view('templates.gallery_logo_pagination', compact('chats', 'userNames','templates', 'notifications', 'allNotif'))->render();
         }
     }
+
     public function fetch_gallery_logo_list_data(Request $request)
     {
         $notifications = Notification::where('is_read', false)->get();
@@ -326,6 +332,7 @@ class TemplateController extends Controller
             return view('templates.pagination.gallery_logo_list_pagination', compact('chats', 'userNames','templates','notifications', 'allNotif'))->render();
         }
     }
+
     public function fetch_gallery_banner_list_data(Request $request)
     {
         $notifications = Notification::where('is_read', false)->get();
@@ -340,12 +347,9 @@ class TemplateController extends Controller
     }
     // END OF GALLERY AJAX
 
-
-
-
     public function grid()
     {
-        $templates = Template::paginate(6);
+        $templates = Template::latest('created_at')->paginate(6);
 
         // Fetch all categories
         $categories = Category::paginate(6);
@@ -371,7 +375,7 @@ class TemplateController extends Controller
         $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
 
         if ($request->ajax()) {
-            $templates = Template::paginate(6);
+            $templates = Template::latest('created_at')->paginate(6);
             $categories = Category::paginate(6);
             $categories = Category::withCount('templates')->get();
             $comments = Comment::whereIn('temp_id', $templates->pluck('id'))->get();

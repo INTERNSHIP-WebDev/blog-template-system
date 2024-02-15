@@ -211,7 +211,7 @@
 												<div class="d-flex flex-row align-items-xl-center align-items-start justify-content-start">
 													<div class="side_post_image">
 														<div>
-															<img src="{{ asset('images/banners/' . $sidebarPost->banner) }}" alt="{{ $sidebarPost->header }}" width="50" height="50">
+															<img src="{{ asset('images/banners/' . $sidebarPost->banner) }}" alt="{{ $sidebarPost->header }}" width="50" height="50" style="object-fit: cover;">
 														</div>
 													</div>
 													<div class="side_post_content">
@@ -245,7 +245,6 @@
 													<div class="side_post_image">
 														<div>
 															<img src="{{ asset('images/banners/' . $sidebarPost->banner) }}" alt="{{ $sidebarPost->header }}" width="50" height="50">
-														</div>
 													</div>
 													<div class="side_post_content">
 														<div class="side_post_title">{{ $sidebarPost->id }}{!! $sidebarPost->header ? \Illuminate\Support\Str::limit(strip_tags($sidebarPost->header), 22, $end='...') : "Blog has no header" !!}</div>

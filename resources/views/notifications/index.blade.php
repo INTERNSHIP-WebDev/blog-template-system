@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notifications | List</title>
-    
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Blogs | Notifications</title>
+
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 </head>
 
@@ -40,6 +41,7 @@
                 </div>
                 <!-- end page title -->
 
+
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card">
@@ -50,17 +52,16 @@
                             </div>
 
                             <div class="card-body">
-                                <div id="notif_data">
-
-                                @include('notifications.pagination_notif')
-
+                                <div id="notification_data">
+                                    @include('notifications.notification_pagination')
                                 </div>
                             </div>
 
                         </div><!--end card-->
                     </div><!--end col-->
 
-                </div>
+                </div><!--end row-->
+
 
             </div> <!-- container-fluid -->
         </div><!-- End Page-content -->
@@ -73,28 +74,25 @@
 
     <!-- Right bar overlay-->
     <div class="rightbar-overlay"></div>
-
     @endsection
-
     <script>
         $(document).ready(function() {
             $(document).on('click', '.pagination a', function(event) {
                 event.preventDefault();
                 var page = $(this).attr('href').split('page=')[1];
-                fetch_data_notif(page);
+                fetch_notif_data(page);
             });
 
-            function fetch_data_notif(page) {
+            function fetch_notif_data(page) {
                 $.ajax({
-                    url: "/pagination/fetch_data_notif?page=" + page,
+                    url: "/pagination/fetch_notif_data?page=" + page,
                     success: function(data) {
-                        $('#notif_data').html(data);
+                        $('#notification_data').html(data);
                     }
                 })
             }
         });
     </script>
-
-    </body>
+</body>
 
 </html>

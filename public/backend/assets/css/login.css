@@ -9,7 +9,7 @@
     --light-main-color: hsl(var(--main-hue), 91%, 55%);
     --text-color: #000;
     --nav-color: hsl(var(--main-hue), 17%, 79%);
-    --bg-color: #fff;
+    --bg-color: #F0F0F0;
     --light-text-color: #9ca7b6;
     --input-bg: hsla(var(--main-hue), 50%, 50%, 6.5%);
     --input-bg-hover: hsla(var(--main-hue), 50%, 50%, 14%);
@@ -112,7 +112,8 @@ header ul {
 .logo img {
     height: 55px;
     grid-column: 1/2;
-    grid-row: 1/2;
+    grid-row: 1/2; 
+    
 }
 
 .logo h2{
@@ -380,7 +381,7 @@ textarea.contact-input ~ .icon {
 .right {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    overflow: hidden;
+    
     pointer-events: none;
 }
 
@@ -390,10 +391,12 @@ textarea.contact-input ~ .icon {
     grid-column: 2;
 }
 
+
+
 .image-wrapper .img {
     position: absolute;
     height: 130%;
-    left: 60%;
+    left: 20%;
     top: 50%;
     transform: translate(-55%, -55%);
 }

@@ -50,7 +50,7 @@ class UserController extends Controller
         $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
 
         return view('users.index', [
-            'users' => User::latest('id')->paginate(3),
+            'users' => User::latest('id')->paginate(4),
             'notifications' => $notifications,
             'allNotif' => $allNotif,
             'chats' => $chats,
@@ -76,6 +76,21 @@ class UserController extends Controller
             'chats' => $chats,
             'userNames' => $userNames,
         ]);
+    }
+
+    public function fetch_user_data(Request $request)
+    {
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
+        if($request->ajax())
+        {
+            $users = User::latest('created_at')->paginate(4);
+            return view('users.user_pagination',compact('chats', 'userNames', 'users', 'notifications', 'allNotif'))->render();
+        }
     }
 
     /**
@@ -210,7 +225,7 @@ class UserController extends Controller
 
         if ($request->ajax()) {
             $userId = $request->input('user_id');
-            $userTemplates = Template::where('user_id', $userId)->paginate(5);
+            $userTemplates = Template::where('user_id', $userId)->paginate(4);
             return view('users.show_pagination', compact('chats', 'userNames', 'userTemplates', 'userId', 'notifications', 'allNotif'))->render();
         }
     }

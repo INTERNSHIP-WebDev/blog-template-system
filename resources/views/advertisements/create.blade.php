@@ -47,6 +47,8 @@
                                 </div>
 
                                 <button type="submit" class="btn btn-primary">Create Advertisement</button>
+                                
+                                
                             </form>
 
                             </div>
@@ -60,6 +62,7 @@
 
 
     <!-- end main content-->
+
 @endsection
 
 </body>

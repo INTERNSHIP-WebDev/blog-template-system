@@ -6,6 +6,24 @@
     <title>Blogs | Grid</title>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<style>
+    .image-container {
+    width: 100%;
+    height: 0; 
+    padding-top: calc(100% * 3 / 4);
+    position: relative;
+    overflow: hidden;
+}
+
+.image-container img {
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    top: 0; 
+    left: 0; 
+    object-fit: cover;
+    }
+</style>
 </head>
 <body>
 
