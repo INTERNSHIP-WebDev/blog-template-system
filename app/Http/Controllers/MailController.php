@@ -15,6 +15,14 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class MailController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:create-mail|edit-mail|delete-mail', ['only' => ['index','show']]);
+        $this->middleware('permission:create-mail', ['only' => ['create','store']]);
+        $this->middleware('permission:edit-mail', ['only' => ['edit','update']]);
+        $this->middleware('permission:delete-mail', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      */

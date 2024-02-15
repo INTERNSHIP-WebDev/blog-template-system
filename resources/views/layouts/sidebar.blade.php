@@ -41,6 +41,7 @@
                 </a>
             </li>
 
+            @canany(['create-permission', 'edit-permission', 'delete-permission', 'create-role', 'edit-role', 'delete-role', 'create-user', 'edit-user', 'delete-user'])
             <li class="menu-title" key="t-apps">Permissions</li>
 
             <li>
@@ -70,6 +71,9 @@
             @endcanany
             </li>
 
+            @endcanany
+
+            @canany(['create-blog', 'edit-blog', 'delete-blog', 'create-ad', 'edit-ad', 'delete-ad', 'create-category', 'edit-category', 'delete-category'])
             <li class="menu-title" key="t-apps">Publications</li>
 
             <li>
@@ -114,6 +118,9 @@
             @endcanany
             </li>
 
+            @endcanany
+
+            @canany(['create-chat', 'edit-chat', 'delete-chat', 'create-notification', 'edit-notification', 'delete-notification', 'create-mail', 'edit-mail', 'delete-mail'])
             <li class="menu-title" key="t-apps">Transactions</li>
 
             <li>
@@ -151,6 +158,7 @@
             @endcanany
             </li>
 
+            @endcanany
             <li class="menu-title" key="t-apps">Others</li>
 
             <li>

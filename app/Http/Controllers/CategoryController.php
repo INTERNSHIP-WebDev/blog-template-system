@@ -19,6 +19,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class CategoryController extends Controller
 {
+    
     /**
      * Create a new controller instance.
      *
@@ -27,6 +28,10 @@ class CategoryController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('permission:create-category|edit-category|delete-category', ['only' => ['index','show']]);
+        $this->middleware('permission:create-category', ['only' => ['create','store']]);
+        $this->middleware('permission:edit-category', ['only' => ['edit','update']]);
+        $this->middleware('permission:delete-category', ['only' => ['destroy']]);
     }
 
     public function index()
@@ -106,7 +111,7 @@ class CategoryController extends Controller
 
         $category = Category::findOrFail($id);
         return view('categories.show', compact('chats', 'userNames','category', 'notifications', 'allNotif'));
-    }
+    }   
 
     /**
      * Show the form for editing the specified category.
@@ -145,7 +150,7 @@ class CategoryController extends Controller
             $category = Category::findOrFail($id);
             $category->update($validatedData);
 
-            Alert::alert('Success!', 'Category updated successfully.', 'success');
+            Alert::success('Success!', 'Category updated successfully.',);
 
             // Redirect to the category index page or any other page after update
             return redirect()->route('categories.index'); //->with('success', 'Category updated successfully!');
@@ -154,20 +159,15 @@ class CategoryController extends Controller
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
-// jucille dapak
+
+    
     public function destroy($id)
     {
         try {
-
             $category = Category::findOrFail($id);
             $category->delete();
-        
-            $title = 'Delete Category!';
-            $text = "forda sure?";
-            confirmDelete($title, $text);
 
-        
-            Alert::success('Success!', 'Category deleted successfully.');
+            Alert::success('Got it', 'Category deleted successfully');
 
             //return response()->json(['success' => true, 'message' => 'Category deleted successfully.']);
             return redirect()->route('categories.index');
@@ -176,6 +176,7 @@ class CategoryController extends Controller
             Alert::error('Error!', 'Category deleted unsuccessfully.');
         }   
     }
+
 
     public function category_page()
     {

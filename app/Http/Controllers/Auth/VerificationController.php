@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\VerifiesEmails;
+use Illuminate\Http\Request;
+
 
 class VerificationController extends Controller
 {
@@ -23,9 +25,12 @@ class VerificationController extends Controller
     /**
      * Where to redirect users after verification.
      *
-     * @var string
+     * @return string
      */
-    protected $redirectTo = '/home';
+    protected function redirectTo()
+    {
+        return route('login');
+    }
 
     /**
      * Create a new controller instance.

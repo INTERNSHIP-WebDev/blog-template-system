@@ -8,18 +8,44 @@ use App\Http\Requests\StoreNotificationRequest;
 use App\Http\Requests\UpdateNotificationRequest;
 use Illuminate\Http\Request;
 use App\Models\ChMessage;
+use RealRashid\SweetAlert\Facades\Alert;
+
 
 class NotificationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:create-notification|edit-notification|delete-notification', ['only' => ['index','show']]);
+        $this->middleware('permission:create-notification', ['only' => ['create','store']]);
+        $this->middleware('permission:edit-notification', ['only' => ['edit','update']]);
+        $this->middleware('permission:delete-notification', ['only' => ['destroy']]);
+    }
     public function index()
     {
         $notifications = Notification::where('is_read', false)->get();
-        $allNotif = Notification::latest('created_at', 'desc')->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+        $anotifications = Notification::latest('created_at')->paginate(5);
 
         $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
         $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
 
-        return view('notifications.index', compact('chats', 'userNames', 'notifications', 'allNotif'));
+        return view('notifications.index', compact('chats', 'userNames', 'notifications', 'allNotif', 'anotifications'));
+    }
+
+    public function fetch_notif_data(Request $request)
+    {
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+        
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
+
+        if ($request->ajax()) {
+            $anotifications = Notification::latest('created_at')->paginate(5);
+            return view('notifications.notification_pagination', compact('chats', 'userNames', 'anotifications', 'notifications', 'allNotif'))->render();
+        }
     }
 
     public function redirect(Notification $notification)
@@ -108,10 +134,9 @@ class NotificationController extends Controller
      */
     public function destroy($id)
     {
-
-
             $notification = Notification::findOrFail($id);
             $notification->delete();
+
             return redirect()->route('notification.index');
     }
 

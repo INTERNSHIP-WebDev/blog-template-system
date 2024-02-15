@@ -5,126 +5,133 @@
     <meta charset="utf-8" />
     <title>Register</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-    <meta content="Themesbrand" name="author" />
+    <link href="{{ asset('backend/assets/css/login.css') }}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+
+    <style>
+      header .container {
+    max-width: 82rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+    height: 80px;
+    display: flex;
+    align-items: flex-end;
+}
+    </style>
+
 </head>
 
-<body class="auth-body-bg">
+<body class="dark">
     @extends('layouts.login')
 
 
     @section('content')
-    <div>
-        <div class="container-fluid p-0">
-            <div class="row g-0">
 
-                <div class="col-xl-9">
-                    <div class="auth-full-bg pt-lg-5 p-4">
-                        <div class="w-100">
-                            <div class="bg-overlay"></div>
-                            <div class="d-flex h-100 flex-column">
+    <div class="background"></div>
+    
+    <header>
+      <div class="container">
+        <ul>
+        
+          <li>
+          <a href="/" class="logo">
+               <div class="images">
+                <img src="{{ asset('theme/dist/assets/images/pixzel-dark.png') }}" title="Foxeus"/>
+              </div>
+                </a>
+          </li>
+      
+         
+          <li>
+            <span class="nav-link theme-toggle">
+              <i class="fa-solid fa-sun"></i>
+              <i class="fa-solid fa-moon"></i>
+            </span>
+          </li>
+        </ul>
+      </div>
+    </header>
 
-                                <div class="p-4 mt-auto">
-                                    <div class="row justify-content-center">
-                                        <div class="col-lg-7">
-                                            <div class="text-center">
+    <!------------- Main ------------->
+    <main>
+      <section class="contact">
+        <div class="container">
+          <!------  Left SIDE  ------>
+          <div class="left">
+            <div class="form-wrapper">
+              <div class="contact-heading">
+                <h1>Welcome Guest<span>!</span></h1>
+                <p class="text">
+                  Sign up to continue
+                  
+                </p>
+              </div>
+   
 
-                                                <h4 class="mb-3"><i class="bx bxs-quote-alt-left text-primary h1 align-middle me-3"></i><span class="text-primary">5k</span>+ Satisfied clients</h4>
-
-                                                <div dir="ltr">
-                                                    <div class="owl-carousel owl-theme auth-review-carousel" id="auth-review-carousel">
-                                                        <div class="item">
-                                                            <div class="py-3">
-                                                                <p class="font-size-16 mb-4">" Fantastic theme with a ton of options. If you just want the HTML to integrate with your project, then this is the package. You can find the files in the 'dist' folder...no need to install git and all the other stuff the documentation talks about. "</p>
-
-                                                                <div>
-                                                                    <h4 class="font-size-16 text-primary">Abs1981</h4>
-                                                                    <p class="font-size-14 mb-0">- Skote User</p>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-
-                                                        <div class="item">
-                                                            <div class="py-3">
-                                                                <p class="font-size-16 mb-4">" If Every Vendor on Envato are as supportive as Themesbrand, Development with be a nice experience. You guys are Wonderful. Keep us the good work. "</p>
-
-                                                                <div>
-                                                                    <h4 class="font-size-16 text-primary">nezerious</h4>
-                                                                    <p class="font-size-14 mb-0">- Skote User</p>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end col -->
-
-                <div class="col-xl-3">
-                    <div class="auth-full-page-content p-md-5 p-4">
-                        <div class="w-100">
-
-                            <div class="d-flex flex-column h-100">
-                                <div class="mb-4 mb-md-5">
-                                    <a href="index.html" class="d-block auth-logo">
-                                        <img src="<?php echo url('theme')?>/dist/assets/images/logo-dark.png" alt="" height="18" class="auth-logo-dark">
-                                        <img src="<?php echo url('theme')?>/dist/assets/images/logo-light.png" alt="" height="18" class="auth-logo-light">
-                                    </a>
-                                </div>
-                                <div class="my-auto">
-
-                                    <div>
-                                        <h5 class="text-primary">Register account</h5>
-                                        <p class="text-muted">Get your free Skote account now.</p>
-                                    </div>
-
-                                    <div class="mt-4">
-                                        <form class="needs-validation" novalidate action="{{ route('register') }}" method="post">
+              
+                                    
+                                        <form class="contact-form" novalidate action="{{ route('register') }}" method="post">
                                             @csrf
 
-                                            <div class="mb-3">
-                                                <label for="name" class="form-label">Name</label>
-                                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" required>
-                                                <div class="invalid-feedback">
-                                                    Please Enter Name
-                                                </div>
+                                            <div class="input-wrap w-100">
+                                                <input 
+                                                type="text" 
+                                                class="contact-input" 
+                                                id="name" 
+                                                name="name"                                          
+                                                required/>
+                                                <label>Name</label>
+                                               
                                             </div>
 
-                                            <div class="mb-3">
-                                                <label for="email" class="form-label">Email</label>
-                                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
-                                                <div class="invalid-feedback">
-                                                    Please Enter Email
-                                                </div>
+                                           <div class="input-wrap w-100">        
+                                                <input 
+                                                type="email" 
+                                                class="contact-input" 
+                                                id="email" 
+                                                name="email" 
+                                            
+                                                required/>
+
+                                                <label>Email</label>
+                                                 <i class="icon fa-solid fa-envelope"></i>
+                                                   @error('email')
+                                                <span class="invalid-feedback" role="alert">
+                                               <strong>{{ $message }}</strong>
+                                               </span>
+                                                 @enderror
+
+                                                
                                             </div>
 
-                                            <div class="mb-3">
-                                                <label for="password" class="form-label">Password</label>
-                                                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+                                           <div class="input-wrap w-100">
+                                                <input 
+                                                type="password" 
+                                                class="contact-input" 
+                                                id="password" 
+                                                name="password" 
+                                                
+                                                required/>
+                                                <label>Enter Password</label>
                                                 <div class="invalid-feedback">
                                                     Please Enter Password
                                                 </div>
                                             </div>
 
-                                            <div class="mb-3">
-                                                <label for="password_confirmation" class="form-label">Confirm Password</label>
-                                                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm password" required>
+                                           <div class="input-wrap w-100">
+                                                <input 
+                                                type="password" 
+                                                class="contact-input" 
+                                                id="password_confirmation" 
+                                                name="password_confirmation" 
+                                                required/>
+                                                <label>Confirm Password</label>
                                             </div>
 
-                                            <div>
-                                                <p class="mb-0">By registering you agree to the Skote <a href="#" class="text-primary">Terms of Use</a></p>
-                                            </div>
+                                          
 
-                                            <div class="mt-4 d-grid">
-                                                <button class="btn btn-primary waves-effect waves-light" type="submit">Register</button>
+                                            <div class="contact-buttons">
+                                                <button class="btn" type="submit">Register</button>
                                             </div>
                                         </form>
 
@@ -135,25 +142,79 @@
 
                                     </div>
                                 </div>
-
-                                <div class="mt-4 mt-md-5 text-center">
-                                    <p class="mb-0">© <script>document.write(new Date().getFullYear())</script> Skote. Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div>
-                <!-- end col -->
+  <!-------  Right SIDE  ------>
+  <div class="right">
+            <!-- Image background -->
+            <div class="image-wrapper">
+            <img src="{{ asset('landing_assets/images/antonette.jpg') }}" alt="josel" id="test" class="img" /> 
+              <!-- Waves 1-->
+              <div class="wave-wrap">
+                <svg
+                  class="wave"
+                  viewBox="0 0 783 1536"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    id="wave"
+                    d="M236.705 1356.18C200.542 1483.72 64.5004 1528.54 1 1535V1H770.538C793.858 63.1213 797.23 196.197 624.165 231.531C407.833 275.698 274.374 331.715 450.884 568.709C627.393 805.704 510.079 815.399 347.561 939.282C185.043 1063.17 281.908 1196.74 236.705 1356.18Z"
+                  />
+                </svg>
+              </div>
+              <!-- Waves 2-->
+              <svg
+                class="dashed-wave"
+                viewBox="0 0 345 877"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  id="dashed-wave"
+                  d="M0.5 876C25.6667 836.167 73.2 739.8 62 673C48 589.5 35.5 499.5 125.5 462C215.5 424.5 150 365 87 333.5C24 302 44 237.5 125.5 213.5C207 189.5 307 138.5 246 87C185 35.5 297 1 344.5 1"/>
+              </svg>
             </div>
-            <!-- end row -->
+
+          </div>
         </div>
-        <!-- end container-fluid -->
-    </div>
+      </section>
+      
+    </main>
+                           
+           
+
+    <script>
+    const inputs = document.querySelectorAll(".contact-input");
+const toggleBtn = document.querySelector(".theme-toggle");
+const allElements = document.querySelectorAll("*");
 
 
+// for change theme to dark and light
+toggleBtn.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+
+    // elements have transition for 1s
+    allElements.forEach((el) => {
+        el.classList.add("transition");
+        setTimeout(() => {
+            el.classList.remove("transition");
+        }, 1000);
+    });
+});
+
+
+// for focus form 
+inputs.forEach((ipt) => {
+    ipt.addEventListener("focus", () => {
+        ipt.parentNode.classList.add("focus");
+        ipt.parentNode.classList.add("not-empty");
+    });
+    ipt.addEventListener("blur", () => {
+        if (ipt.value == "") {
+            ipt.parentNode.classList.remove("not-empty");
+        }
+        ipt.parentNode.classList.remove("focus");
+    });
+});
+</script>
     @endsection
 </body>
-
 </html>

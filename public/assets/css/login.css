@@ -45,6 +45,7 @@
     top: 0;
     left: 0;
     background-color: hsla(var(--main-hue), 30%, 16.5%, 80%);
+    background: linear-gradient(to bottom right, orange, red);
     z-index: 2;
     opacity: 0;
 }
@@ -86,7 +87,7 @@ header .container {
     max-width: 82rem;
     margin: 0 auto;
     padding: 0 1rem;
-    height: 65px;
+    height: 80px;
     display: flex;
     align-items: flex-end;
 }
@@ -124,6 +125,8 @@ header ul {
 .logo h2 span {
     color: var(--main-color);
 }
+
+
 
 /* ==== Nav Links ==== */
 
@@ -187,7 +190,7 @@ header ul {
     width: 100%;
     max-width: 80rem;
     margin: 0 auto;
-    padding: 65px 1rem 0;
+    padding:0;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     align-items: center;
@@ -266,6 +269,8 @@ header ul {
 .contact-input:hover {
     background-color: var(--input-bg-hover);
 }
+
+
 
 .input-wrap label {
     position: absolute;
@@ -393,7 +398,7 @@ textarea.contact-input ~ .icon {
 .image-wrapper .img {
     position: absolute;
     height: 130%;
-    left: 60%;
+    left: 70%;
     top: 50%;
     transform: translate(-55%, -55%);
 }
