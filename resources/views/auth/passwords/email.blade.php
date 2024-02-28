@@ -1,4 +1,4 @@
-@extends('layouts.app2')
+\@extends('layouts.app2')
 
 @section('content')
 <head>
@@ -40,6 +40,7 @@
 
     </style>
 </head>
+
 <body>
     <div class="top-section"></div>
     

@@ -1,3 +1,8 @@
+{{-- LAYOUT --}}
+@extends("landing.layouts.footer")
+
+@section("content")
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -6,8 +11,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Contact Us</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
 
   <!-- Favicons -->
   <link href="{{ asset ('backend/assets/img/favicon.png') }}" rel="icon">
@@ -38,6 +41,13 @@
   <!-- Template Main CSS Files -->
   <link href="{{ asset('backend/assets/css/variables.css') }}" rel="stylesheet">
   <link href="{{ asset('backend/assets/css/main.css') }}" rel="stylesheet">
+
+  <style>
+          .page-title{
+            color: #212529;
+            letter-spacing: 2px;
+          }
+        </style>
 
 
 </head>
@@ -97,8 +107,16 @@
         exit();
     @endphp
 @endguest
-  <div class="super_container">
 
+  <div class="super_container">
+    <div class="home">
+      <div class="home_background parallax-window" data-parallax="scroll" data-image-src="landing_assets/images/post_nosidebar.jpg" data-speed="0.8"></div>
+      <div class="home_content">
+      </div>
+    </div>
+
+
+    
     <!-- Header -->
 
     <header class="header">
@@ -106,7 +124,7 @@
         <div class="row">
           <div class="col">
             <div class="header_content d-flex flex-row align-items-center justify-content-start">
-              <div class="logo"><a href="#">Blog | Travel</a></div>
+              <div class="logo"><a href="#">Blog | Contact</a></div>
               <nav class="main_nav">
                 <ul>
                   <li><a href="/">Home</a></li>
@@ -137,12 +155,7 @@
       </div>
     </header>
 
-    <div class="home">
-      <div class="home_background parallax-window" data-parallax="scroll" data-image-src="landing_assets/images/post_nosidebar.jpg" data-speed="0.8"></div>
-      <div class="home_content">
-      </div>
-    </div>
-  </div>
+    
 
   <main id="main">
     <section id="contact" class="contact mb-5">
@@ -150,7 +163,7 @@
 
         <div class="row">
           <div class="col-lg-12 text-center mb-5">
-            <h1 class="page-title">Contact us</h1>
+            <h1 class="page-title">Contact Us</h1>
           </div>
         </div>
 
@@ -211,61 +224,6 @@
     </section>
 
   </main><!-- End #main -->
-
-  <!-- ======= Footer ======= -->
-  <footer class="footer">
-    <div class="container">
-      <div class="row row-lg-eq-height">
-        <div class="col-lg-9 order-lg-1 order-2">
-          <div class="footer_content">
-            <div class="footer_logo"><a href="#">avision</a></div>
-            <div class="footer_social">
-              <ul>
-                @if(isset($socials))
-                @if($socials['facebook'] == TRUE)
-                <li class="footer_social_facebook"><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                @endif
-                @if($socials['twitter'] == TRUE)
-                <li class="footer_social_twitter"><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
-                @endif
-                @if($socials['pinterest'] == TRUE)
-                <li class="footer_social_pinterest"><a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a></li>
-                @endif
-                @if($socials['instagram'] == TRUE)
-                <li class="footer_social_instagram"><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
-                @endif
-                @if($socials['google'] == TRUE)
-                <li class="footer_social_google"><a href="#"><i class="fa fa-google" aria-hidden="true"></i></a></li>
-                @endif
-                @endif
-              </ul>
-            </div>
-            <div class="copyright"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-              Copyright &copy;<script>
-                document.write(new Date().getFullYear());
-              </script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Nissi Cup Noodles | Clint Garcia | Orange Juice Seal Escala | Anjel Baby by Troye Sivan Babanto | Sam pot </a>
-              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></div>
-          </div>
-        </div>
-        <div class="col-lg-3 order-lg-2 order-1">
-          <div class="subscribe">
-            <div class="subscribe_background"></div>
-            <div class="subscribe_content">
-              <div class="subscribe_title">Subscribe</div>
-              <form action="#">
-                <input type="email" class="sub_input" placeholder="Your Email" required="required">
-                <button class="sub_button">
-                  <svg version="1.1" id="link_arrow_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="19px" height="13px" viewBox="0 0 19 13" enable-background="new 0 0 19 13" xml:space="preserve">
-                    <polygon fill="#FFFFFF" points="12.475,0 11.061,0 17.081,6.021 0,6.021 0,7.021 17.038,7.021 11.06,13 12.474,13 18.974,6.5 " />
-                  </svg>
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
 
 
   <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

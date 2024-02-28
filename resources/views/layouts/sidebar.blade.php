@@ -28,10 +28,21 @@
             <li class="menu-title" key="t-menu">Menu</li>
 
             <li>
+            @canany(['create-user', 'edit-user', 'delete-user'])
                 <a href="{{ route('home') }}" class="waves-effect">
                     <i class="bx bx-home-circle"></i>
                     <span key="t-dashboards">Dashboard</span>
                 </a>
+            @endcanany    
+            </li>
+
+            <li>
+            @canany(['view-newsfeed','create-like'])
+                <a href="{{ url('newsfeed') }}" class="waves-effect">
+                    <i class="bx bx-news"></i>
+                    <span key="t-guests">Newsfeed</span>
+                </a>
+            @endcanany
             </li>
 
             <li>
@@ -159,7 +170,9 @@
             </li>
 
             @endcanany
-            <li class="menu-title" key="t-apps">Others</li>
+
+            <br><br><br><br><br>
+            <!-- <li class="menu-title" key="t-apps">Others</li>
 
             <li>
                 <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -186,7 +199,7 @@
                     <span key="t-faq">FAQs</span>
                 </a>
             </li>
-
+ -->
 
 
         </ul>

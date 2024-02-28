@@ -64,7 +64,67 @@
 
 body {
     font-family: 'Poppins', sans-serif;
+    /*==== CURSOR ===*/
+
 }
+
+.brand {
+    opacity: 0.81;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+  
+.brand svg,
+.brand path,
+.brand text {
+    fill: hsl(190deg, 100%, 10%) !important;
+    user-select: none;
+}
+  
+.brand .buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+  
+.brand .buttons:hover {
+    cursor: pointer;
+}
+  
+.brand .buttons .btn {
+    width: 1em;
+    height: 1em;
+    border-radius: 0.25em;
+    background-color: hsl(190deg, 100%, 81%);
+    margin-left: 0.5em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.2s ease-in-out;
+    flex-shrink: 0;
+}
+  
+.brand .buttons .btn svg,
+.brand .buttons .btn path,
+.brand .buttons .btn text {
+    fill: hsl(190deg, 100%, 90%) !important;
+}
+  
+.brand .buttons .btn svg {
+    height: 0.6em;
+}
+  
+.brand .buttons .btn:hover {
+    transform: translateY(-0.25em);
+}
+
+
+/*==cursor done==*/
 
 ul {
     list-style: none;
@@ -611,3 +671,4 @@ textarea.contact-input ~ .icon {
         font-size: 1.15rem;
     }
 }
+

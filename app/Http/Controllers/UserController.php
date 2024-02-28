@@ -10,6 +10,7 @@ use App\Models\Comment;
 use App\Models\Concern;
 use App\Models\Template;
 use App\Models\Notification;
+use App\Models\Category;
 use App\Models\ChMessage;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
@@ -32,9 +33,9 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('permission:create-user|edit-user|delete-user', ['only' => ['index','show']]);
-        $this->middleware('permission:create-user', ['only' => ['create','store']]);
-        $this->middleware('permission:edit-user', ['only' => ['edit','update']]);
+        $this->middleware('permission:create-user|edit-user|delete-user', ['only' => ['index', 'show']]);
+        $this->middleware('permission:create-user', ['only' => ['create', 'store']]);
+        $this->middleware('permission:edit-user', ['only' => ['edit', 'update']]);
         $this->middleware('permission:delete-user', ['only' => ['destroy']]);
     }
 
@@ -49,14 +50,125 @@ class UserController extends Controller
         $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
         $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
 
+        $roles = Role::all();
+
         return view('users.index', [
-            'users' => User::latest('id')->paginate(4),
+            'users' => User::latest('id')->paginate(5),
             'notifications' => $notifications,
             'allNotif' => $allNotif,
             'chats' => $chats,
             'userNames' => $userNames,
+            'roles' => $roles,
         ]);
     }
+
+    //paginate user
+    public function paginateUser(Request $request)
+    {
+        $categoryName = Category::all();
+        $searchString = $request->query('search_string');
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+        $selectedRoles = $request->query('roles'); // Get the selected roles
+
+        // Query builder for filtering by search string if it's provided
+        $query = User::query();
+        if ($searchString) {
+            $query->where(function ($query) use ($searchString) {
+                $query->where('name', 'like', '%' . $searchString . '%')
+                    ->orWhere('email', 'like', '%' . $searchString . '%');
+            });
+        }
+
+        // Apply date range filter if start date and end date are provided
+        if ($startDate && $endDate) {
+            $query->whereDate('created_at', '>=', $startDate)
+                ->whereDate('created_at', '<=', $endDate);
+        }
+
+        // Apply role filter if selected roles are provided
+        if ($selectedRoles) {
+            // Join with model_has_roles table to get users with selected roles
+            $query->join('model_has_roles', function ($join) use ($selectedRoles) {
+                $join->on('users.id', '=', 'model_has_roles.model_id')
+                    ->whereIn('model_has_roles.role_id', $selectedRoles)
+                    ->where('model_has_roles.model_type', '=', 'App\Models\User');
+            });
+        }
+
+        // Paginate the results
+        $users = $query->latest()->paginate(5);
+
+        // Pass the start date, end date, and selected roles to the view
+        $users->appends([
+            'search_string' => $searchString,
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'roles' => $selectedRoles
+        ]);
+
+        // Render the view with paginated users
+        return view('users.user_pagination', compact('users'))->render();
+    }
+
+    //search user
+    public function searchUser(Request $request)
+    {
+        $users = User::where(function ($query) use ($request) {
+            $query->where('name', 'like', '%' . $request->search_string . '%')
+                ->orWhere('email', 'like', '%' . $request->search_string . '%');
+        })
+            ->orderBy('id', 'desc')
+            ->paginate(5);
+
+        if ($users->count() >= 1) {
+            return view('users.user_pagination', compact('users'))->render();
+        } else {
+            return response()->json([
+                'status' => 'nothing_found',
+            ]);
+        }
+    }
+
+    //filter user
+    public function filterUser(Request $request)
+    {
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+        $selectedRoles = $request->roles; // Get the selected roles
+
+        $query = User::query();
+
+        // Apply date range filter if start date and end date are provided
+        if ($start_date && $end_date) {
+            $query->whereDate('created_at', '>=', $start_date)
+                ->whereDate('created_at', '<=', $end_date);
+        }
+
+        // Apply role filter if selected roles are provided
+        if ($selectedRoles) {
+            // Join with model_has_roles table to get users with selected roles
+            $query->join('model_has_roles', function ($join) use ($selectedRoles) {
+                $join->on('users.id', '=', 'model_has_roles.model_id')
+                    ->whereIn('model_has_roles.role_id', $selectedRoles)
+                    ->where('model_has_roles.model_type', '=', 'App\Models\User');
+            });
+        }
+
+        // Paginate the results
+        $users = $query->latest()->paginate(5);
+
+        // Pass the start date, end date, and selected roles to the view
+        $users->appends([
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'roles' => $selectedRoles
+        ]);
+
+        // Render the view with paginated users
+        return view('users.user_pagination', compact('users'))->render();
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -76,21 +188,6 @@ class UserController extends Controller
             'chats' => $chats,
             'userNames' => $userNames,
         ]);
-    }
-
-    public function fetch_user_data(Request $request)
-    {
-        $notifications = Notification::where('is_read', false)->get();
-        $allNotif = Notification::orderBy('created_at', 'desc')->get();
-
-        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
-        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
-
-        if($request->ajax())
-        {
-            $users = User::latest('created_at')->paginate(4);
-            return view('users.user_pagination',compact('chats', 'userNames', 'users', 'notifications', 'allNotif'))->render();
-        }
     }
 
     /**
@@ -114,10 +211,20 @@ class UserController extends Controller
             $user->save();
         }
 
-        Alert::alert('Success!', 'User added successfully', 'success');
+        toastr()->success(
+            'User added successfully!',
+            'Success',
+            [
+                'progressBar' => true,
+                'closeButton' => true,
+                'preventDuplicates' => true,
+                'timeOut' => 3000,
+                'showDuration' => 300
+            ]
+        );
 
-        return redirect()->route('users.index')
-                ->withSuccess('New user is added successfully.');
+        return redirect()->route('users.index');
+        // ->withSuccess('New user is added successfully.');
     }
 
     /**
@@ -134,9 +241,9 @@ class UserController extends Controller
         $userTemplates = Template::where('user_id', $user->id)->paginate(5);
 
         // Calculate monthly posting data
-        $monthlyPostingsData = $userTemplates->groupBy(function($date) {
+        $monthlyPostingsData = $userTemplates->groupBy(function ($date) {
             return Carbon::parse($date->created_at)->format('Y-m');
-        })->map(function($item, $key) {
+        })->map(function ($item, $key) {
             return $item->count();
         });
 
@@ -182,16 +289,16 @@ class UserController extends Controller
 
         // Get the total number of views for templates created by each user
         $userViews = Template::select('user_id', DB::raw('SUM(views) as total_views'))
-        ->groupBy('user_id')
-        ->get();
+            ->groupBy('user_id')
+            ->get();
 
         // You can also get the total views for the current user separately
         $currentUserViews = $userViews->where('user_id', $user->id)->first()->total_views ?? 0;
 
         // Get the total number of views for templates created by each user
         $userViews = Template::select('user_id', DB::raw('SUM(views) as total_views'))
-        ->groupBy('user_id')
-        ->get();
+            ->groupBy('user_id')
+            ->get();
 
         // Retrieve the 4 most viewed templates for the current user
         $mostViewedTemplates = Template::where('user_id', $user->id)
@@ -229,7 +336,7 @@ class UserController extends Controller
             return view('users.show_pagination', compact('chats', 'userNames', 'userTemplates', 'userId', 'notifications', 'allNotif'))->render();
         }
     }
-    
+
 
     /**
      * Show the form for editing the specified resource.
@@ -237,8 +344,8 @@ class UserController extends Controller
     public function edit(User $user): View
     {
         // Check Only Super Admin can update his own Profile
-        if ($user->hasRole('Super Admin')){
-            if($user->id != auth()->user()->id){
+        if ($user->hasRole('Super Admin')) {
+            if ($user->id != auth()->user()->id) {
                 abort(403, 'USER DOES NOT HAVE THE RIGHT PERMISSIONS');
             }
         }
@@ -266,8 +373,8 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
         $input = $request->all();
-        
-        if(!empty($request->password)){
+
+        if (!empty($request->password)) {
             $input['password'] = Hash::make($request->password);
         } else {
             $input = $request->except('password');
@@ -280,7 +387,7 @@ class UserController extends Controller
         // Delete old photo and upload new photo
         if ($request->hasFile('photo')) {
             $oldPhoto = $user->photo;
-            
+
             // Delete old photo
             if ($oldPhoto) {
                 $oldPhotoPath = public_path('images/photos/') . $oldPhoto;
@@ -296,7 +403,17 @@ class UserController extends Controller
             $user->update(['photo' => $photoName]);
         }
 
-        Alert::alert('Success!', 'User is updated successfully', 'success');
+        toastr()->success(
+            'User info updated successfully!',
+            'Success',
+            [
+                'progressBar' => true,
+                'closeButton' => true,
+                'preventDuplicates' => true,
+                'timeOut' => 3000,
+                'showDuration' => 300
+            ]
+        );
 
         return redirect()->route('users.index'); //->withSuccess('User is updated successfully.');
     }
@@ -306,15 +423,26 @@ class UserController extends Controller
     public function destroy(User $user): RedirectResponse
     {
         // About if user is Super Admin or User ID belongs to Auth User
-        if ($user->hasRole('Super Admin') || $user->id == auth()->user()->id)
-        {
+        if ($user->hasRole('Super Admin') || $user->id == auth()->user()->id) {
             abort(403, 'USER DOES NOT HAVE THE RIGHT PERMISSIONS');
         }
 
         $user->syncRoles([]);
         $user->delete();
-        Alert::alert('Success!', 'User is deleted successfully', 'success');
+
+        toastr()->success(
+            'User deleted successfully!',
+            'Success',
+            [
+                'progressBar' => true,
+                'closeButton' => true,
+                'preventDuplicates' => true,
+                'timeOut' => 3000,
+                'showDuration' => 300
+            ]
+        );
+
         return redirect()->route('users.index');
-                //->withSuccess('User is deleted successfully.');
+        //->withSuccess('User is deleted successfully.');
     }
 }

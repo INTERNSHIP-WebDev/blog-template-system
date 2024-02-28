@@ -190,13 +190,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/emails/mark-as-read', [MailController::class, 'markAsRead'])->name('emails.markAsRead');
     Route::post('/emails/mark-as-unread', [MailController::class, 'markAsUnread'])->name('emails.markAsUnread');
 
-    Route::get('newsfeed', [GuestController::class, 'index'])->name('guests.index');
+    Route::get('newsfeed', [GuestController::class, 'index'])->name('newsfeed');
     Route::get('guests/profile', [App\Http\Controllers\GuestController::class, 'profile'])->name('guests.profile');
     Route::get('guests/create', [GuestController::class, 'create'])->name('guests.create');
     Route::post('guests', [GuestController::class, 'store'])->name('guests.store');
     Route::get('/guests/{guest}/edit', [GuestController::class, 'edit'])->name('guests.edit');
     Route::delete('/guests/{guest}', [GuestController::class, 'destroy'])->name('guests.destroy');
     Route::post('/templates/{template}/like', [GuestController::class, 'toggleLike'])->name('templates.toggleLike');
+    Route::post('/mark-as-read/{id}', [GuestController::class, 'markNotificationAsRead'])->name('mark-as-read');
+    Route::get('/fetch-notifications', [GuestController::class, 'fetchNotifications'])->name('fetch-notifications');
+    Route::post('/guests/update', [GuestController::class, 'update'])->name('updateProfile');
+    Route::get('/search', [GuestController::class, 'search'])->name('search');
     Route::resource('guests', GuestController::class);
 
     Route::get('/notifications', [HeaderController::class, 'showNotifications']);
@@ -230,8 +234,28 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('advertisements', AdvertisementController::class);
 
     // PAGINATION AND SEARCH
-    Route::get('/pagination/paginate-data', [PermissionController::class, 'pagination']);
+    Route::get('/pagination/paginate-data-permission', [PermissionController::class, 'paginatePermission'])->name('paginate.permission');
     Route::get('/search-permission', [PermissionController::class, 'searchPermission'])->name('search.permission');
-    Route::get('/filter', [PermissionController::class, 'filter']);
+    Route::get('/filter-permission', [PermissionController::class, 'filterPermission'])->name('filter.permission');
+
+    Route::get('/pagination/paginate-data-role', [RoleController::class, 'paginateRole'])->name('paginate.role');
+    Route::get('/search-role', [RoleController::class, 'searchRole'])->name('search.role');
+    Route::get('/filter-role', [RoleController::class, 'filterRole'])->name('filter.role');
+
+    Route::get('/pagination/paginate-data-category', [CategoryController::class, 'paginateCategory'])->name('paginate.category');
+    Route::get('/search-category', [CategoryController::class, 'searchCategory'])->name('search.category');
+    Route::get('/filter-category', [CategoryController::class, 'filterCategory'])->name('filter.category');
   
+    Route::get('/pagination/paginate-data-advertisement', [AdvertisementController::class, 'paginateAdvertisement'])->name('paginate.advertisement');
+    Route::get('/search-advertisement', [AdvertisementController::class, 'searchAdvertisement'])->name('search.advertisement');
+    Route::get('/filter-advertisement', [AdvertisementController::class, 'filterAdvertisement'])->name('filter.advertisement');
+
+    Route::get('/pagination/paginate-data-user', [UserController::class, 'paginateUser'])->name('paginate.user');
+    Route::get('/search-user', [UserController::class, 'searchUser'])->name('search.user');
+    Route::get('/filter-user', [UserController::class, 'filterUser'])->name('filter.user');
+
+    Route::get('/pagination/paginate-data-blog', [TemplateController::class, 'paginateBlog'])->name('paginate.blog');
+    Route::get('/search-blog', [TemplateController::class, 'searchBlog'])->name('search.blog');
+    Route::get('/filter-blog', [TemplateController::class, 'filterBlog'])->name('filter.blog');
+
 });

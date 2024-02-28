@@ -1,10 +1,15 @@
+{{-- LAYOUT --}}
+@extends("landing.layouts.footer")
+
+@section("content")
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>About</title>
+        <title>About Us</title>
         <meta content="" name="description">
         <meta content="" name="keywords">
         
@@ -37,6 +42,13 @@
         <!-- Template Main CSS Files -->
         <link href="{{ asset('backend/assets/css/variables.css') }}" rel="stylesheet">
         <link href="{{ asset('backend/assets/css/main.css') }}" rel="stylesheet">
+
+        <style>
+          .page-title{
+            color: #212529;
+            letter-spacing: 2px;
+          }
+        </style>
        
 
 
@@ -51,7 +63,7 @@
 			<div class="row">
 				<div class="col">
 					<div class="header_content d-flex flex-row align-items-center justify-content-start">
-						<div class="logo"><a href="#">Blog | Travel</a></div>
+						<div class="logo"><a href="#">Blog | About</a></div>
 						<nav class="main_nav">
 							<ul>
 								<li><a href="/">Home</a></li>
@@ -87,7 +99,6 @@
 	<div class="home">
 		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="landing_assets/images/post_nosidebar.jpg" data-speed="0.8"></div>
 		<div class="home_content">
-    <h1 class="page-title">About us</h1>
 			</div>
 		</div>
 	</div>
@@ -98,7 +109,7 @@
       <div class="container" data-aos="fade-up">
         <div class="row">
           <div class="col-lg-12 text-center mb-5">
-          <h1 class="page-title">About us</h1>
+          <h1 class="page-title">About Us</h1>
           </div>
         </div>
 
@@ -109,7 +120,7 @@
               <img src="backend/assets/img/post-landscape-2.jpg" alt="" class="img-fluid">
             </a>
               <div class="ps-md-5 mt-4 mt-md-0">
-              <div class="post-meta mt-4">About us</div>
+              <div class="post-meta mt-4">About Us</div>
               <h2 class="mb-4 display-4">Company History</h2>
 
               <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis, perspiciatis repellat maxime, adipisci non ipsam at itaque rerum vitae, necessitatibus nulla animi expedita cumque provident inventore? Voluptatum in tempora earum deleniti, culpa odit veniam, ea reiciendis sunt ullam temporibus aut!</p>
@@ -189,63 +200,6 @@
     </section>
 
   </main><!-- End #main -->
-
-  
-
-	<!-- Footer -->
-
-	<footer class="footer">
-		<div class="container">
-			<div class="row row-lg-eq-height">
-				<div class="col-lg-9 order-lg-1 order-2">
-					<div class="footer_content">
-						<div class="footer_logo"><a href="#">avision</a></div>
-						<div class="footer_social">
-							<ul>
-                            @if(isset($socials))
-                                @if($socials['facebook'] == TRUE)
-                                <li class="footer_social_facebook"><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                                @endif
-                                @if($socials['twitter'] == TRUE)
-                                <li class="footer_social_twitter"><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
-                                @endif
-                                @if($socials['pinterest'] == TRUE)
-                                <li class="footer_social_pinterest"><a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a></li>
-                                @endif
-                                @if($socials['instagram'] == TRUE)
-                                <li class="footer_social_instagram"><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
-                                @endif
-                                @if($socials['google'] == TRUE)
-                                <li class="footer_social_google"><a href="#"><i class="fa fa-google" aria-hidden="true"></i></a></li>
-                                @endif
-                            @endif
-							</ul>
-						</div>
-						<div class="copyright"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Nissi Cup Noodles | Clint Garcia | Orange Juice Seal Escala | Anjel Baby by Troye Sivan Babanto | Sam pot </a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></div>
-					</div>
-				</div>
-				<div class="col-lg-3 order-lg-2 order-1">
-					<div class="subscribe">
-						<div class="subscribe_background"></div>
-						<div class="subscribe_content">
-							<div class="subscribe_title">Subscribe</div>
-							<form action="#">
-								<input type="email" class="sub_input" placeholder="Your Email" required="required">
-								<button class="sub_button">
-									<svg version="1.1" id="link_arrow_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-										 width="19px" height="13px" viewBox="0 0 19 13" enable-background="new 0 0 19 13" xml:space="preserve">
-										<polygon fill="#FFFFFF" points="12.475,0 11.061,0 17.081,6.021 0,6.021 0,7.021 17.038,7.021 11.06,13 12.474,13 18.974,6.5 "/>
-									</svg>
-								</button>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</footer>
 </div>
 
   <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
@@ -269,5 +223,5 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
   <!-- Template Main JS File -->
   <script type="text/javascript" src="{{ URL::asset('backend/assets/js/main.js') }}"></script>
-    </body>
+</body>
 </html>

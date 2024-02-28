@@ -7,6 +7,7 @@
     <title>Categories | List</title>
     
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 
 <body>
@@ -46,18 +47,67 @@
                         <div class="card">
                             <div class="card-body border-bottom">
                                 <div class="d-flex align-items-center">
-                                    <h5 class="mb-0 card-title flex-grow-1">Category Lists</h5>
+                                    <h5 class="mb-0 card-title flex-grow-1">Categories List</h5>
                                     <div class="flex-shrink-0">
-                                        <a href="{{ route('categories.create') }}" class="btn btn-success btn-sm my-2"><i class="bi bi-plus-circle"></i> Add New Category</a>
+                                    @can('create-category')
+                                        <a href="{{ route('categories.create') }}" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add New Category</a>
+                                    @endcanany 
+                                        <button class="btn btn-light" type="button" id="refresh_table"><i class="mdi mdi-refresh"></i></button>
+                                        <div class="dropdown d-inline-block">
+                                            <button type="menu" class="btn btn-success" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><i class="mdi mdi-dots-vertical"></i></button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="card-body">
-                                <div id="category_data">
-                                    @include('categories.pagination_category')
-                                </div>
+                            <div class="card-body border-bottom">
+                                <form method="GET" action="/filter">
+                                    <div class="row g-3 align-items-center">
+                                        <div class="col-xxl-2 col-lg-4">
+                                            <label>Search:</label>
+                                            <input type="search" name="search" class="form-control" id="searchInput" placeholder="Search for ...">
+                                        </div>
+                                        <div class="col-xxl-2 col-lg-3">
+                                            <label>Start Date:</label>
+                                            <div class="input-group">
+                                                <input type="date" name="start_date" class="form-control" id="start_date">
+                                                <button class="btn btn-primary" type="button" id="set_today_start">Today</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-2 col-lg-3">
+                                            <label>End Date:</label>
+                                            <div class="input-group">
+                                                <input type="date" name="end_date" class="form-control" id="end_date">
+                                                <button class="btn btn-primary" type="button" id="set_today_end">Today</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-2 col-lg-1 d-grid">
+                                            <label>&nbsp;</label>
+                                            <button type="submit" class="btn btn-primary">Filter</button>
+                                        </div>
+                                        <div class="col-xxl-2 col-lg-1 d-grid">
+                                            <label>&nbsp;</label>
+                                            <button class="btn btn-secondary" type="button" id="clear_filter">Clear</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
+
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <div class="table-data">
+                                        <table class="table table-bordered align-middle nowrap">
+                                            @include('categories.category_pagination')
+                                        </table>
+                                    </div>
+                                </div>
+                                @include('categories.categories_js')
+                            </div><!--end card-->
                         </div><!--end card-->
                     </div><!--end col-->
 
@@ -76,24 +126,6 @@
     <!-- Right bar overlay-->
     <div class="rightbar-overlay"></div>
     @endsection
-    <script>
-        $(document).ready(function() {
-            $(document).on('click', '.pagination a', function(event) {
-                event.preventDefault();
-                var page = $(this).attr('href').split('page=')[1];
-                fetch_data_category(page);
-            });
-
-            function fetch_data_category(page) {
-                $.ajax({
-                    url: "/pagination/fetch_data_category?page=" + page,
-                    success: function(data) {
-                        $('#category_data').html(data);
-                    }
-                })
-            }
-        });
-    </script>
 </body>
 
 </html>

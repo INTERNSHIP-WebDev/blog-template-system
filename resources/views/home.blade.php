@@ -183,9 +183,9 @@
                                     <div class="flex-shrink-0 me-3">
                                         @if(auth()->user()->photo)
                                             <img class="avatar-sm rounded-circle img-thumbnail" src="{{ asset('images/photos/' . auth()->user()->photo) }}"
-                                                alt="Profile Photo">
+                                                alt="Profile Photo" class="shadow-sm rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
                                         @else
-                                            <img class="avatar-sm rounded-circle img-thumbnail" src="{{ asset('/images/avatars/avatar-1.png') }}" alt="Profile Photo">
+                                            <img class="avatar-sm rounded-circle img-thumbnail" src="{{ asset('/images/avatars/avatar-1.png') }}" alt="Profile Photo" class="shadow-sm rounded-circle" style="width: 40px; height: 40px; object-fit: cover;"> 
                                         @endif
                                     </div>
 

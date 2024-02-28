@@ -1,6 +1,4 @@
-@include('sweetalert::alert')
-
-<div class="table-responsive">
+<div id="pagination-container">
     <table class="table table-bordered align-middle nowrap">
         <thead>
             <tr>
@@ -12,7 +10,7 @@
             </tr>
         </thead>
         <tbody>
-            @forelse ($users as $user)
+            @forelse($users ?? [] as $user)
             <tr>
                 <td style="width: 100px; /* Adjust the width as needed */">
                     <div class="user-photo-container" style="margin: 0 auto; text-align: center;">
@@ -53,7 +51,6 @@
                         @endif
                         @endcan
                         @endif
-
                     </form>
                 </td>
             </tr>
@@ -66,39 +63,5 @@
             @endforelse
         </tbody>
     </table>
-
-    <div style="width: 100%; display: flex; justify-content: center;">{{ $users->links() }}</div>
-
+    {{ $users->appends(['start_date' => request()->input('start_date'), 'end_date' => request()->input('end_date'), 'roles' => request()->input('roles')])->links() }}
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-<script>
-    // Add event listener to delete buttons
-    document.addEventListener('DOMContentLoaded', function () {
-        const deleteButtons = document.querySelectorAll('.delete-btn');
-        
-        // Iterate through each delete button and attach event listener
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', function (event) {
-                event.preventDefault();
-
-                // Display Sweet Alert confirmation dialog
-                Swal.fire({
-                    title: 'Warning!',
-                    text: 'Are you sure you want to delete this category?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it'
-                }).then((result) => {
-                    // If user confirms the deletion
-                    if (result.isConfirmed) {
-                        // Trigger the form submission
-                        event.target.closest('form').submit();
-                    }
-                });
-            });
-        });
-    });
-</script>

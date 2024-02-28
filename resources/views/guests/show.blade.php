@@ -51,13 +51,15 @@
                                 <div class="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3">
                                     <div class="card-body p-0 d-flex">
                                         <figure class="avatar me-3">
-                                            <img src="{{ asset('images/photos/' . $template->user->photo) }}" alt="User Photo" class="shadow-sm rounded-circle w45">
+                                            <img src="{{ asset('images/photos/' . $template->user->photo) }}" alt="User Photo" class="shadow-sm rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
                                         </figure>
                                         <h4 class="fw-700 text-grey-900 font-xssss mt-1">{{ $template->user->name }}<span class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">{{ $template->created_at->diffForHumans() }}</span></h4>
                                     </div>
 
                                     <div class="card-body p-0 me-lg-6">
                                         <p class="fw-500 text-grey-500 lh-26 font-xssss w-100">
+
+                                        <p class="fw-700 text-black lh-26 font-xss w-100">{{ $template->header }} </p>
                                             {!! $template->description !!}
                                         </p>
                                     </div>
@@ -70,7 +72,7 @@
 
 
                                         <a href="#" class="like-button emoji-bttn d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss me-2" data-template-id="{{ $template->id }}">
-                                            <i class="like-icon {{ $template->isLikedByUser(auth()->user()) ? 'feather-thumbs-up' : 'feather-thumbs-down' }} text-white bg-primary-gradiant me-1 btn-round-xs font-xss"></i>
+                                            <i class="like-icon {{ $template->isLikedByUser(auth()->user()) ? 'feather-thumbs-up' : 'feather-thumbs-down' }} text-white bg-blue-gradiant me-1 btn-round-xs font-xss"></i>
                                             <span id="likeCount-{{ $template->id }}" style="margin-right: 5px">{{ $template->likes->count() }}</span> Likes 
                                         </a>
 
@@ -85,7 +87,14 @@
                                         <h5 class="fw-700 font-xsssss text-grey-900 mt-1 mb-2">All Comments</h5><hr>
                                         @forelse($template->comments as $comment)
                                             <div class="d-flex align-items-start">
-                                                <img src="<?php echo url('theme')?>/dist/assets/images/users/avatar-9.png" alt="Profile" class="shadow-sm rounded-circle me-2" style="width: 40px; height: 40px;">
+                                            @php
+                                                // Find the user with the same name as the comment's name
+                                                $user = \App\Models\User::where('name', $comment->name)->first();
+
+                                                // Check if the user exists and has a photo
+                                                $userPhoto = $user ? (!empty($user->photo) ? asset('images/photos/' . $user->photo) : url('theme/dist/assets/images/users/avatar-9.png')) : url('theme/dist/assets/images/users/avatar-9.png');
+                                            @endphp
+                                            <img src="{{ $userPhoto }}" alt="Profile" class="shadow-sm rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
                                             
                                             <div>
                                                 <p style="font-size: x-small; margin-bottom: 0px" class="fw-700 font-xssss lh-3 text-grey-900">{{ $comment->name }}</p>

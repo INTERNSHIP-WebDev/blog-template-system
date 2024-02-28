@@ -584,7 +584,10 @@ section
 .home
 {
 	width: 100%;
-	height: 100vh;
+	height: 600px;
+	position: relative;
+	overflow: hidden;
+
 }
 
 /*********************************
@@ -823,7 +826,7 @@ section
 {
 	position: absolute;
 	bottom: 264px;
-	left: calc(((100vw - 1170px) / 2) + (1170px * 0.75) + 8px);
+	left: calc(((100vw - 1170px) / 2) + (1170px * 0.75) + 8px); 
 }
 .custom_dots
 {
@@ -1906,4 +1909,64 @@ section
 .sub_input:focus
 {
 	border-bottom: solid 1px rgba(255,255,255,1);
+}
+
+/*===*/
+
+
+*, *:before, *:after {
+  outline: 0;
+  box-sizing: inherit;
+  font: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  font: 400 16px/1.5 Arial, sans-serif;
+  background: #111;
+}
+
+body {
+  margin: 0;
+}
+
+canvas {
+  display: block;
+}
+
+.card {
+	position: relative;
+	overflow: hidden;
+	transition: transform 0.3s ease-in-out, box-shadow 0.4s ease-in-out;
+	border: 1px solid transparent;
+}
+
+.card::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border: 2px solid transparent; 
+	transition: border-color 0.3s ease-in-out; 
+	pointer-events: none; 
+}
+
+.card:hover::before {
+	border-color: rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+	transform: scale(1.1);
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card:not(:hover) {
+	transform: scale(1);
+	box-shadow: none;
+}
+
+.card.smooth-transition {
+	transition: transform 0.8 ease-in-out, box-shadow 0.8s ease-in-out;
 }

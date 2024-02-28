@@ -18,14 +18,6 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class BlogController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    //     $this->middleware('permission:create-blog|edit-blog|delete-blog', ['only' => ['index','show']]);
-    //     $this->middleware('permission:create-blog', ['only' => ['create','store']]);
-    //     $this->middleware('permission:edit-blog', ['only' => ['edit','update']]);
-    //     $this->middleware('permission:delete-blog', ['only' => ['destroy']]);
-    // }
     /**
      * Display a listing of the resource.
      */

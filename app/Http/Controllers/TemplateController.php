@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreTemplateRequest;
 use App\Http\Requests\UpdateTemplateRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use RealRashid\SweetAlert\Facades\Alert;
+
 
 class TemplateController extends Controller
 {
@@ -32,9 +34,9 @@ class TemplateController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('permission:create-blog|edit-blog|delete-blog', ['only' => ['index','show']]);
-        $this->middleware('permission:create-blog', ['only' => ['create','store']]);
-        $this->middleware('permission:edit-blog', ['only' => ['edit','update']]);
+        $this->middleware('permission:create-blog|edit-blog|delete-blog', ['only' => ['index', 'show']]);
+        $this->middleware('permission:create-blog', ['only' => ['create', 'store']]);
+        $this->middleware('permission:edit-blog', ['only' => ['edit', 'update']]);
         $this->middleware('permission:delete-blog', ['only' => ['destroy']]);
     }
     /**
@@ -49,22 +51,92 @@ class TemplateController extends Controller
         $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
 
         $templates = Template::latest('created_at')->paginate(5);
-        return view('templates.index', compact('chats', 'userNames', 'templates','notifications', 'allNotif' ));
+        return view('templates.index', compact('chats', 'userNames', 'templates', 'notifications', 'allNotif'));
     }
 
-    public function fetch_data(Request $request)
+    //paginate template
+    public function paginateBlog(Request $request)
     {
-        $notifications = Notification::where('is_read', false)->get();
-        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+        $categoryName = Category::all();
+        $searchString = $request->query('search_string');
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+    
+        // Query builder for filtering by search string if it's provided
+        $query = Template::query();
+        if ($searchString) {
+            $query->where('header', 'like', '%' . $searchString . '%');
+        }
 
-        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
-        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+        // Join with the Category table and filter by category name
+        if ($categoryName) {
+            $query->join('categories', 'templates.category_id', '=', 'categories.id')
+                ->where('categories.name', 'like', '%' . $categoryName . '%');
+        }
 
-        if ($request->ajax()) {
-            $templates = Template::latest('created_at')->paginate(5);
-            return view('templates.pagination_data', compact('chats', 'userNames', 'templates','notifications', 'allNotif'))->render();
+        // Execute your query or continue building it as needed
+        $results = $query->get();
+
+    
+        // Apply date range filter if start date and end date are provided
+        if ($startDate && $endDate) {
+            $query->whereDate('created_at', '>=', $startDate)
+                  ->whereDate('created_at', '<=', $endDate);
+        }
+    
+        // Paginate the results
+        $templates = $query->latest()->paginate(5);
+    
+        // Pass the start date and end date to the view
+        $templates->appends(['start_date' => $startDate, 'end_date' => $endDate]);
+    
+        // Render the view with paginated templates
+        return view('templates.blog_pagination', compact('templates'))->render();
+    }   
+
+    //search blog
+    public function searchBlog(Request $request)
+    {
+        $templates = Template::where('header', 'like', '%' . $request->search_string . '%')
+            ->orderBy('id', 'desc')
+            ->paginate(5);
+
+        if ($templates->count() >= 1) {
+            return view('templates.blog_pagination', compact('templates'))->render();
+        } else {
+            return response()->json([
+                'status' => 'nothing_found',
+            ]);
         }
     }
+
+    //filter blog
+    public function filterBlog(Request $request)
+    {
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+    
+        $templates = Template::whereDate('created_at', '>=', $start_date)
+            ->whereDate('created_at', '<=', $end_date)
+            ->orderBy('created_at', 'desc') // Order by created_at in descending order
+            ->paginate(5);
+    
+        return view('templates.blog_pagination', compact('templates'))->render();
+    }
+
+    // public function fetch_data(Request $request)
+    // {
+    //     $notifications = Notification::where('is_read', false)->get();
+    //     $allNotif = Notification::orderBy('created_at', 'desc')->get();
+
+    //     $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+    //     $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
+    //     if ($request->ajax()) {
+    //         $templates = Template::latest('created_at')->paginate(5);
+    //         return view('templates.pagination_data', compact('chats', 'userNames', 'templates','notifications', 'allNotif'))->render();
+    //     }
+    // }
 
     public function create()
     {
@@ -136,7 +208,16 @@ class TemplateController extends Controller
                 }
             }
 
-            return redirect()->route('templates.index')->with('success', 'Template added successfully!');
+            toastr()->success(
+                'New template added successfully!',
+                'Success',
+                [
+                    'progressBar' => true, 'closeButton' => true, 'preventDuplicates' => true,
+                    'timeOut' => 3000, 'showDuration' => 300
+                ]
+            );
+
+            return redirect()->route('templates.index'); //->with('success', 'Template added successfully!');
         } catch (\Exception $e) {
             // Handle exceptions if needed
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
@@ -179,14 +260,14 @@ class TemplateController extends Controller
     {
         try {
             $template = Template::findOrFail($id);
-            $categories = Category::all();  
+            $categories = Category::all();
             $comments = Comment::where('temp_id', $template->id)->get();
 
             $notifications = Notification::where('is_read', false)->get();
-            $allNotif = Notification::orderBy('created_at', 'desc')->get();    
+            $allNotif = Notification::orderBy('created_at', 'desc')->get();
             $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
             $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
-    
+
             return view('templates.edit', compact('chats', 'userNames', 'template', 'categories', 'comments', 'notifications', 'allNotif'));
         } catch (ModelNotFoundException $e) {
             return redirect()->route('templates.index')->with('error', 'Template not found.');
@@ -263,7 +344,16 @@ class TemplateController extends Controller
                 $template->update(['logo' => $logoName]);
             }
 
-            return redirect()->route('templates.index')->with('success', 'Template updated successfully!');
+            toastr()->success(
+                'Template updated successfully!',
+                'Success',
+                [
+                    'progressBar' => true, 'closeButton' => true, 'preventDuplicates' => true,
+                    'timeOut' => 3000, 'showDuration' => 300
+                ]
+            );
+
+            return redirect()->route('templates.index'); //->with('success', 'Template updated successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
@@ -278,8 +368,17 @@ class TemplateController extends Controller
         $template = Template::findOrFail($id);
         $template->delete();
 
-        return redirect()->route('templates.index')
-            ->withSuccess('Template is deleted successfully.');
+        toastr()->success(
+            'Template removed successfully!',
+            'Success',
+            [
+                'progressBar' => true, 'closeButton' => true, 'preventDuplicates' => true,
+                'timeOut' => 3000, 'showDuration' => 300
+            ]
+        );
+
+        return redirect()->route('templates.index');
+        // ->withSuccess('Template is deleted successfully.');
     }
 
     public function gallery()
@@ -290,7 +389,7 @@ class TemplateController extends Controller
         $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
 
         $templates = Template::latest('created_at')->paginate(9);
-        return view('templates.gallery', compact('chats', 'userNames','templates','notifications', 'allNotif'));
+        return view('templates.gallery', compact('chats', 'userNames', 'templates', 'notifications', 'allNotif'));
     }
 
     // GALLERY AJAX
@@ -303,7 +402,7 @@ class TemplateController extends Controller
 
         if ($request->ajax()) {
             $templates = Template::latest('created_at')->paginate(9);
-            return view('templates.gallery_banner_pagination', compact('chats', 'userNames','templates', 'notifications', 'allNotif'))->render();
+            return view('templates.gallery_banner_pagination', compact('chats', 'userNames', 'templates', 'notifications', 'allNotif'))->render();
         }
     }
 
@@ -316,7 +415,7 @@ class TemplateController extends Controller
 
         if ($request->ajax()) {
             $templates = Template::latest('created_at')->paginate(9);
-            return view('templates.gallery_logo_pagination', compact('chats', 'userNames','templates', 'notifications', 'allNotif'))->render();
+            return view('templates.gallery_logo_pagination', compact('chats', 'userNames', 'templates', 'notifications', 'allNotif'))->render();
         }
     }
 
@@ -329,7 +428,7 @@ class TemplateController extends Controller
 
         if ($request->ajax()) {
             $templates = Template::latest('created_at')->paginate(9);
-            return view('templates.pagination.gallery_logo_list_pagination', compact('chats', 'userNames','templates','notifications', 'allNotif'))->render();
+            return view('templates.pagination.gallery_logo_list_pagination', compact('chats', 'userNames', 'templates', 'notifications', 'allNotif'))->render();
         }
     }
 
@@ -342,7 +441,7 @@ class TemplateController extends Controller
 
         if ($request->ajax()) {
             $templates = Template::latest('created_at')->paginate(9);
-            return view('templates.pagination.gallery_banner_list_pagination', compact('chats', 'userNames','templates', 'notifications', 'allNotif'))->render();
+            return view('templates.pagination.gallery_banner_list_pagination', compact('chats', 'userNames', 'templates', 'notifications', 'allNotif'))->render();
         }
     }
     // END OF GALLERY AJAX
@@ -365,7 +464,7 @@ class TemplateController extends Controller
         $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
         $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
 
-        return view('templates.grid', compact('chats', 'userNames','templates', 'comments', 'categories', 'notifications', 'allNotif'));
+        return view('templates.grid', compact('chats', 'userNames', 'templates', 'comments', 'categories', 'notifications', 'allNotif'));
     }
     public function fetch_grid_data(Request $request)
     {
@@ -379,7 +478,7 @@ class TemplateController extends Controller
             $categories = Category::paginate(6);
             $categories = Category::withCount('templates')->get();
             $comments = Comment::whereIn('temp_id', $templates->pluck('id'))->get();
-            return view('templates.grid_pagination', compact('chats', 'userNames','templates', 'comments', 'categories', 'notifications', 'allNotif'))->render();
+            return view('templates.grid_pagination', compact('chats', 'userNames', 'templates', 'comments', 'categories', 'notifications', 'allNotif'))->render();
         }
     }
 
@@ -395,7 +494,7 @@ class TemplateController extends Controller
 
         // Fetch all categories with template count
         $categories = Category::withCount('templates')->get();
-        
+
         $notifications = Notification::where('is_read', false)->get();
         $allNotif = Notification::orderBy('created_at', 'desc')->get();
         $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
@@ -403,7 +502,7 @@ class TemplateController extends Controller
 
         // Fetch comments for all templates
         $comments = Comment::whereIn('temp_id', $templates->pluck('id'))->get();
-        return view('templates.list', compact('chats', 'userNames','templates', 'comments', 'categories', 'notifications', 'allNotif'));
+        return view('templates.list', compact('chats', 'userNames', 'templates', 'comments', 'categories', 'notifications', 'allNotif'));
     }
 
     public function fetch_list_data(Request $request)
@@ -418,7 +517,7 @@ class TemplateController extends Controller
             $categories = Category::latest('created_at')->paginate(3);
             $categories = Category::withCount('templates')->get();
             $comments = Comment::whereIn('temp_id', $templates->pluck('id'))->get();
-            return view('templates.list_pagination', compact('chats', 'userNames','templates', 'comments', 'categories', 'notifications', 'allNotif'))->render();
+            return view('templates.list_pagination', compact('chats', 'userNames', 'templates', 'comments', 'categories', 'notifications', 'allNotif'))->render();
         }
     }
 
@@ -465,5 +564,4 @@ class TemplateController extends Controller
             'totalLikes' => $template->likes()->count(),
         ]);
     }
-
 }

@@ -44,16 +44,28 @@ class HomeController extends Controller
             $template->likeCount = $template->likes()->count(); // Count the likes for each template
         }
 
-        // Retrieve comments in descending order of creation date
-        $comments = Comment::orderBy('created_at', 'desc')->get();
+        // Retrieve comments where the temp_id is published by the authenticated user
+        $comments = Comment::whereHas('template', function ($query) {
+            $query->where('user_id', auth()->id());
+        })
+        ->orderBy('created_at', 'desc')
+        ->get();
 
-        // Retrieve concerns in descending order of creation date
-        $concerns = Concern::orderBy('created_at', 'desc')->get();
 
-        // Count the total number of posts, concerns, comments, and likes
-        $totalPosts = Template::count();
-        $totalConcerns = Concern::count();
-        $totalComments = Comment::count();
+        // Retrieve mails from concerns where rcpt_email matches the auth user email
+        $concerns = Concern::where('rcpt_email', auth()->user()->email)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+        // Count the total number of posts published by the authenticated user
+        $totalPosts = Template::where('user_id', auth()->id())->count();
+        $totalConcerns = Concern::where('rcpt_email', auth()->user()->email)->count();
+        $totalComments = Comment::whereIn('temp_id', function ($query) {
+            $query->select('id')
+                ->from('templates')
+                ->where('user_id', auth()->id());
+        })->count();
+        
         $totalLikes = Like::count();
 
         // Get the total number of posts created by the authenticated user

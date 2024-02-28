@@ -592,7 +592,7 @@ $socials = [
             }, 10000);
         }
 
-        var randomDelay = Math.floor(Math.random() * 20000);
+        var randomDelay = Math.floor(Math.random() * 1000);
         setTimeout(function() {
             var overlay = document.createElement("div");
             overlay.classList.add("modal-overlay");

@@ -1,9 +1,3 @@
-{{-- LAYOUT --}}
-@extends("landing.layouts.layout")
-
-@section("content")
-
-
 
 <!-- Home -->
 
@@ -63,11 +57,7 @@
 								</ul>
 							</div>
 						</div>
-						<div class="section_content">
-							<div id="more_pagination">
-								@include('landing.more_pagination')
-							</div>
-						</div>
+
 					</div>
 
 				</div>
@@ -76,4 +66,4 @@
 		</div>
 	</div>
 </div>
-@endsection
+

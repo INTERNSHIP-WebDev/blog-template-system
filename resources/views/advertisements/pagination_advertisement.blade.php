@@ -40,36 +40,8 @@
     <div style="width: 100%; display: flex; justify-content: center;">{!! $ads->links() !!}</div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-<script>
-    // Add event listener to delete buttons
-    document.addEventListener('DOMContentLoaded', function () {
-        const deleteButtons = document.querySelectorAll('.delete-btn');
-        
-        // Iterate through each delete button and attach event listener
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', function (event) {
-                event.preventDefault();
 
-                // Display Sweet Alert confirmation dialog
-                Swal.fire({
-                    title: 'Warning!',
-                    text: 'Are you sure you want to delete this ad?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it'
-                }).then((result) => {
-                    // If user confirms the deletion
-                    if (result.isConfirmed) {
-                        // Trigger the form submission
-                        event.target.closest('form').submit();
-                    }
-                });
-            });
-        });
-    });
-</script>
+
 
 

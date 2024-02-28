@@ -51,7 +51,7 @@
 
 
          <!-- JAVASCRIPT -->
-         <script src="<?php echo url('theme')?>/dist/assets/libs/jquery/jquery.min.js"></script>
+        <script src="<?php echo url('theme')?>/dist/assets/libs/jquery/jquery.min.js"></script>
         <script src="<?php echo url('theme')?>/dist/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="<?php echo url('theme')?>/dist/assets/libs/metismenu/metisMenu.min.js"></script>
         <script src="<?php echo url('theme')?>/dist/assets/libs/simplebar/simplebar.min.js"></script>

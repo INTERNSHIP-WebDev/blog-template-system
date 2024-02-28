@@ -39,7 +39,9 @@
 	<!-- Home Slider -->
 
 	<div class="home_slider_container">
+
 		<div class="owl-carousel owl-theme home_slider">
+
 
 			<!-- Slider Item -->
 			<div class="owl-item">
@@ -419,6 +421,7 @@
 
 	</div>
 </div>
+
 
 <!-- Page Content -->
 
@@ -1273,4 +1276,5 @@
 		</div>
 	</div>
 </div>
+
 @endsection

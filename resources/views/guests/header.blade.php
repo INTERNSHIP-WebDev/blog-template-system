@@ -1,32 +1,102 @@
+
+<style>
+    .notification-card:hover {
+        background-color: #000000; 
+        transition: background-color 0.3s ease;
+    }
+
+</style>
+
  <!-- navigation top-->
  <div class="nav-header bg-white shadow-xs border-0">
             <div class="nav-top">
                 <a href="index.html"><i class="feather-file-text text-success display1-size me-2 ms-0"></i><span class="d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0">Blog.TS</span> </a>
-                <a href="#" class="mob-menu ms-auto me-2 chat-active-btn"><i class="feather-message-circle text-grey-900 font-sm btn-round-md bg-greylight"></i></a>
+                <a href="#" class="mob-menu ms-auto me-2 chat-active-btn"></a>
                 <a href="#" class="me-2 menu-search-icon mob-menu"><i class="feather-search text-grey-900 font-sm btn-round-md bg-greylight"></i></a>
                 <button class="nav-menu me-0 ms-2"></button>
             </div>
             
-            <form action="#" class="float-left header-search">
+            <form action="{{ route('search') }}" method="GET" class="float-left header-search">
                 <div class="form-group mb-0 icon-input">
                     <i class="feather-search font-sm text-grey-400"></i>
-                    <input type="text" placeholder="Start typing to search.." class="bg-grey border-0 lh-32 pt-2 pb-2 ps-5 pe-3 font-xssss fw-500 rounded-xl w350 theme-dark-bg">
+                    <input type="text" name="query" placeholder="Start typing to search.." class="bg-grey border-0 lh-32 pt-2 pb-2 ps-5 pe-3 font-xssss fw-500 rounded-xl w350 theme-dark-bg">
                 </div>
             </form>
 
-            <a href="{{ route('guests.index')}}" class="p-2 text-center ms-3 menu-icon center-menu-icon"><i class="feather-home font-lg alert-primary btn-round-lg theme-dark-bg text-current "></i></a>
+            <!-- Display search results here -->
+            @if(isset($searchResults))
+                <!-- Display search results -->
+                @forelse($searchResults as $result)
+                    @if ($result instanceof \App\Models\User)
+                        {{-- User search result --}}
+                        <div class="result-item">
+                            <!-- Display user information -->
+                            <p>{{ $result->name }}</p>
+                        </div>
+                    @else
+                        {{-- Template search result --}}
+                        <div class="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3">
+                            <!-- Card content for each template search result -->
+                            <div class="card-body p-0 d-flex">
+                                <figure class="avatar me-3">
+                                    <img src="{{ asset('images/photos/' . $result->user->photo) }}" alt="User Photo" class="shadow-sm rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                </figure>
+                                <h4 class="fw-700 text-grey-900 font-xssss mt-1">{{ $result->user->name }}<span class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">{{ $result->created_at->diffForHumans() }}</span></h4>
+                            </div>
+
+                            <div class="card-body p-0 me-lg-6">
+                                <p class="fw-500 text-grey-500 lh-26 font-xssss w-100">
+                                    <p class="fw-700 text-black lh-26 font-xss w-100">{{ $result->header }} </p>
+                                    {!! Illuminate\Support\Str::limit($result->description, 150) !!}
+                                    <a href="{{ route('guests.show', $result) }}" class="fw-600 text-primary ms-2"> Read more</a>
+                                </p>
+                            </div>
+
+                            <!-- Display views, likes, comments, and comments form -->
+
+                        </div>
+                    @endif
+                @empty
+                    <p>No search results found.</p>
+                @endforelse
+            @endif
+
+
+            <a href="{{ route('newsfeed')}}" class="p-2 text-center ms-3 menu-icon center-menu-icon"><i class="feather-home font-lg alert-primary btn-round-lg theme-dark-bg text-current "></i></a>
             
-            <a href="#" class="p-2 text-center ms-auto menu-icon" id="dropdownMenu3" data-bs-toggle="dropdown" aria-expanded="false"><span class="dot-count bg-warning"></span><i class="feather-bell font-xl text-current"></i></a>
+            <a href="#" class="p-2 text-center ms-auto menu-icon" id="dropdownMenu3" data-bs-toggle="dropdown" aria-expanded="false">
+                @if($tempNotificationsCount > 0)
+                    <span class="dot-count bg-warning"></span>
+                @endif
+                <i class="feather-bell font-xl text-current"></i>
+            </a>
+
+
             <div class="dropdown-menu dropdown-menu-end p-4 rounded-3 border-0 shadow-lg" aria-labelledby="dropdownMenu3">
                 
-                <h4 class="fw-700 font-xss mb-4">Notification</h4>
-                <div class="card bg-transparent-card w-100 border-0 ps-5 mb-3">
-                    <img src="images/user-8.png" alt="user" class="w40 position-absolute left-0">
-                    <h5 class="font-xsss text-grey-900 mb-1 mt-0 fw-700 d-block">Hendrix Stamp <span class="text-grey-400 font-xsssss fw-600 float-right mt-1"> 3 min</span></h5>
-                    <h6 class="text-grey-500 fw-500 font-xssss lh-4">There are many variations of pass..</h6>
+            <h4 class="fw-700 font-xss mb-4"> {{ $tempNotificationsCount }} New Notifications</h4>
+                <div style="max-height: 500px; overflow-y: auto;">
+                    @if($tempNotifications->isNotEmpty())
+                        @foreach($tempNotifications as $notification)
+                            @php
+                                $template = App\Models\Template::find($notification->temp_id);
+                                $header = Str::limit($template->header, 50);
+                            @endphp
+                            <a href="{{ route('guests.show', ['guest' => $template->id]) }}" class="text-decoration-none notification-card" onclick="markAsRead({{ $notification->id }})">
+                                <div class="card bg-transparent-card w-100 border-0 ps-5 mb-3">
+                                    <img src="{{ $template ? asset('images/banners/' . $template->banner) : asset('images/user-default.png') }}" alt="template banner" class="w40 position-absolute left-0">
+                                    <h5 class="font-xsss text-grey-900 mb-1 mt-0 fw-700 d-block">{{ $header }} <span class="text-grey-400 font-xsssss fw-600 float-right mt-1">{{ $notification->created_at->diffForHumans() }}</span></h5>
+                                    <h6 class="text-grey-500 fw-500 font-xssss lh-4">{{ $notification->message }}</h6>
+                                </div>
+                            </a>
+                        @endforeach
+                    @else
+                        <p>No new notifications.</p>
+                    @endif
                 </div>
             </div>
-            <a href="#" class="p-2 text-center ms-3 menu-icon chat-active-btn"><i class="feather-message-square font-xl text-current"></i></a>
+            
+           
             <div class="p-2 text-center ms-3 position-relative dropdown-menu-icon menu-icon cursor-pointer">
                 <i class="feather-settings animation-spin d-inline-block font-xl text-current"></i>
                 <div class="dropdown-menu-settings switchcolor-wrap">
@@ -129,7 +199,36 @@
                     
                 </div>
             </div>
-            
-            <a href="default-settings.html" class="p-0 ms-3 menu-icon"><img src="<?php echo url('sociala')?>/images/profile-4.png" alt="user" class="w40 mt--1"></a>
+
+            <a href="{{ route('guests.profile')}}" class="p-0 ms-3 menu-icon">
+                @php
+                    $userPhoto = Auth::user()->photo ? asset('images/photos/' . Auth::user()->photo) : url('sociala/images/profile-4.png');
+                @endphp
+                <img src="{{ $userPhoto }}"  alt="User Photo" class="shadow-sm rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+            </a>
+
         </div>
         <!-- navigation top -->
+
+<script>
+    function markAsRead(notificationId) {
+        // Make an AJAX request to update the is_read status
+        fetch(`/mark-as-read/${notificationId}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Notification marked as read');
+            } else {
+                console.error('Failed to mark notification as read');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>

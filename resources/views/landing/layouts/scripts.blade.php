@@ -86,5 +86,131 @@
 	});
 </script>
 
+<script>
+		/**
+	 * Options
+	 **/
+	const options = {
+		ease: 0.1,
+	}
+
+	/**
+	 * Canvas
+	 **/
+	const $canvas = document.getElementById('canvas')
+
+	const updateCanvasSize = () => {
+		const { innerWidth, innerHeight, devicePixelRatio } = window
+		const width = innerWidth
+		const height = innerHeight
+		const pixelRatio = Math.min(devicePixelRatio, 2)
+
+		$canvas.width = width * pixelRatio
+		$canvas.height = height * pixelRatio
+
+		$canvas.style.width = width + 'px'
+		$canvas.style.height = height + 'px'
+	}
+
+	window.addEventListener('resize', updateCanvasSize)
+	updateCanvasSize()
+
+	/**
+	 * Context
+	 **/
+	const ctx = $canvas.getContext('2d')
+
+	/**
+	* Mouse
+	**/
+	const mouse = {
+		x: window.innerWidth / 2 * Math.min(window.devicePixelRatio, 2),
+		y: window.innerHeight / 2 * Math.min(window.devicePixelRatio, 2),
+	}
+
+	const updateMousePosition = e => {
+		const { clientX, clientY } = e
+		const { left, top } = $canvas.getBoundingClientRect()
+		const pixelRatio = Math.min(window.devicePixelRatio, 2)
+
+		mouse.x = (clientX - left) * pixelRatio
+		mouse.y = (clientY - top) * pixelRatio
+	}
+
+	$canvas.addEventListener('mousemove', updateMousePosition)
+
+	/**
+	 * Cursor
+	 **/
+	const cursor = {
+		x: window.innerWidth / 2 * Math.min(window.devicePixelRatio, 2),
+		y: window.innerHeight / 2 * Math.min(window.devicePixelRatio, 2),
+		a: 0,
+		s: 0,
+	}
+
+	/**
+	 * Loop
+	 **/
+	requestAnimationFrame(function tick(timestamp) {
+		const { width, height } = $canvas
+		const pixelRatio = Math.min(window.devicePixelRatio, 2)
+
+		ctx.clearRect(0, 0, width, height)
+
+		// mouse
+		const mouseRadius = pixelRatio * 16
+
+		ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)'
+		ctx.lineWidth = 4
+		ctx.beginPath()
+		ctx.arc(mouse.x, mouse.y, mouseRadius, 0, Math.PI * 2, false)
+		ctx.closePath()
+		ctx.stroke()
+
+		// cursor
+		cursor.x += (mouse.x - cursor.x) * options.ease
+		cursor.y += (mouse.y - cursor.y) * options.ease
+
+		cursor.a = Math.atan((mouse.y - cursor.y) / (mouse.x - cursor.x))
+
+		cursor.s = map(distance(cursor.x, cursor.y, mouse.x, mouse.y), 0, Math.max(width, height), 1, .1)
+
+		const cursorRadius = pixelRatio * 12
+
+		ctx.save()
+		ctx.translate(cursor.x, cursor.y)
+		ctx.rotate(cursor.a)
+		ctx.scale(1, cursor.s)
+
+		ctx.fillStyle = 'rgba(255, 255, 255, 1.0)'
+		ctx.beginPath()
+		ctx.arc(0, 0, cursorRadius, 0, Math.PI * 2, false)
+		ctx.closePath()
+		ctx.fill()
+
+		ctx.restore()
+
+		requestAnimationFrame(tick)
+	})
+
+	/**
+	 * Utils
+	 **/
+	function lerp(norm, min, max) {
+		return (max - min) * norm + min
+	}
+
+	function distance(x0, y0, x1, y1) {
+		return Math.hypot(x1 - x0, y1 - y0)
+	}
+
+	function map(n, start1, stop1, start2, stop2) {
+		return (n - start1) / (stop1 - start1) * (stop2 - start2) + start2
+	}
+
+</script>
+
+
 </body>
 </html>

@@ -14,12 +14,12 @@ use App\Models\Category;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
-use RealRashid\SweetAlert\Facades\Alert;
+
 
 
 class CategoryController extends Controller
 {
-    
+
     /**
      * Create a new controller instance.
      *
@@ -28,9 +28,9 @@ class CategoryController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('permission:create-category|edit-category|delete-category', ['only' => ['index','show']]);
-        $this->middleware('permission:create-category', ['only' => ['create','store']]);
-        $this->middleware('permission:edit-category', ['only' => ['edit','update']]);
+        $this->middleware('permission:create-category|edit-category|delete-category', ['only' => ['index', 'show']]);
+        $this->middleware('permission:create-category', ['only' => ['create', 'store']]);
+        $this->middleware('permission:edit-category', ['only' => ['edit', 'update']]);
         $this->middleware('permission:delete-category', ['only' => ['destroy']]);
     }
 
@@ -42,22 +42,81 @@ class CategoryController extends Controller
         $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
 
         $categories = Category::latest('created_at')->paginate(5);
-        
-        return view('categories.index', compact('chats', 'userNames','categories', 'notifications', 'allNotif'));
+
+        return view('categories.index', compact('chats', 'userNames', 'categories', 'notifications', 'allNotif'));
     }
 
-    public function fetch_data_category(Request $request)
+    //paginate category
+    public function paginateCategory(Request $request)
     {
-        $notifications = Notification::where('is_read', false)->get();
-        $allNotif = Notification::orderBy('created_at', 'desc')->get();
-        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
-        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+        $searchString = $request->query('search_string');
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
 
-        if ($request->ajax()) {
-            $categories = Category::latest('created_at')->paginate(5);
-            return view('categories.pagination_category', compact('chats', 'userNames','categories', 'notifications', 'allNotif'))->render();
+        // Query builder for filtering by search string if it's provided
+        $query = Category::query();
+        if ($searchString) {
+            $query->where('text', 'like', '%' . $searchString . '%');
+        }
+
+        // Apply date range filter if start date and end date are provided
+        if ($startDate && $endDate) {
+            $query->whereDate('created_at', '>=', $startDate)
+                ->whereDate('created_at', '<=', $endDate);
+        }
+
+        // Paginate the results
+        $categories = $query->latest()->paginate(5);
+
+        // Pass the start date and end date to the view
+        $categories->appends(['start_date' => $startDate, 'end_date' => $endDate]);
+
+        // Render the view with paginated permissions
+        return view('categories.category_pagination', compact('categories'))->render();
+    }
+
+    //search category
+    public function searchCategory(Request $request)
+    {
+        $categories = Category::where('text', 'like', '%' . $request->search_string . '%')
+            ->orderBy('id', 'desc')
+            ->paginate(5);
+
+        if ($categories->count() >= 1) {
+            return view('categories.category_pagination', compact('categories'))->render();
+        } else {
+            return response()->json([
+                'status' => 'nothing_found',
+            ]);
         }
     }
+
+    //filter category
+    public function filterCategory(Request $request)
+    {
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+
+        $categories = Category::whereDate('created_at', '>=', $start_date)
+            ->whereDate('created_at', '<=', $end_date)
+            ->orderBy('created_at', 'desc') // Order by created_at in descending order
+            ->paginate(5);
+
+        return view('categories.category_pagination', compact('categories'))->render();
+    }
+
+    // public function fetch_data_category(Request $request)
+    // {
+    //     $notifications = Notification::where('is_read', false)->get();
+    //     $allNotif = Notification::orderBy('created_at', 'desc')->get();
+    //     $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+    //     $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
+    //     if ($request->ajax()) {
+    //         $categories = Category::latest('created_at')->paginate(5);
+    //         return view('categories.pagination_category', compact('chats', 'userNames','categories', 'notifications', 'allNotif'))->render();
+    //     }
+    // }
 
     /**
      * Show the form for creating a new category.
@@ -71,7 +130,7 @@ class CategoryController extends Controller
         $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
         $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
 
-        return view('categories.create', compact('chats', 'userNames','notifications', 'allNotif'));
+        return view('categories.create', compact('chats', 'userNames', 'notifications', 'allNotif'));
     }
 
     /**
@@ -87,20 +146,34 @@ class CategoryController extends Controller
                 'text' => 'required|string|max:255',
             ]);
 
+            // Check if the category already exists
+            $existingCategory = Category::where('text', $request->input('text'))->first();
+            if ($existingCategory) {
+                toastr()->warning('Category already exists!', 'Warning', 
+                ['progressBar' => true, 'closeButton' => true, 'timeOut' => 3000]);
+                return redirect()->back();
+            }
+
             // Create a new category instance and save to the database
             Category::create([
                 'text' => $request->input('text'),
             ]);
 
-            Alert::alert('Success!', 'Category added successfully.', 'success');
+            toastr()->success('Category added successfully!', 'Success', 
+            ['progressBar' => true, 'closeButton' => true, 'preventDuplicates' => true, 
+            'timeOut' => 3000, 'showDuration' => 300]);
 
             // Redirect to the category index page or any other page after creation
             return redirect()->route('categories.index'); //->with('success', 'Category added successfully!');
         } catch (\Exception $e) {
+
+            toastr()->error('An error has occurred please try again later.');
+
             // Alert::error('Error', 'Error Message: ' . $e->getMessage());
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
+
 
     public function show($id)
     {
@@ -110,8 +183,8 @@ class CategoryController extends Controller
         $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
 
         $category = Category::findOrFail($id);
-        return view('categories.show', compact('chats', 'userNames','category', 'notifications', 'allNotif'));
-    }   
+        return view('categories.show', compact('chats', 'userNames', 'category', 'notifications', 'allNotif'));
+    }
 
     /**
      * Show the form for editing the specified category.
@@ -127,7 +200,7 @@ class CategoryController extends Controller
         $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
 
         $category = Category::findOrFail($id);
-        return view('categories.edit', compact('chats', 'userNames','category', 'notifications', 'allNotif'));
+        return view('categories.edit', compact('chats', 'userNames', 'category', 'notifications', 'allNotif'));
     }
 
     /**
@@ -150,7 +223,9 @@ class CategoryController extends Controller
             $category = Category::findOrFail($id);
             $category->update($validatedData);
 
-            Alert::success('Success!', 'Category updated successfully.',);
+            toastr()->success('Category updated successfully!', 'Success', 
+            ['progressBar' => true, 'closeButton' => true, 'preventDuplicates' => true, 
+            'timeOut' => 3000, 'showDuration' => 300]);
 
             // Redirect to the category index page or any other page after update
             return redirect()->route('categories.index'); //->with('success', 'Category updated successfully!');
@@ -160,21 +235,23 @@ class CategoryController extends Controller
         }
     }
 
-    
+
     public function destroy($id)
     {
         try {
             $category = Category::findOrFail($id);
             $category->delete();
 
-            Alert::success('Got it', 'Category deleted successfully');
+            toastr()->success('Category deleted successfully!', 'Success', 
+            ['progressBar' => true, 'closeButton' => true, 'preventDuplicates' => true, 
+            'timeOut' => 3000, 'showDuration' => 300]);
 
             //return response()->json(['success' => true, 'message' => 'Category deleted successfully.']);
             return redirect()->route('categories.index');
-        } catch (\Exception $e) {
+            } catch (\Exception $e) {
             return
-            Alert::error('Error!', 'Category deleted unsuccessfully.');
-        }   
+                toastr()->error('An error has occurred please try again later.');
+        }
     }
 
 
@@ -202,6 +279,6 @@ class CategoryController extends Controller
         $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
         $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
 
-        return view('category', compact('chats', 'userNames','notifications', 'allNotif', 'categories', 'heroTemplates', 'descriptions', 'subtitles', 'titles', 'fTemplate', 'latestTemplate', 'templates', 'users'));
+        return view('category', compact('chats', 'userNames', 'notifications', 'allNotif', 'categories', 'heroTemplates', 'descriptions', 'subtitles', 'titles', 'fTemplate', 'latestTemplate', 'templates', 'users'));
     }
 }

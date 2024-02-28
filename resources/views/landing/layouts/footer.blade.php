@@ -7,7 +7,7 @@
 			<div class="row row-lg-eq-height">
 				<div class="col-lg-9 order-lg-1 order-2">
 					<div class="footer_content">
-						<div class="footer_logo"><a href="#">BLOGERISTAAAAAAAAAAAR</a></div>
+						<div class="footer_logo"><a href="#">BLOG</a></div>
 						<div class="footer_social">
 							<ul>
 								<li class="footer_social_facebook"><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>

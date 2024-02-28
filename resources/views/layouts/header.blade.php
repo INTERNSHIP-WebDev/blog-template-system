@@ -162,34 +162,34 @@
                         </div>
                         <div data-simplebar style="max-height: 230px;">
                             @foreach($chats as $chat)
-                            <a href="{{ route('chatify', ['from_id' => $chat->from_id]) }}" class="text-reset notification-item">
-                            <div class="d-flex mb-3">
-                                <div class="avatar-xs me-3">
-                                    <span class="avatar-title bg-info rounded-circle font-size-16" style="width: 35px; margin-right: 5px;">
-                                        <i class="bx bx-user"></i>
-                                    </span>
-                                </div>
-                                <div>
-                                    <p class="mb-1">
-                                    @php
-                                        // Fetch user names for each to_id
-                                        $userNames = \App\Models\User::pluck('name');
-                                    @endphp
-
-                                        @if($chat->from_id !== auth()->id() && $chat->to_id == auth()->id())
-                                            <h6 >{{ $userNames[$chat->from_id] }}</h6>
-                                        @else
-                                        <h6 class="mb-1">Unknown User</h6>
-                                        @endif
-                              
-                                    <p class="mb-1">{{ $chat->body }}</p>
-                                    <p class="mb-0" key="t-grammer">{{ $chat->created_at->diffForHumans() }}</p>
-                                    </p>
-                                </div>
-                            </div>
-                            </a>
+                                @if($chat->from_id !== auth()->id() && $chat->to_id == auth()->id())
+                                    <a href="{{ route('chatify', ['from_id' => $chat->from_id]) }}" class="text-reset notification-item">
+                                        <div class="d-flex mb-3">
+                                            <div class="avatar-xs me-3">
+                                                <span class="shadow-sm rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                                    @php
+                                                        $user = \App\Models\User::find($chat->from_id);
+                                                        $userPhoto = $user ? asset('images/photos/' . $user->photo) : asset('default-avatar.jpg');
+                                                    @endphp
+                                                    <img src="{{ $userPhoto }}" alt="User Photo" class="shadow-sm rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <p class="mb-1">
+                                                    @php
+                                                        $userName = $user ? $user->name : 'Unknown User';
+                                                    @endphp
+                                                    <h6 style="margin-left: 20px">{{ $userName }}</h6>
+                                                    <p class="mb-1" style="margin-left: 20px">{{ $chat->body }}</p>
+                                                    <p class="mb-0" key="t-grammer" style="margin-left: 20px; font-size:x-small;">{{ $chat->created_at->diffForHumans() }}</p>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                @endif
                             @endforeach
                         </div>
+
 
 
                         <div class="p-2 border-top d-grid">
@@ -207,7 +207,7 @@
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         @if(auth()->user()->photo)
                             <img class="rounded-circle header-profile-user" src="{{ asset('images/photos/' . auth()->user()->photo) }}"
-                                alt="Header Avatar">
+                                alt="Header Avatar" class="shadow-sm rounded-circle" style="width: 40px; height: 40px; object-fit: cover;"  >
                         @else
                             <img class="rounded-circle header-profile-user" src="{{ asset('/images/avatars/avatar-1.png') }}" alt="Header Avatar">
                         @endif

@@ -9,15 +9,18 @@ use App\Models\ChMessage;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
+use \Illuminate\Support\Facades\Facade;
+use RealRashid\SweetAlert\Facades\Alert;
+
 
 class PermissionController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('permission:create-permission|edit-permission|delete-permission', ['only' => ['index','show']]);
-        $this->middleware('permission:create-permission', ['only' => ['create','store']]);
-        $this->middleware('permission:edit-permission', ['only' => ['edit','update']]);
+        $this->middleware('permission:create-permission|edit-permission|delete-permission', ['only' => ['index', 'show']]);
+        $this->middleware('permission:create-permission', ['only' => ['create', 'store']]);
+        $this->middleware('permission:edit-permission', ['only' => ['edit', 'update']]);
         $this->middleware('permission:delete-permission', ['only' => ['destroy']]);
     }
 
@@ -34,23 +37,34 @@ class PermissionController extends Controller
     }
 
     //paginate permission
-    public function pagination(Request $request)
+    public function paginatePermission(Request $request)
     {
         $searchString = $request->query('search_string');
-
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+    
         // Query builder for filtering by search string if it's provided
         $query = Permission::query();
         if ($searchString) {
             $query->where('name', 'like', '%' . $searchString . '%');
         }
-
+    
+        // Apply date range filter if start date and end date are provided
+        if ($startDate && $endDate) {
+            $query->whereDate('created_at', '>=', $startDate)
+                  ->whereDate('created_at', '<=', $endDate);
+        }
+    
         // Paginate the results
         $permissions = $query->latest()->paginate(5);
-
+    
+        // Pass the start date and end date to the view
+        $permissions->appends(['start_date' => $startDate, 'end_date' => $endDate]);
+    
         // Render the view with paginated permissions
         return view('permissions.permission_pagination', compact('permissions'))->render();
-    }
-
+    }    
+    
     //search permission
     public function searchPermission(Request $request)
     {
@@ -67,48 +81,60 @@ class PermissionController extends Controller
         }
     }
 
-    public function fetch_permission_data(Request $request)
+    //filter permission
+    public function filterPermission(Request $request)
     {
-        $notifications = Notification::where('is_read', false)->get();
-        $allNotif = Notification::orderBy('created_at', 'desc')->get();
-
-        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
-        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
-
-
-        if ($request->ajax()) {
-            $permissions = Permission::latest('created_at')->paginate(5);
-            return view('permissions.permission_pagination', compact('chats', 'userNames', 'permissions', 'notifications', 'allNotif'))->render();
-        }
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+    
+        $permissions = Permission::whereDate('created_at', '>=', $start_date)
+            ->whereDate('created_at', '<=', $end_date)
+            ->orderBy('created_at', 'desc') // Order by created_at in descending order
+            ->paginate(5);
+    
+        return view('permissions.permission_pagination', compact('permissions'))->render();
     }
 
-    public function action(Request $request)
-    {
-        if ($request->ajax()) {
-            $output = '';
-            $query = $request->get('query');
+    // public function fetch_permission_data(Request $request)
+    // {
+    //     $notifications = Notification::where('is_read', false)->get();
+    //     $allNotif = Notification::orderBy('created_at', 'desc')->get();
 
-            $permissionsQuery = Permission::query();
-
-            if ($query != '') {
-                $permissionsQuery->where('name', 'like', '%' . $query . '%');
-            }
-
-            $permissions = $permissionsQuery->orderBy('id', 'desc')->paginate(5);
-
-            // Render the paginated results and pagination links
-            $view = view('permissions.permission_table_body', compact('permissions'))->render();
-            $paginationLinks = $permissions->links()->toHtml();
-
-            return response()->json([
-                'table_data'  => $view,
-                'total_data'  => $permissions->total(),
-                'pagination_links' => $paginationLinks,
-            ]);
-        }
-    }
+    //     $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+    //     $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
 
 
+    //     if ($request->ajax()) {
+    //         $permissions = Permission::latest('created_at')->paginate(5);
+    //         return view('permissions.permission_pagination', compact('chats', 'userNames', 'permissions', 'notifications', 'allNotif'))->render();
+    //     }
+    // }
+
+    // public function action(Request $request)
+    // {
+    //     if ($request->ajax()) {
+    //         $output = '';
+    //         $query = $request->get('query');
+
+    //         $permissionsQuery = Permission::query();
+
+    //         if ($query != '') {
+    //             $permissionsQuery->where('name', 'like', '%' . $query . '%');
+    //         }
+
+    //         $permissions = $permissionsQuery->orderBy('id', 'desc')->paginate(5);
+
+    //         // Render the paginated results and pagination links
+    //         $view = view('permissions.permission_table_body', compact('permissions'))->render();
+    //         $paginationLinks = $permissions->links()->toHtml();
+
+    //         return response()->json([
+    //             'table_data'  => $view,
+    //             'total_data'  => $permissions->total(),
+    //             'pagination_links' => $paginationLinks,
+    //         ]);
+    //     }
+    // }
 
     public function create()
     {
@@ -137,6 +163,10 @@ class PermissionController extends Controller
                     'guard_name' => 'web',
                 ]);
             }
+
+            toastr()->success('Permission added successfully!', 'Success', 
+            ['progressBar' => true, 'closeButton' => true, 'preventDuplicates' => true, 
+            'timeOut' => 3000, 'showDuration' => 300]);
 
             return redirect()->route('permissions.index');
         } catch (\Exception $e) {
@@ -175,6 +205,10 @@ class PermissionController extends Controller
                 ]);
             }
 
+            toastr()->success('Permission updated successfully!', 'Success', 
+            ['progressBar' => true, 'closeButton' => true, 'preventDuplicates' => true, 
+            'timeOut' => 3000, 'showDuration' => 300]);
+
             return redirect()->route('permissions.index');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
@@ -186,22 +220,10 @@ class PermissionController extends Controller
         $permission = Permission::findOrFail($id);
         $permission->delete();
 
-        return redirect()->route('permissions.index');
-    }
-
-    public function filter(Request $request){
-        $notifications = Notification::where('is_read', false)->get();
-        $allNotif = Notification::orderBy('created_at', 'desc')->get();
-
-        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
-        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+        toastr()->success('Permission removed successfully!', 'Success', 
+        ['progressBar' => true, 'closeButton' => true, 'preventDuplicates' => true, 
+        'timeOut' => 3000, 'showDuration' => 300]);
         
-        $start_date = $request->start_date;
-        $end_date = $request->end_date;
-
-        $permissions = Permission::whereDate('created_at', '>=', $start_date)
-                                    ->whereDate('created_at', '<=', $end_date)
-                                    ->get();
-        return view('permissions.index', compact('chats', 'userNames', 'permissions', 'notifications', 'allNotif', 'permissions'));
+        return redirect()->route('permissions.index');
     }
 }
