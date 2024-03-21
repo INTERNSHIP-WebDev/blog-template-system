@@ -28,6 +28,7 @@ use App\Http\Controllers\HeaderController;
 // use App\Http\Controllers\SocialController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -71,6 +72,7 @@ Route::get('/', function () {
     $more = Template::paginate(6);
     return view('landing/landing', compact('templates', 'sidebarPosts', 'categories', 'heroTemplates', 'descriptions', 'subtitles', 'titles', 'fTemplate', 'latestTemplates', 'users', 'more'));
 });
+
 
 # NON AUTHENTICATED PAGES
 # GUEST EMAIL
@@ -126,6 +128,10 @@ Route::get('/forgot-password', function () {
 })->name('password.request');
 
 //email verification
+Route::get('/verification/{id}',[UserController::class,'verification']);
+Route::post('/verified',[UserController::class,'verifiedOtp'])->name('verifiedOtp');
+Route::get('/resend-otp',[UserController::class,'resendOtp'])->name('resendOtp');
+
 Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('blogs', [TemplateController::class, 'index'])->name('templates.index');
@@ -191,7 +197,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/emails/mark-as-unread', [MailController::class, 'markAsUnread'])->name('emails.markAsUnread');
 
     Route::get('newsfeed', [GuestController::class, 'index'])->name('newsfeed');
+    Route::get('saved-favorites', [GuestController::class, 'favorites'])->name('favorites');
     Route::get('guests/profile', [App\Http\Controllers\GuestController::class, 'profile'])->name('guests.profile');
+    Route::post('/save-to-favorites', [GuestController::class, 'saveToFavorites'])->name('save.to.favorites');
     Route::get('guests/create', [GuestController::class, 'create'])->name('guests.create');
     Route::post('guests', [GuestController::class, 'store'])->name('guests.store');
     Route::get('/guests/{guest}/edit', [GuestController::class, 'edit'])->name('guests.edit');
@@ -231,6 +239,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('advertisements', [AdvertisementController::class, 'store'])->name('ads.store');
     Route::get('/advertisements/{advertisement}/edit', [AdvertisementController::class, 'edit'])->name('ads.edit');
     Route::delete('/advertisements/{advertisement}', [AdvertisementController::class, 'destroy'])->name('ads.destroy');
+    Route::post('/update-priority/{advertisement}', [AdvertisementController::class, 'updatePriority'])->name('update.priority');
     Route::resource('advertisements', AdvertisementController::class);
 
     // PAGINATION AND SEARCH

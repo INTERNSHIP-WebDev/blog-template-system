@@ -12,6 +12,7 @@ class Advertisement extends Model
     protected $fillable = [
         'file_type',
         'name',
+        'priority',
     ];
     
 }

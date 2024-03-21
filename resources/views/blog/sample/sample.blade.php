@@ -155,13 +155,13 @@ $socials = [
 			<div></div>
 		</div>
 	</div>
-	<div class="logo menu_mm">
+	<!-- <div class="logo menu_mm">
 		@if ($template->logo)
 		<img src="{{ asset('images/logos/' . $template->logo) }}" alt="Logo Image" class="rounded-circle">
 		@else
 		No photo
 		@endif
-	</div>
+	</div> -->
 	<div class="search">
 		<form action="#">
 			<input type="search" class="header_search_input menu_mm" required="required" placeholder="Type to Search...">
@@ -177,12 +177,17 @@ $socials = [
 	</nav>
 </div>
 
+
+
+
+
+
 <!-- Home -->
 <div class="home">
 	@php
 	$bannerUrl = asset($banner_dir . $template->banner);
 	@endphp
-	<div class="home_background parallax-window" data-parallax="scroll" data-image-src="{{ $bannerUrl }}" data-speed="0.8"></div>
+	<div class="home_background parallax-window" data-parallax="scroll" data-image-src="{{ $bannerUrl }}" data-speed="1"></div>
 	<div class="home_content">
 		<div class="post_category trans_200"><a href="category.html" class="trans_200">{{ $template->category->text }}</a></div>
 		<div class="post_title">{{ $template->header }}</div>
@@ -194,6 +199,7 @@ $socials = [
 		</div>
 	</div>
 </div>
+
 
 <!-- Page Content -->
 
@@ -471,25 +477,32 @@ $socials = [
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
 
-        @foreach ($ads as $ad)
+        @php
+        // Filter ads with priority 'yes'
+        $priorityAds = $ads->filter(function($ad) {
+            return $ad->priority == 'yes';
+        });
+        @endphp
+
+        @foreach ($priorityAds as $ad)
         fileNames.push('{{ $ad->name }}');
         @endforeach
 
-		// Shuffle function using Fisher-Yates algorithm
-		function shuffleArray(array) {
-			for (var i = array.length - 1; i > 0; i--) {
-				var j = Math.floor(Math.random() * (i + 1));
-				var temp = array[i];
-				array[i] = array[j];
-				array[j] = temp;
-			}
-			return array;
-		}
+        // Shuffle function using Fisher-Yates algorithm
+        function shuffleArray(array) {
+            for (var i = array.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+            return array;
+        }
 
-		fileNames = shuffleArray(fileNames);
+        fileNames = shuffleArray(fileNames);
 
-		var randomIndex = getRandomInt(0, fileNames.length - 1);
-		var randomFileName = fileNames[randomIndex];
+        var randomIndex = getRandomInt(0, fileNames.length - 1);
+        var randomFileName = fileNames[randomIndex];
 
         // Function to close the modal and remove overlay
         function closeModal() {
@@ -555,44 +568,44 @@ $socials = [
         var fileType = '{{ $ad->file_type }}';
 
         if (fileType === 'Video') {
-			var videoElement = document.createElement('video');
-				videoElement.setAttribute('controls', true);
-				videoElement.setAttribute('autoplay', true);
-			var sourceElement = document.createElement('source');
-				sourceElement.setAttribute('src', '{{ asset("images/ads/") }}/' + randomFileName);
-				sourceElement.setAttribute('type', 'video/mp4');
-				videoElement.appendChild(sourceElement);
-				adContent.appendChild(videoElement);
+            var videoElement = document.createElement('video');
+            videoElement.setAttribute('controls', true);
+            videoElement.setAttribute('autoplay', true);
+            var sourceElement = document.createElement('source');
+            sourceElement.setAttribute('src', '{{ asset("images/ads/") }}/' + randomFileName);
+            sourceElement.setAttribute('type', 'video/mp4');
+            videoElement.appendChild(sourceElement);
+            adContent.appendChild(videoElement);
 
-			videoElement.addEventListener("play", function() {
-				if (videoElement.duration > 30) {
-					startCountdown();
-				}
-			});
+            videoElement.addEventListener("play", function() {
+                if (videoElement.duration > 30) {
+                    startCountdown();
+                }
+            });
 
-			videoElement.addEventListener("ended", function() {
-				closeModal();
-			});
+            videoElement.addEventListener("ended", function() {
+                closeModal();
+            });
 
-			if (videoElement.duration < 30) {
-				videoElement.addEventListener("seeking", function() {
-					videoElement.currentTime = 0;
-				});
-			}
-			
-		} else if (fileType === 'Image' || fileType === 'GIF') {
+            if (videoElement.duration < 30) {
+                videoElement.addEventListener("seeking", function() {
+                    videoElement.currentTime = 0;
+                });
+            }
+
+        } else if (fileType === 'Image' || fileType === 'GIF') {
             var imgElement = document.createElement('img');
-				imgElement.setAttribute('src', '{{ asset("images/ads/") }}/' + randomFileName);
-				imgElement.setAttribute('alt', 'Advertisement File');
-				adContent.appendChild(imgElement);
-				imgStartCountdown();
+            imgElement.setAttribute('src', '{{ asset("images/ads/") }}/' + randomFileName);
+            imgElement.setAttribute('alt', 'Advertisement File');
+            adContent.appendChild(imgElement);
+            imgStartCountdown();
 
             setTimeout(function() {
                 closeModal();
             }, 10000);
         }
 
-        var randomDelay = Math.floor(Math.random() * 1000);
+        var randomDelay = Math.floor(Math.random() * 2000);
         setTimeout(function() {
             var overlay = document.createElement("div");
             overlay.classList.add("modal-overlay");

@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Notification;
 use App\Models\Like;
 use App\Models\Comment;
+use App\Models\Favorite;
 use App\Http\Requests\StoreGuestRequest;
 use App\Http\Requests\UpdateGuestRequest;
 use Illuminate\Support\Facades\Hash;
@@ -62,13 +63,82 @@ class GuestController extends Controller
         $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
         $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
 
-        $templates = Template::with(['user', 'likes', 'comments' => function ($query) {
+        $templates = Template::where('draft', 'no')
+        ->with(['user', 'likes', 'comments' => function ($query) {
             $query->latest()->limit(3);
-        }])->inRandomOrder()->limit(15)->get();
+        }])
+        ->inRandomOrder()
+        ->limit(15)
+        ->get();
 
         return view('guests.index', compact('templates', 'tempNotificationsCount', 'tempNotifications', 'user', 'chats', 'userNames', 'notifications', 'allNotif'));
     }
 
+    public function saveToFavorites(Request $request)
+    {
+        // Check if the user is authenticated
+        if (!auth()->check()) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+    
+        // Check if the favorite already exists for this user and template
+        $existingFavorite = Favorite::where('temp_id', $request->temp_id)
+                                    ->where('user_id', auth()->user()->id)
+                                    ->first();
+    
+        if ($existingFavorite) {
+            // If the favorite already exists, delete it
+            $existingFavorite->delete();
+            return redirect()->back();
+        }
+    
+        // Create a new favorite entry if it doesn't already exist
+        $favorite = new Favorite();
+        $favorite->temp_id = $request->temp_id;
+        $favorite->user_id = auth()->user()->id;
+        $favorite->save();
+    
+        return redirect()->back();
+    }
+
+    public function favorites(Request $request)
+    {
+        $user = Auth::user();
+        $favorites = Favorite::where('user_id', $user->id)->get();
+
+        // Fetch notifications and other data as before
+        $tempNotifications = Notification::whereNotNull('temp_id')
+            ->whereNull('like_id')
+            ->whereNull('comment_id')
+            ->whereNull('user_id')
+            ->whereNull('mail_id')
+            ->where('is_read', false)
+            ->latest('created_at')
+            ->get();
+
+        $tempNotificationsCount = Notification::whereNotNull('temp_id')
+            ->whereNull('like_id')
+            ->whereNull('comment_id')
+            ->whereNull('user_id')
+            ->whereNull('mail_id')
+            ->where('is_read', false)
+            ->count();
+
+        $notifications = Notification::where('is_read', false)->get();
+        $allNotif = Notification::orderBy('created_at', 'desc')->get();
+        $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
+        $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
+
+        $templates = Template::where('draft', 'no')
+        ->with(['user', 'likes', 'comments' => function ($query) {
+            $query->latest()->limit(3);
+        }])
+        ->inRandomOrder()
+        ->limit(15)
+        ->get();
+
+        return view('guests.favorites', compact('favorites', 'templates', 'tempNotificationsCount', 'tempNotifications', 'user', 'chats', 'userNames', 'notifications', 'allNotif'));
+    }
 
     
     /**
@@ -95,6 +165,12 @@ class GuestController extends Controller
         $user = Auth::user();
 
         $template = Template::findOrFail($id);
+
+        // Check if the template is a draft, if yes, prevent access
+        if ($template->draft === 'yes') {
+            abort(403, 'Unauthorized action.'); // Or redirect to a different page
+        }
+
         // Pass the description through htmlspecialchars_decode to decode HTML entities
         $template->description = htmlspecialchars_decode($template->description);
 

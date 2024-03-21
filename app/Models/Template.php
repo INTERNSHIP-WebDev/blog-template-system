@@ -17,6 +17,7 @@ class Template extends Model
         'logo',
         'description',
         'views',
+        'draft',
         'user_id',
         'category_id',
     ];
@@ -86,6 +87,11 @@ class Template extends Model
     public function images()
     {
         return $this->hasMany(Image::class, 'temp_id');
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class, 'temp_id');
     }
 
     public function deleteExistingImages()

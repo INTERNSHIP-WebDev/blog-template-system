@@ -50,49 +50,63 @@ class TemplateController extends Controller
         $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
         $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
 
+        $users = User::all();
+        $category = Category::all();
+
         $templates = Template::latest('created_at')->paginate(5);
-        return view('templates.index', compact('chats', 'userNames', 'templates', 'notifications', 'allNotif'));
+
+        return view('templates.index', compact('category', 'users', 'chats', 'userNames', 'templates', 'notifications', 'allNotif'));
     }
 
-    //paginate template
+
+    // paginate template
     public function paginateBlog(Request $request)
     {
         $categoryName = Category::all();
         $searchString = $request->query('search_string');
         $startDate = $request->query('start_date');
         $endDate = $request->query('end_date');
-    
+        $selectedUsers = $request->query('selectedAuthors'); // Correct parameter name
+        $selectedCategories = $request->query('selectedCategories'); // Retrieve selected category IDs
+
         // Query builder for filtering by search string if it's provided
         $query = Template::query();
         if ($searchString) {
             $query->where('header', 'like', '%' . $searchString . '%');
         }
 
-        // Join with the Category table and filter by category name
-        if ($categoryName) {
-            $query->join('categories', 'templates.category_id', '=', 'categories.id')
-                ->where('categories.name', 'like', '%' . $categoryName . '%');
-        }
-
-        // Execute your query or continue building it as needed
-        $results = $query->get();
-
-    
         // Apply date range filter if start date and end date are provided
         if ($startDate && $endDate) {
             $query->whereDate('created_at', '>=', $startDate)
-                  ->whereDate('created_at', '<=', $endDate);
+                ->whereDate('created_at', '<=', $endDate);
         }
-    
+
+        // Apply filter for selected users
+        if (!empty($selectedUsers)) {
+            $query->whereIn('user_id', $selectedUsers);
+        }
+
+            // Apply filter for selected categories
+            if (!empty($selectedCategories)) {
+                $query->whereIn('category_id', $selectedCategories);
+            }
+
         // Paginate the results
         $templates = $query->latest()->paginate(5);
-    
-        // Pass the start date and end date to the view
-        $templates->appends(['start_date' => $startDate, 'end_date' => $endDate]);
-    
+
+        // Pass the start date, end date, and selected users to the view
+        $templates->appends([
+            'search_string' => $searchString,
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'selectedAuthors' => $selectedUsers, // Append selected users to pagination links
+            'selectedCategories' => $selectedCategories // Append selected categories to pagination links
+        ]);
+
         // Render the view with paginated templates
         return view('templates.blog_pagination', compact('templates'))->render();
-    }   
+    }
+
 
     //search blog
     public function searchBlog(Request $request)
@@ -110,33 +124,50 @@ class TemplateController extends Controller
         }
     }
 
-    //filter blog
+    // Filter blog
     public function filterBlog(Request $request)
     {
         $start_date = $request->start_date;
         $end_date = $request->end_date;
-    
-        $templates = Template::whereDate('created_at', '>=', $start_date)
-            ->whereDate('created_at', '<=', $end_date)
-            ->orderBy('created_at', 'desc') // Order by created_at in descending order
-            ->paginate(5);
-    
+        $selectedAuthors = $request->selectedAuthors; // Retrieve selected user IDs
+        $selectedCategories = $request->selectedCategories; // Retrieve selected category IDs
+
+        $query = Template::query();
+
+        // Apply date range filter if start date and end date are provided
+        if ($start_date && $end_date) {
+            $query->whereDate('created_at', '>=', $start_date)
+                ->whereDate('created_at', '<=', $end_date);
+        }
+
+        // Apply filter for selected users
+        if (!empty($selectedAuthors)) {
+            $query->whereIn('user_id', $selectedAuthors);
+        }
+
+        // Apply filter for selected categories
+        if (!empty($selectedCategories)) {
+            $query->whereIn('category_id', $selectedCategories);
+        }
+
+        // Paginate the results
+        $templates = $query->orderBy('created_at', 'desc')->paginate(5);
+
+        // Pass the start date, end date, selected users, and selected categories to the view
+        $templates->appends([
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'selectedAuthors' => $selectedAuthors, // Append selected authors to pagination links
+            'selectedCategories' => $selectedCategories // Append selected categories to pagination links
+        ]);
+
+        // Render the view with paginated templates
         return view('templates.blog_pagination', compact('templates'))->render();
     }
 
-    // public function fetch_data(Request $request)
-    // {
-    //     $notifications = Notification::where('is_read', false)->get();
-    //     $allNotif = Notification::orderBy('created_at', 'desc')->get();
 
-    //     $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
-    //     $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
 
-    //     if ($request->ajax()) {
-    //         $templates = Template::latest('created_at')->paginate(5);
-    //         return view('templates.pagination_data', compact('chats', 'userNames', 'templates','notifications', 'allNotif'))->render();
-    //     }
-    // }
+
 
     public function create()
     {
@@ -163,6 +194,7 @@ class TemplateController extends Controller
                 'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:25000',
                 'description' => 'required|string|max:250000',
                 'views' => 'nullable|integer',
+                'draft' => 'required|in:yes,no',
                 'comments.*.name' => 'required|string|max:255',
                 'comments.*.message' => 'required|string|max:7000',
             ]);
@@ -186,6 +218,8 @@ class TemplateController extends Controller
                 $logo->move(public_path('images/logos/'), $logoName);
             }
 
+            $draft = $request->input('draft', 'no');
+
             $template = Template::create([
                 'user_id' => $user_id,
                 'category_id' => $request->input('category_id'),
@@ -194,6 +228,7 @@ class TemplateController extends Controller
                 'logo' => $logoName,
                 'description' => $request->input('description'),
                 'views' => 0,
+                'draft' => $draft,
             ]);
 
             // Process and store each comment
@@ -212,8 +247,11 @@ class TemplateController extends Controller
                 'New template added successfully!',
                 'Success',
                 [
-                    'progressBar' => true, 'closeButton' => true, 'preventDuplicates' => true,
-                    'timeOut' => 3000, 'showDuration' => 300
+                    'progressBar' => true,
+                    'closeButton' => true,
+                    'preventDuplicates' => true,
+                    'timeOut' => 3000,
+                    'showDuration' => 300
                 ]
             );
 
@@ -303,6 +341,8 @@ class TemplateController extends Controller
             $oldBanner = $template->banner;
             $oldLogo = $template->logo;
 
+            $draft = $request->input('draft', 'no');
+
             $template->update([
                 'user_id' => $user_id, // Update the user_id field
                 'header' => $request->input('header'),
@@ -310,6 +350,7 @@ class TemplateController extends Controller
                 'logo' => $request->input('logo', $oldLogo),
                 'description' => $request->input('description'),
                 'views' => $request->input('views'),
+                'draft' => $draft, // Update the draft status
             ]);
 
             if ($request->hasFile('banner')) {
@@ -348,8 +389,11 @@ class TemplateController extends Controller
                 'Template updated successfully!',
                 'Success',
                 [
-                    'progressBar' => true, 'closeButton' => true, 'preventDuplicates' => true,
-                    'timeOut' => 3000, 'showDuration' => 300
+                    'progressBar' => true,
+                    'closeButton' => true,
+                    'preventDuplicates' => true,
+                    'timeOut' => 3000,
+                    'showDuration' => 300
                 ]
             );
 
@@ -372,8 +416,11 @@ class TemplateController extends Controller
             'Template removed successfully!',
             'Success',
             [
-                'progressBar' => true, 'closeButton' => true, 'preventDuplicates' => true,
-                'timeOut' => 3000, 'showDuration' => 300
+                'progressBar' => true,
+                'closeButton' => true,
+                'preventDuplicates' => true,
+                'timeOut' => 3000,
+                'showDuration' => 300
             ]
         );
 

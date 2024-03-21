@@ -126,16 +126,17 @@ class AdvertisementController extends Controller
         // Validate the request data
         $request->validate([
             'name' => 'required|file|mimes:jpeg,png,mp4,jpg,gif|max:25000', 
+            'priority' => 'required|in:yes,no',
         ]);
-
+    
         // Determine the file type based on the file extension
         $fileType = null;
         $allowedImageExtensions = ['jpeg', 'png', 'jpg'];
         $allowedGIFExtensions = ['gif'];
         $allowedVideoExtensions = ['mp4'];
-
+    
         $extension = $request->file('name')->getClientOriginalExtension();
-
+    
         if (in_array($extension, $allowedImageExtensions)) {
             $fileType = 'Image';
         } elseif (in_array($extension, $allowedVideoExtensions)) {
@@ -145,25 +146,26 @@ class AdvertisementController extends Controller
         } else {
             return redirect()->back()->with('error', 'Unsupported file type.');
         }
-
+    
         // Generate a unique filename
         $fileName = 'ad_' . time() . '.' . $extension;
-
+    
         // Move the uploaded file to the images/ads directory
         $request->file('name')->move(public_path('images/ads/'), $fileName);
-
+    
         // Create the advertisement record in the database
         Advertisement::create([
             'file_type' => $fileType,
             'name' => $fileName,
+            'priority' => $request->priority,
         ]);
-
+    
         // Redirect back with a success message
         toastr()->success('Advertisement added successfully!', 'Success', 
         ['progressBar' => true, 'closeButton' => true, 'preventDuplicates' => true, 
         'timeOut' => 3000, 'showDuration' => 300]);
-
-        return redirect()->route('advertisements.index'); //->with('success', 'Advertisement added successfully!');
+    
+        return redirect()->route('advertisements.index');
     }
 
     public function destroy($id)
@@ -177,4 +179,13 @@ class AdvertisementController extends Controller
     
             return redirect()->route('advertisements.index');
     }
+
+    public function updatePriority(Request $request, Advertisement $advertisement)
+    {
+        $advertisement->priority = $request->priority;
+        $advertisement->save();
+
+        return response()->json(['success' => true]);
+    }
+
 }

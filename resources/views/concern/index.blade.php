@@ -43,11 +43,27 @@
   <link href="{{ asset('backend/assets/css/main.css') }}" rel="stylesheet">
 
   <style>
-          .page-title{
-            color: #212529;
-            letter-spacing: 2px;
-          }
-        </style>
+    .page-title{
+      color: #212529;
+      letter-spacing: 2px;
+    }
+
+    .home {
+      position: relative;
+      height: 500px;
+      overflow: hidden;
+    }
+
+    .home_background {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      position: relative;
+	  }
+
+
+
+  </style>
 
 
 </head>
@@ -110,12 +126,10 @@
 
   <div class="super_container">
     <div class="home">
-      <div class="home_background parallax-window" data-parallax="scroll" data-image-src="landing_assets/images/post_nosidebar.jpg" data-speed="0.8"></div>
+      <div class="home_background parallax-window" data-parallax="scroll" data-image-src="landing_assets/images/post_nosidebar.jpg" data-speed="2.0"></div>
       <div class="home_content">
       </div>
     </div>
-
-
     
     <!-- Header -->
 
@@ -136,15 +150,10 @@
                 </ul>
               </nav>
               <div class="search_container ml-auto">
-                <div class="weather">
-                  <div class="temperature">+10°</div>
-                  <img class="weather_icon" src="images/cloud.png" alt="">
-                </div>
                 <form action="#">
                   <input type="search" class="header_search_input" required="required" placeholder="Type to Search...">
                   <img class="header_search_icon" src="images/search.png" alt="">
                 </form>
-
               </div>
               <div class="hamburger ml-auto menu_mm">
                 <i class="fa fa-bars trans_200 menu_mm" aria-hidden="true"></i>
@@ -154,8 +163,6 @@
         </div>
       </div>
     </header>
-
-    
 
   <main id="main">
     <section id="contact" class="contact mb-5">

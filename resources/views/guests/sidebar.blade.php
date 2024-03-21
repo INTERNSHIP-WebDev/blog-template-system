@@ -9,6 +9,7 @@
                             <li><a href="{{ route('newsfeed')}}" class="nav-content-bttn open-font" ><i class="feather-tv btn-round-md bg-blue-gradiant me-3"></i><span>News Feed</span></a></li>
                             <li><a href="{{ route('guests.profile')}}" class="nav-content-bttn open-font"><i class="feather-user btn-round-md bg-primary-gradiant me-3"></i><span>Account Profile </span></a></li> 
                             <li><a href="{{ route('chatify', ['from_id' => ' ']) }}"  class="nav-content-bttn open-font" ><i class="feather-message-circle btn-round-md bg-gold-gradiant me-3"></i><span>Messenger</span></a></li>                    
+                            <li><a href="{{ route('favorites')}}"  class="nav-content-bttn open-font" ><i class="feather-bookmark btn-round-md bg-success me-3"></i><span>Favorites</span></a></li>                    
                         </ul>
                     </div>
 

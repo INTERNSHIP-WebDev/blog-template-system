@@ -67,13 +67,13 @@
 				<div class="row">
 					<div class="col">
 						<div class="header_content d-flex flex-row align-items-center justify-content-start">
-							<div class="logo">
+							<!-- <div class="logo">
 								@if ($template->logo)
 								<img src="{{ asset('images/logos/' . $template->logo) }}" alt="Logo Image" class="rounded-circle">
 								@else
 								No photo
 								@endif
-							</div>
+							</div> -->
 
 							<nav class="main_nav">
 								<ul>

@@ -17,7 +17,7 @@
                     editor.save();
                 });
             },
-            plugins: 'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss fullscreen', // Add 'fullscreen' plugin here
+            // plugins: 'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss fullscreen', // Add 'fullscreen' plugin here
             toolbar: 'undo redo | fullscreen | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
             tinycomments_mode: 'embedded',
             tinycomments_author: 'Author name',
@@ -153,7 +153,8 @@
 
 
                                     <div class="mb-3">
-                                        <button type="submit" class="btn btn-primary">Update Blog</button>
+                                        <button type="submit" class="btn btn-primary" name="draft" value="no">Publish Blog</button>
+                                        <button type="submit" class="btn btn-secondary" name="draft" value="yes">Save as Draft</button>
                                     </div>
                                 </form>
 

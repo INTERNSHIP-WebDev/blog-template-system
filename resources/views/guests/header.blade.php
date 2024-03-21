@@ -10,7 +10,7 @@
  <!-- navigation top-->
  <div class="nav-header bg-white shadow-xs border-0">
             <div class="nav-top">
-                <a href="index.html"><i class="feather-file-text text-success display1-size me-2 ms-0"></i><span class="d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0">Blog.TS</span> </a>
+            <a href="index.html"><i class="feather-file-text text-success display1-size me-2 ms-0"></i><span class="d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0">Blog.TS</span> </a>
                 <a href="#" class="mob-menu ms-auto me-2 chat-active-btn"></a>
                 <a href="#" class="me-2 menu-search-icon mob-menu"><i class="feather-search text-grey-900 font-sm btn-round-md bg-greylight"></i></a>
                 <button class="nav-menu me-0 ms-2"></button>

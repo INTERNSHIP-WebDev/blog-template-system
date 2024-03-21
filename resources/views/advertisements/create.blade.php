@@ -46,6 +46,15 @@
                                     <input type="file" class="form-control" id="name" name="name" required>
                                 </div>
 
+                                <div class="mb-3">
+                                    <label for="priority" class="form-label">Prioritize Ad?</label>
+                                    <select class="form-select" id="priority" name="priority" required>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+
+
                                 <button type="submit" class="btn btn-primary">Create Advertisement</button>
                                 
                                 

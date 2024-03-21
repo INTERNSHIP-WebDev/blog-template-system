@@ -54,6 +54,95 @@
                         <div class="col-xl-12">
                             @forelse($templates as $template)
                                 <div class="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3">
+
+
+                                <div class="dropdown position-absolute top-0 end-0 mt-2 me-2">
+                                    <button class="btn btn-sm btn-link text-white dropdown-toggle" type="button" id="dropdownMenuButton_{{ $template->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="feather" style="font-size: 20px;">
+                                            <span class="dot"></span>
+                                            <span class="dot"></span>
+                                            <span class="dot"></span>
+                                        </i>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton_{{ $template->id }}">
+                                        @php
+                                            $isFavorite = auth()->check() && $template->favorites()->where('user_id', auth()->user()->id)->exists();
+                                        @endphp
+                                        <li>
+                                            <form id="saveToFavoritesForm_{{ $template->id }}" action="{{ route('save.to.favorites') }}" method="POST" class="save-to-favorites-form">
+                                                @csrf
+                                                <input type="hidden" name="temp_id" value="{{ $template->id }}">
+                                                <button type="submit" class="dropdown-item save-to-favorites-btn">
+                                                    @if($isFavorite)
+                                                        <i class="feather-file-minus"></i>&nbsp; Unsave from Favorites
+                                                    @else
+                                                        <i class="feather-file-plus"></i>&nbsp; Save to Favorites
+                                                    @endif
+                                                </button>
+                                            </form>
+                                        </li>
+                                        <!-- Add other dropdown items here if needed -->
+                                    </ul>
+                                </div>
+
+                                <script>
+                                $(document).ready(function() {
+                                    $('.save-to-favorites-form').submit(function(e) {
+                                        e.preventDefault();
+
+                                        var form = $(this);
+                                        var templateId = form.find('input[name="temp_id"]').val();
+
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: form.attr('action'),
+                                            data: form.serialize(),
+                                            success: function(response) {
+                                                // Toggle button text and icon
+                                                var dropdownToggle = $('#dropdownMenuButton_' + templateId);
+                                                var isFavorite = response.isFavorite;
+
+                                                if (isFavorite) {
+                                                    dropdownToggle.find('.feather').removeClass('feather-file-plus').addClass('feather-heart');
+                                                    dropdownToggle.html('<i class="feather-heart" style="font-size: 20px;"></i> Unsave from Favorites');
+                                                } else {
+                                                    dropdownToggle.find('.feather').removeClass('feather-heart').addClass('feather-file-plus');
+                                                    dropdownToggle.html('<i class="feather-file-plus" style="font-size: 20px;"></i> Save to Favorites');
+                                                }
+
+                                                // Show success message
+                                                alert(response.message);
+                                            },
+                                            error: function(xhr, status, error) {
+                                                alert('An error occurred while saving to favorites.');
+                                            }
+                                        });
+                                    });
+                                });
+                            </script>
+
+
+
+
+                            <style>
+                                .feather {
+                                display: flex;
+                                flex-direction: column;
+                                margin-top: 15px;
+                                margin-right: 15px;
+                                }
+
+                                .dot {
+                                    width: 5px;
+                                    height: 5px;
+                                    background-color: #212529;
+                                    border-radius: 50%;
+                                    margin-top: 3px;
+                                }
+
+                                </style>
+
+
                                     <div class="card-body p-0 d-flex">
                                         <figure class="avatar me-3">
                                             <img src="{{ asset('images/photos/' . $template->user->photo) }}" alt="User Photo" class="shadow-sm rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">

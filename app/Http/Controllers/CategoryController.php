@@ -105,19 +105,6 @@ class CategoryController extends Controller
         return view('categories.category_pagination', compact('categories'))->render();
     }
 
-    // public function fetch_data_category(Request $request)
-    // {
-    //     $notifications = Notification::where('is_read', false)->get();
-    //     $allNotif = Notification::orderBy('created_at', 'desc')->get();
-    //     $chats = ChMessage::latest('created_at')->where('to_id', auth()->id())->where('seen', 0)->get();
-    //     $userNames = User::whereIn('id', $chats->pluck('to_id'))->pluck('name');
-
-    //     if ($request->ajax()) {
-    //         $categories = Category::latest('created_at')->paginate(5);
-    //         return view('categories.pagination_category', compact('chats', 'userNames','categories', 'notifications', 'allNotif'))->render();
-    //     }
-    // }
-
     /**
      * Show the form for creating a new category.
      *

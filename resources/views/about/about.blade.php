@@ -48,6 +48,19 @@
             color: #212529;
             letter-spacing: 2px;
           }
+
+          .home {
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+          }
+
+          .home_background {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            position: relative;
+          }
         </style>
        
 
@@ -75,10 +88,6 @@
 							</ul>
 						</nav>
 						<div class="search_container ml-auto">
-							<div class="weather">
-								<div class="temperature">+10°</div>
-								<img class="weather_icon" src="images/cloud.png" alt="">
-							</div>
 							<form action="#">
 								<input type="search" class="header_search_input" required="required" placeholder="Type to Search...">
 								<img class="header_search_icon" src="images/search.png" alt="">
@@ -97,7 +106,7 @@
   	<!-- pic-->
   
 	<div class="home">
-		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="landing_assets/images/post_nosidebar.jpg" data-speed="0.8"></div>
+		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="landing_assets/images/post_nosidebar.jpg" data-speed="2.0"></div>
 		<div class="home_content">
 			</div>
 		</div>
@@ -213,13 +222,13 @@
 
   <!--NEW SCRIPTS-->
   <script src="landing_assets/js/jquery-3.2.1.min.js"></script>
-<script src="landing_assets/styles/bootstrap4/popper.js"></script>
-<script src="landing_assets/styles/bootstrap4/bootstrap.min.js"></script>
-<script src="landing_assets/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
-<script src="landing_assets/plugins/easing/easing.js"></script>
-<script src="landing_assets/plugins/masonry/masonry.js"></script>
-<script src="landing_assets/plugins/parallax-js-master/parallax.min.js"></script>
-<script src="landing_assets/js/post_nosidebar.js"></script>
+  <script src="landing_assets/styles/bootstrap4/popper.js"></script>
+  <script src="landing_assets/styles/bootstrap4/bootstrap.min.js"></script>
+  <script src="landing_assets/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
+  <script src="landing_assets/plugins/easing/easing.js"></script>
+  <script src="landing_assets/plugins/masonry/masonry.js"></script>
+  <script src="landing_assets/plugins/parallax-js-master/parallax.min.js"></script>
+  <script src="landing_assets/js/post_nosidebar.js"></script>
 
   <!-- Template Main JS File -->
   <script type="text/javascript" src="{{ URL::asset('backend/assets/js/main.js') }}"></script>

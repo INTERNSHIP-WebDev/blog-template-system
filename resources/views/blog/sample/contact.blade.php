@@ -155,13 +155,13 @@ $socials = [
 			<div></div>
 		</div>
 	</div>
-	<div class="logo menu_mm">
+	<!-- <div class="logo menu_mm">
 		@if ($template->logo)
 		<img src="{{ asset('images/logos/' . $template->logo) }}" alt="Logo Image" class="rounded-circle">
 		@else
 		No photo
 		@endif
-	</div>
+	</div> -->
 	<div class="search">
 		<form action="#">
 			<input type="search" class="header_search_input menu_mm" required="required" placeholder="Type to Search...">

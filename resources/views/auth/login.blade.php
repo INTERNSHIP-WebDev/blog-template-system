@@ -90,7 +90,7 @@
                                 type="password"
                                 required
                             />
-                            <i class="icon fa fa-eye toggle-password" id="togglePassword"></i>
+                            <i class="icon fa fa-eye-slash toggle-password" id="togglePassword"></i>
                             @error('password')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>

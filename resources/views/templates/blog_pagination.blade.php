@@ -8,6 +8,7 @@
                 <th class="text-center" scope="col">Header</th>
                 <th class="text-center" scope="col">Banner</th>
                 <th class="text-center" scope="col">Logo</th>
+                <th class="text-center" scope="col">Status</th>
                 <th class="text-center" scope="col">Action</th>
             </tr>
         </thead>
@@ -51,6 +52,13 @@
                     @endif
                 </td>
                 <td class="text-center">
+                    @if ($template->draft == 'no')
+                    <span class="badge bg-success">Published</span>
+                    @else
+                    <span class="badge bg-secondary">Drafted</span>
+                    @endif
+                </td>
+                <td class="text-center">
                     <a href="{{ route('templates.show', $template->id) }}" class="btn btn-warning btn-sm"><i class="bi bi-eye"></i></a>
                     <a href="{{ route('templates.edit', $template->id) }}" class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i></a>
                     <form action="{{ route('templates.destroy', $template->id) }}" method="POST" style="display:inline;">
@@ -61,9 +69,11 @@
                 </td>
             </tr>
             @empty
-            <tr>
-                <td colspan="6">No blog posts found.</td>
-            </tr>
+            <td colspan="3">
+                <span class="text-danger">
+                    <strong>No Blog found!</strong>
+                </span>
+            </td>
             @endforelse
         </tbody>
     </table>
